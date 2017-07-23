@@ -69,7 +69,7 @@ function redcurl() {
   local FILE=$(echo "${1}" | grep -oE "[0-9]+\.mp4")
   local OUTPUT="${DIRECTORY}/${FILE}"
 
-  torcurl --request "GET" "${1}" --output ${OUTPUT} --continue-at - \
+  torcurl --request "GET" "${1}" --output "${OUTPUT}" --continue-at - \
     --write-out "${STATUS}" \
     --cookie "${COOKIE}" \
     --cookie-jar "${COOKIE}"
@@ -77,10 +77,10 @@ function redcurl() {
 
 #  Download a RedTube video from a RedTube video ID
 function redget() {
-  redcurl $(redpage \"${REDTUBE}/${1}\" | redlink | redselect | redhref)
+  redcurl $(redpage "${REDTUBE}/${1}" | redlink | redselect | redhref)
 }
 
 #  Download a RedTube video from a RedTube video URL
 function redurl() {
-  redcurl $(redpage ${1} | redlink | redselect | redhref)
+  redcurl $(redpage "${1}" | redlink | redselect | redhref)
 }
