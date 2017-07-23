@@ -1,6 +1,4 @@
 ## RedTube
-#  `torcurl()` is defined in zprofile.
-
 #  Variables
 local REDTUBE="https://www.redtube.com"
 local REDTUBE_LOGIN="${REDTUBE}/htmllogin"
