@@ -34,7 +34,7 @@ alias reload="source ${HOME}/.zshrc"
 #  VBoxManage shortcut
 alias vbm="VBoxManage"
 
-#  Allow open to work in tmux
+#  Make open to work in tmux
 alias open="reattach-to-user-namespace open"
 
 #  Python VirtualEnv
