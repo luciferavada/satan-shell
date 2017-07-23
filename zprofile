@@ -33,16 +33,16 @@ alias docker="grc docker"
 
 
 ## Utility Functions
-#  Disk Usage
-function dh() {
-  local DIRECTORY=${1:-"${PWD}"}
-  sudo grc du -d "1" -hsc "${DIRECTORY}" | gsort -bhr
-}
-
 #  Reload ZShell configurations
 function reload() {
   source "${HOME}/.zprofile"
   source "${HOME}/.zshrc"
+}
+
+#  Disk Usage
+function dh() {
+  local DIRECTORY=${1:-"${PWD}"}
+  sudo grc du -d "1" -hsc "${DIRECTORY}" | gsort -bhr
 }
 
 
