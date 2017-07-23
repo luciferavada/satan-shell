@@ -1,0 +1,33 @@
+#alias o   {open}
+#alias c   {close}
+
+#alias ga  {get all}
+#alias rm  {remove}
+
+#alias srs {sit;recline;sleep}
+#alias ws  {wake;stand}
+
+#alias stt {status}
+
+#alias ln  {look north}
+#alias ls  {look south}
+#alias le  {look east}
+#alias lw  {look west}
+#alias ld  {look down}
+#alias lu  {look up}
+
+#alias lr  {look room}
+
+#alias odn {open door north}
+#alias ods {open door south}
+#alias ode {open door east}
+#alias odw {open door west}
+#alias odd {open door down}
+#alias odu {open door up}
+
+#alias ogn {open gate north}
+#alias ogs {open gate south}
+#alias oge {open gate east}
+#alias ogw {open gate west}
+#alias ogd {open gate down}
+#alias ogu {open gate up}

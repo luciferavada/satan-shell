@@ -1,54 +1,14 @@
 #split
 
+#session toril torilmud.org 9999
 #event {SESSION DEACTIVATED} {#end}
 
-#alias reload {#read /Users/lava/.toril/main.tt}
+#script {PATH} {echo "$${HOME}/.torilmud"}
+#variable {PATH} {$PATH[1]}
 
-#alias stat   {status}
+#alias reload {#read $PATH/main.tt}
 
-#alias ln  {look north}
-#alias ls  {look south}
-#alias le  {look east}
-#alias lw  {look west}
-#alias ld  {look down}
-#alias lu  {look up}
+#read {$PATH/alias.tt}
+#read {$PATH/action.tt}
 
-#alias lr  {look room}
-
-#alias odn {open door north}
-#alias ods {open door south}
-#alias ode {open door east}
-#alias odw {open door west}
-#alias odd {open door down}
-#alias odu {open door up}
-
-#alias ogn {open gate north}
-#alias ogs {open gate south}
-#alias oge {open gate east}
-#alias ogw {open gate west}
-#alias ogd {open gate down}
-#alias ogu {open gate up}
-
-#alias en  {escape north}
-#alias es  {escape south}
-#alias ee  {escape east}
-#alias ew  {escape west}
-#alias ed  {escape down}
-#alias eu  {escape up}
-
-#alias o   {open}
-#alias c   {close}
-
-#alias ga  {get all}
-#alias rm  {remove}
-
-#alias srs {sit;recline;sleep}
-#alias ws  {wake;stand}
-
-#alias sh {sneak;hide}
-#alias h  {hide}
-
-#alias b  {backstab}
-
-
-#action   {%1 sends you sprawling.}  {stand}
+#read {$PATH/rogue.tt}

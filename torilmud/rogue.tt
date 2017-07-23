@@ -1,0 +1,11 @@
+#alias h   {hide}
+#alias sh  {sneak;hide}
+
+#alias b   {backstab}
+
+#alias en  {escape north}
+#alias es  {escape south}
+#alias ee  {escape east}
+#alias ew  {escape west}
+#alias ed  {escape down}
+#alias eu  {escape up}
