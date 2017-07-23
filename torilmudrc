@@ -1,0 +1,17 @@
+#split
+
+#session toril torilmud.org 9999
+#event {SESSION DEACTIVATED} {#end}
+
+#script {HOME} {echo "$${HOME}"}
+#variable {HOME} {$HOME[1]}
+
+#script {CONF} {echo "$${HOME}/.torilmud.d"}
+#variable {CONF} {$CONF[1]}
+
+#alias reload {#read $HOME/.torilmudrc}
+
+#read {$CONF/alias.tt}
+#read {$CONF/action.tt}
+
+#read {$CONF/rogue.tt}
