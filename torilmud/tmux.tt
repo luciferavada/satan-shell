@@ -1,0 +1,8 @@
+#class tmux open
+#sys {tmux split-window -h -p 40 "tail -f log_map.tt"}
+#sys {tmux split-window -v -p 15 "tail -f log_hurt.tt"}
+#sys {tmux split-window -v -p 15 "tail -f log_damage.tt"}
+#sys {tmux select-pane -t 0}
+#sys {tmux split-window -v -p 15 "tail -f log_tick.tt"}
+#sys {tmux split-window -v -p 15 "tail -f log_target.tt"}
+#sys {tmux select-pane -t 0}
