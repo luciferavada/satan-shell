@@ -1,9 +1,4 @@
-## TTY Settings
-#  Enable forward history search (CTRL+s)
-stty -ixon
-
-
-## General
+## Aliases
 #  Sudo with an alias as a command (trailing space is for alias expansion)
 alias sudo="sudo "
 
@@ -31,14 +26,7 @@ alias ping="grc ping"
 #  Corolize Docker
 alias docker="grc docker"
 
-
-## Utility Functions
-#  Reload ZShell configurations
-function reload() {
-  source "${HOME}/.zprofile"
-  source "${HOME}/.zshrc"
-}
-
+## Functions
 #  Disk Usage
 function dh() {
   local DIRECTORY=${1:-"${PWD}"}
