@@ -1,4 +1,14 @@
-## Python Functions
+## Python
+#  Remove all packages from a Python environment
+function pip-clean() {
+  pip freeze | xargs pip uninstall -y
+}
+
+
+## Python AutoEnv
+#  Requirements Filename
+local REQUIREMENTS_FILE=".requirements"
+
 #  AutoEnv file
 local AUTOENV_ENV_FILENAME=".pythonrc"
 
@@ -23,7 +33,8 @@ function venv-init() {
   fi
 
   # activate the newly created python virtual environment
-  cd "${PWD}"
+  venv-activate
+  # write 'y' to stdin to enter the virtual environment for the first time
   cat <<< "y" 2>&1 /dev/null
 }
 
@@ -38,7 +49,28 @@ function venv-deactivate() {
   deactivate
 }
 
-#  Remove all packages from a Python environment
-function pip-clean() {
-  pip freeze | xargs pip uninstall -y
+# Create a requirements file for the virtual environment
+function venv-update() {
+  if [ -f "${REQUIREMENTS_FILE}" ]; then
+    mv "${REQUIREMENTS_FILE}" "${REQUIREMENTS_FILE}.back"
+  fi
+  pip freeze > "${REQUIREMENTS_FILE}"
+}
+
+# Remove packages from the virtual environment
+function venv-clean() {
+  if [ -f "${AUTOENV_ENV_FILENAME}" ]; then
+    venv-activate
+    pip-clean
+    venv-update
+  else
+    echo "Not in a python virtual environment folder."
+  fi
+}
+
+# Virtual environment names
+function venv-name() {
+  if [ -n "${VIRTUAL_ENV}" ]; then
+    basename $(dirname "${VIRTUAL_ENV}")
+  fi
 }
