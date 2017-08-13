@@ -72,11 +72,16 @@ function venv-name() {
   fi
 }
 
-#  Automatically activate a python virtual environment
+#  Automatically activate/deactivate a python virtual environment
 function venv-cd() {
   builtin cd "${1}"
   if [ -f "${VENV_ACTIVATE}" ]; then
     venv-activate
+  fi
+  if [ -n "${VIRTUAL_ENV}" ]; then
+    if [[ ! "${PWD}" =~ "$(dirname ${VIRTUAL_ENV})" ]]; then
+      venv-deactivate
+    fi
   fi
 }
 
