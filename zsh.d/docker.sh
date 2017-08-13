@@ -1,7 +1,22 @@
 ## Docker Functions
+#  Default Docker machine
+local DEFAULT_MACHINE="default"
+
+#  Corolize Docker
+alias docker="grc docker"
+
+#  Colorize Docker Machine
+alias docker-machine="grc docker-machine"
+
+#  Initialize a Docker machine
+function docker-init() {
+  local MACHINE="${1:-${DEFAULT_MACHINE}}"
+  docker-machine create --driver "virtualbox" "${MACHINE}"
+}
+
 #  Setup docker-machine environment
 function docker-env() {
-  local MACHINE=${1:-"sugarush"}
+  local MACHINE="${1:-${DEFAULT_MACHINE}}"
   eval $(docker-machine env ${MACHINE})
 }
 
