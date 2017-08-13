@@ -23,9 +23,14 @@ function ssh-add-key() {
   ssh-add "${SSH_DIR}/${1}"
 }
 
+#  List ssh agents
+function ssh-agents() {
+  pgrep -l -u "${USER}" ssh-agent
+}
+
 #  Start an ssh-agent
 #  XXX: untested
-if [ ! "$(uname)" == "Darwin" ]; then
+if [ ! "$(uname)" = "Darwin" ]; then
   if [ ! -f "${SSH_AGENT}" ]; then
     ssh-agent > "${SSH_AGENT}"
   fi
