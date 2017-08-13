@@ -24,6 +24,11 @@ local VENV_DEACTIVATE=".venv-deactivate"
 #  Requirements Filename
 local REQUIREMENTS_FILE=".requirements"
 
+#  Overwrite the default cd command with venv-cd
+function cd() {
+  venv-cd "${1}"
+}
+
 #  Initialize a Python virtual environment
 function venv-init() {
   local PYTHON="${1:-python2.7}"
@@ -60,6 +65,21 @@ function venv-deactivate() {
   deactivate
 }
 
+#  Virtual environment names
+function venv-name() {
+  if [ -n "${VIRTUAL_ENV}" ]; then
+    basename $(dirname "${VIRTUAL_ENV}")
+  fi
+}
+
+#  Automatically activate a python virtual environment
+function venv-cd() {
+  builtin cd "${1}"
+  if [ -f "${VENV_ACTIVATE}" ]; then
+    venv-activate
+  fi
+}
+
 #  Install packages in a virtual environment
 function venv-install() {
   pip install -r "${REQUIREMENTS_FILE}"
@@ -84,13 +104,7 @@ function venv-clean() {
   fi
 }
 
-#  Virtual environment names
-function venv-name() {
-  if [ -n "${VIRTUAL_ENV}" ]; then
-    basename $(dirname "${VIRTUAL_ENV}")
-  fi
-}
-
+#  Test with python unittest
 function venv-python-test() {
   if [ $(which -s coverage) ]; then
     coverage run --source "${MODULE}" \
@@ -101,6 +115,7 @@ function venv-python-test() {
   fi
 }
 
+#  Test with tornado.testing
 function venv-tornado-test() {
   if [ $(which -s coverage) ]; then
     coverage run --source "${MODULE}" \
