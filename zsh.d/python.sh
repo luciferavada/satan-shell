@@ -1,4 +1,10 @@
 ## Python
+#  Python 2.7 path
+local PYTHON_PATH="${HOME}/Library/Python/2.7"
+
+#  Add Python executables to $PATH
+export PATH="${PATH}:${PYTHON_PATH}/bin"
+
 #  Remove all packages from a Python environment
 function pip-clean() {
   pip freeze | xargs pip uninstall -y
@@ -40,7 +46,7 @@ function venv-init() {
 
 #  Activate a python virtual environment
 function venv-activate() {
-  # reads the .pythonrc file in the current directory
+  # read the .pythonrc file in the current directory
   cd .
 }
 
@@ -49,7 +55,12 @@ function venv-deactivate() {
   deactivate
 }
 
-# Create a requirements file for the virtual environment
+#  Install packages in a virtual environment
+function venv-install() {
+  pip install -r "${REQUIREMENTS_FILE}"
+}
+
+#  Create a requirements file for the virtual environment
 function venv-update() {
   if [ -f "${REQUIREMENTS_FILE}" ]; then
     mv "${REQUIREMENTS_FILE}" "${REQUIREMENTS_FILE}.back"
@@ -57,7 +68,7 @@ function venv-update() {
   pip freeze > "${REQUIREMENTS_FILE}"
 }
 
-# Remove packages from the virtual environment
+#  Remove packages from the virtual environment
 function venv-clean() {
   if [ -f "${AUTOENV_ENV_FILENAME}" ]; then
     venv-activate
@@ -68,7 +79,7 @@ function venv-clean() {
   fi
 }
 
-# Virtual environment names
+#  Virtual environment names
 function venv-name() {
   if [ -n "${VIRTUAL_ENV}" ]; then
     basename $(dirname "${VIRTUAL_ENV}")
