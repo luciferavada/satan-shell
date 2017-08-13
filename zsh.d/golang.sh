@@ -1,6 +1,6 @@
 ## Golang Environment Variables
 #  Set $GOPATH
-export GOPATH=${HOME}/.golang
+export GOPATH="${HOME}/.golang"
 
 #  Add $GOPATH to $PATH
-export PATH=${PATH}:${GOPATH}/bin
+export PATH="${PATH}:${GOPATH}/bin"
