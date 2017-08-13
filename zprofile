@@ -11,20 +11,11 @@ alias vbm="VBoxManage"
 #  Make open to work in tmux
 alias open="reattach-to-user-namespace open"
 
-#  Python VirtualEnv
-alias virtualenv="${HOME}/Library/Python/2.7/bin/virtualenv"
-
-#  TinTin
-alias tintin="tt++"
-
 #  Corolize Traceroute
 alias traceroute="grc traceroute"
 
 #  Colorize Ping
 alias ping="grc ping"
-
-#  Corolize Docker
-alias docker="grc docker"
 
 ## Functions
 #  Disk Usage
