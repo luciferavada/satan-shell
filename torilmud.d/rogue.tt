@@ -1,5 +1,8 @@
 #alias h   {hide}
+#alias hs  {hide;status}
+
 #alias sh  {sneak;hide}
+#alias shs {sneak;hide;status}
 
 #alias b   {backstab}
 
@@ -9,3 +12,5 @@
 #alias ew  {escape west}
 #alias ed  {escape down}
 #alias eu  {escape up}
+
+#alias fillsoup { #loop 0 2 i { #showme { fill $i.cup pot } } }
