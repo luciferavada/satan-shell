@@ -20,9 +20,14 @@ local ZSH_MODULES=(${HOME}/.zsh.d.modules/*)
 
 if [ -n "${ZSH_MODULES}" ]; then
   for module in ${ZSH_MODULES}; do
+    
     local MODULE_FILES=(${module}/*)
+
     for file in ${MODULE_FILES}; do
-      source "${file}"
+      if [ -f "${file}" ]; then
+        source "${file}"
+      fi
     done
+
   done
 fi
