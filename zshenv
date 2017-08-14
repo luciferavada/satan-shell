@@ -15,10 +15,13 @@ if [ -n "${ZSHRC_DIRECTORY}" ]; then
   done
 fi
 
+#  ZShell modules directory
 export ZSH_MODULES_DIRECTORY="${HOME}/.zsh.d.modules"
 
+#  ZShell modules arary
 local ZSH_MODULES=(${ZSH_MODULES_DIRECTORY}/*)
 
+#  Load ZShell modules
 if [ -n "${ZSH_MODULES}" ]; then
   for module in ${ZSH_MODULES}; do
 
