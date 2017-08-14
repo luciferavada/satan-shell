@@ -15,12 +15,13 @@ if [ -n "${ZSHRC_DIRECTORY}" ]; then
   done
 fi
 
+export ZSH_MODULES_DIRECTORY="${HOME}/.zsh.d.modules"
 
-local ZSH_MODULES=(${HOME}/.zsh.d.modules/*)
+local ZSH_MODULES=(${ZSH_MODULES_DIRECTORY}/*)
 
 if [ -n "${ZSH_MODULES}" ]; then
   for module in ${ZSH_MODULES}; do
-    
+
     local MODULE_FILES=(${module}/*)
 
     for file in ${MODULE_FILES}; do
