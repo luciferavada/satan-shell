@@ -9,8 +9,8 @@ local FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 function reload() {
   for file in ${FILES}; do
     if [ -f "${file}" ]; then
-      source "${HOME}/.${file}"
       echo "source ${HOME}/.${file}"
+      source "${HOME}/.${file}"
     fi
   done
 }
