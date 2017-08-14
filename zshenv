@@ -25,7 +25,7 @@ local ZSH_MODULES=(${ZSH_MODULES_DIRECTORY}/*)
 if [ -n "${ZSH_MODULES}" ]; then
   for module in ${ZSH_MODULES}; do
 
-    local MODULE_FILES=(${module}/*)
+    local MODULE_FILES=(${module}/*.sh)
 
     for file in ${MODULE_FILES}; do
       if [ -f "${file}" ]; then
@@ -35,3 +35,13 @@ if [ -n "${ZSH_MODULES}" ]; then
 
   done
 fi
+
+#  Update ZShell modules
+function modules-update() {
+  if [ -n "${ZSH_MODULES}" ]; then
+    for module in ${ZSH_MODULES}; do
+      echo "==> $(basename ${module})"
+      git -C "${module}" pull
+    done
+  fi
+}
