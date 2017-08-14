@@ -14,3 +14,15 @@ if [ -n "${ZSHRC_DIRECTORY}" ]; then
     source "${file}"
   done
 fi
+
+
+local ZSH_MODULES=(${HOME}/.zsh.d.modules/*)
+
+if [ -n "${ZSH_MODULES}" ]; then
+  for module in ${ZSH_MODULES}; do
+    local MODULE_FILES=(${module}/*)
+    for file in ${MODULE_FILES}; do
+      source "${file}"
+    done
+  done
+fi
