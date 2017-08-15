@@ -1,4 +1,4 @@
 #  ZShell modules
 export MODULES=(
-  "docker" "golang" "python" "redtube" "ssh" "tintin" "tmux" "tor"
+  "docker" "git" "golang" "python" "redtube" "ssh" "tintin" "tmux" "tor"
 )
