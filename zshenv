@@ -1,47 +1,13 @@
-## ZShell Settings
-#  If the glob is empty, nullglob will remove the glob argument from the
-#  list and supress the `no matches found` error.
-setopt +o nullglob
+## ZShell Environment
+#  ZShell configuration files
+local ZSHELL_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 
-
-## ZShell Configuration
-#  ZShell configuration directory
-local ZSHRC_DIRECTORY=(${HOME}/.zsh.d/*)
-
-# Load all files in the ZShell configuration directory
-if [ -n "${ZSHRC_DIRECTORY}" ]; then
-  for file in ${ZSHRC_DIRECTORY}; do
-    source "${file}"
+#  Reload ZShell configuration files
+function reload() {
+  for file in ${ZSHELL_FILES}; do
+    if [ -f "${file}" ]; then
+      echo "source ${HOME}/.${file}"
+      source "${HOME}/.${file}"
+    fi
   done
-fi
-
-#  ZShell modules directory
-export ZSH_MODULES_DIRECTORY="${HOME}/.zsh.d.modules"
-
-#  ZShell modules arary
-local ZSH_MODULES=(${ZSH_MODULES_DIRECTORY}/*)
-
-#  Load ZShell modules
-if [ -n "${ZSH_MODULES}" ]; then
-  for module in ${ZSH_MODULES}; do
-
-    local MODULE_FILES=(${module}/*.sh)
-
-    for file in ${MODULE_FILES}; do
-      if [ -f "${file}" ]; then
-        source "${file}"
-      fi
-    done
-
-  done
-fi
-
-#  Update ZShell modules
-function modules-update() {
-  if [ -n "${ZSH_MODULES}" ]; then
-    for module in ${ZSH_MODULES}; do
-      echo "==> $(basename ${module})"
-      git -C "${module}" pull
-    done
-  fi
 }

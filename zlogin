@@ -1,3 +1,7 @@
+## TTY Settings
+#  Enable forward history search (CTRL+s)
+stty -ixon
+
 ## Aliases
 #  Sudo with an alias as a command (trailing space is for alias expansion)
 alias sudo="sudo "

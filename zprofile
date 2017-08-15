@@ -1,16 +1,11 @@
-## TTY Settings
-#  Enable forward history search (CTRL+s)
-stty -ixon
+autoload -Uz compinit promptinit
 
-# ZShell configuration files
-local FILES=("zshenv" "zprofile" "zshrc" "zlogin")
+compinit
+promptinit
 
-#  Reload ZShell configuration files
-function reload() {
-  for file in ${FILES}; do
-    if [ -f "${file}" ]; then
-      echo "source ${HOME}/.${file}"
-      source "${HOME}/.${file}"
-    fi
-  done
-}
+zstyle ':completion:*' menu select
+
+local STATUS="%(?: %F{green}%B➜%b%f : %F{red}%B➜%b%f )"
+local DIRECTORY="%F{cyan}%B%c%b%f "
+
+export PROMPT="${STATUS} ${DIRECTORY}"
