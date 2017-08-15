@@ -17,15 +17,17 @@ fi
 export ZSHELL_MODULES_DIRECTORY="${HOME}/.zsh.d.modules"
 
 #  Initialize modules array
-for module in ${MODULES}; do
-  local MODULE_NAME="zshell-${module}"
-  local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}"
-  if [ ! -d "${MODULE_PATH}" ]; then
-    echo "==> ${MODULE_NAME}"
-    git clone "https://github.com/luciferavada/${MODULE_NAME}.git" \
-      "${MODULE_PATH}"
-  fi
-done
+if [ -n "${MODULES}" ]; then
+  for module in ${MODULES}; do
+    local MODULE_NAME="zshell-${module}"
+    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}"
+    if [ ! -d "${MODULE_PATH}" ]; then
+      echo "==> ${MODULE_NAME}"
+      git clone "https://github.com/luciferavada/${MODULE_NAME}.git" \
+        "${MODULE_PATH}"
+    fi
+  done
+fi
 
 #  ZShell modules arary
 local ZSHELL_MODULES=(${ZSHELL_MODULES_DIRECTORY}/*)
