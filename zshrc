@@ -1,8 +1,3 @@
-#  Reload configuration
-function reload() {
-  environment-load
-}
-
 #  Load custom files
 custom-load
 

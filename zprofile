@@ -1,6 +1,11 @@
 #  If the glob is empty, supress the `no matches found` error.
 setopt +o nullglob
 
+#  If zlogin doesn't exist, create it.
+if [ ! -f "${HOME}/.zlogin" ]; then
+  touch "${HOME}/.zlogin"
+fi
+
 #  Configuration directory
 export ZSHELL_CONFIGURATION_DIRECTORY="${HOME}/.zsh.d.conf"
 
@@ -14,7 +19,7 @@ local ZSHELL_CUSTOM_FILES=(${ZSHELL_CUSTOM_DIRECTORY}/*)
 local ZSHELL_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 
 #  Source environment files
-function environment-load() {
+local function environment-load() {
   for file in ${ZSHELL_FILES}; do
     if [ -f "${file}" ]; then
       source "${HOME}/.${file}"
@@ -23,10 +28,15 @@ function environment-load() {
 }
 
 #  Source configuration files
-function custom-load() {
+local function custom-load() {
   for file in ${ZSHELL_CUSTOM_FILES}: do
     source "${file}"
   done
+}
+
+#  Reload configuration
+function reload() {
+  environment-load
 }
 
 #  Check for verbose flag
