@@ -1,2 +1,8 @@
+zsh.d/*
+!zsh.d/.gitkeep
+
+zsh.d.conf/*
+!zsh.d.conf/.gitkeep
+
 zsh.d.modules/*
 !zsh.d.modules/.gitkeep
