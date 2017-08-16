@@ -12,9 +12,21 @@ A modular ZShell configuration.
 
 `zsh -c $(curl "https://raw.githubusercontent.com/luciferavada/zshell-configuration/master/install-github.sh")`
 
+## General
+
+### Usage
+
+User configuration goes in `~/.zlogin`.
+
+### Functions
+
+`reload`
+
+  - Reloads the shell configuration.
+
 ## Modules
 
-### Configuration
+### Usage
 
 Installed modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
 
@@ -56,7 +68,9 @@ The following variables are available to modules.
 
 ### Boilerplate
 
-The following example is from [zshell-ssh](https://github.com/luciferavada/zshell-ssh).
+If a module requires configuration, it should include an adaptation of the example below.
+
+The following example is from [zshell-ssh](https://github.com/luciferavada/zshell-ssh/blob/master/ssh.sh).
 
 ```
 #  Module configuration
@@ -71,4 +85,26 @@ fi
 
 #  Source module configuration
 source "${MODULE_CONF}"
+```
+
+### Prompt
+
+The prompt can be configured from within a module, see the example below.
+
+The following example is from [zshell-git](https://github.com/luciferavada/zshell-git/blob/master/prompt.sh).
+
+```
+local BRANCH="$(git-branch)"
+local STATUS="$(git-status)"
+
+local BRANCH_COLOR
+BRANCH_COLOR="%F{red}%B${BRANCH}%b%f"
+BRANCH_COLOR="%F{yellow}%Bgit:(%b%f${BRANCH_COLOR}%F{yellow}%B)%b%f"
+
+local STATUS_COLOR="%F{yellow}%Bx%b%f"
+
+local GIT_BRANCH="%(${BRANCH}: ${GIT_COLOR}:)"
+local GIT_STATUS="%(${STATUS}: ${STATUS_COLOR}:)"
+
+export PROMPT="${PROMPT}${GIT_BRANCH}${GIT_STATUS}"
 ```
