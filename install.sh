@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 #  Skip the following files when installing
-local SKIP=("install.sh" "github.sh" "README.md")
+local SKIP=("install.sh" "install-github.sh" "README.md")
 
 #  Split paths on `/` and store in an array
 local HOME_PATH=(`echo ${HOME//\// }`)
