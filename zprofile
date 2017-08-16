@@ -5,7 +5,7 @@ setopt +o nullglob
 export ZSHELL_CONFIGURATION_DIRECTORY="${HOME}/.zsh.d.conf"
 
 #  Custom directory
-export ZSHELL_CUSTOM_DIRECTORY="${HOME}/.zsh.d"
+local ZSHELL_CUSTOM_DIRECTORY="${HOME}/.zsh.d"
 
 #  Configuration files
 local ZSHELL_CUSTOM_FILES=(${ZSHELL_CUSTOM_DIRECTORY}/*)
