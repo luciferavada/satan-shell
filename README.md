@@ -48,7 +48,7 @@ Most of the following functions are used in `~/.zshrc` and are available in the 
 
 `modules-update`
 
-  - Updates installed modules. Not used in `~/.zshrc`.
+  - Updates installed modules.
 
 `modules-load`
 
