@@ -98,8 +98,9 @@ function modules-install() {
 #  Update installed modules
 function modules-update() {
   for module in ${ZSHELL_MODULES}; do
+    local MODULE_NAME="$(basename ${module})"
     if [ $(verbose ${@}) ]; then
-      echo "==> Updating $(basename ${module})"
+      echo "==> Updating ${MODULE_NAME}"
     fi
     git -C "${module}" pull
   done
@@ -108,11 +109,12 @@ function modules-update() {
 #  Load installed modules
 function modules-load() {
   for module in ${ZSHELL_MODULES}; do
+    local MODULE_NAME="$(basename ${module})"
     local MODULE_FILES=(${module}/*.sh)
     for file in ${MODULE_FILES}; do
       if [ -f "${file}" ]; then
         if [ $(verbose ${@}) ]; then
-          echo "==> Loading $(basename ${module})"
+          echo "==> Loading ${MODULE_NAME}"
         fi
         source "${file}"
       fi
@@ -123,10 +125,12 @@ function modules-load() {
 #  Uninstall modules not in the modules array
 function modules-uninstall() {
   for module in ${ZSHELL_MODULES}; do
-    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${module}}"
-    if [[ ! "${module}" =~ "${MODULES}" ]]; then
+    local MODULE_NAME="$(basename ${module})"
+    local MODULE_ID="$(echo ${MODULE_NAME} | sed 's/zshell-\(.*\)/\1/')"
+    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}}"
+    if [[ ! "${MODULE_ID}" =~ "${MODULES}" ]]; then
       if [ $(verbose ${@}) ]; then
-        echo "==> Uninstalling $(basename ${module})"
+        echo "==> Uninstalling ${MODULE_NAME}"
       fi
       rm -rf "${MODULE_PATH}"
     fi
