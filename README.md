@@ -10,7 +10,7 @@ A modular ZShell configuration.
 
 ## Install
 
-`zsh -c $(curl "https://raw.githubusercontent.com/luciferavada/zshell-configuration/master/install-github.sh")`
+`zsh -c $(curl -s "https://raw.githubusercontent.com/luciferavada/zshell-configuration/master/install-github.sh")`
 
 ## General
 
