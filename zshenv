@@ -1,13 +1,11 @@
-## ZShell Environment
-#  ZShell configuration files
-local ZSHELL_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
+autoload -Uz compinit promptinit
 
-#  Reload ZShell configuration files
-function reload() {
-  for file in ${ZSHELL_FILES}; do
-    if [ -f "${file}" ]; then
-      echo "source ${HOME}/.${file}"
-      source "${HOME}/.${file}"
-    fi
-  done
-}
+compinit
+promptinit
+
+zstyle ':completion:*' menu select
+
+local STATUS="%(?:%F{green}%B➜%b%f :%F{red}%B➜%b%f )"
+local DIRECTORY="%F{cyan}%B%c%b%f "
+
+export PROMPT="${STATUS} ${DIRECTORY}"
