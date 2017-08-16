@@ -29,7 +29,7 @@ local function environment-load() {
 
 #  Source configuration files
 local function custom-load() {
-  for file in ${ZSHELL_CUSTOM_FILES}: do
+  for file in ${ZSHELL_CUSTOM_FILES}; do
     source "${file}"
   done
 }
