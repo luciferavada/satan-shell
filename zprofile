@@ -1,19 +1,17 @@
-#  If the glob is empty, nullglob will remove the glob argument from the
-#  list and supress the `no matches found` error.
+#  If the glob is empty, supress the `no matches found` error.
 setopt +o nullglob
+
+#  Configuration directory
+export ZSHELL_CONFIGURATION_DIRECTORY="${HOME}/.zsh.d.conf"
+
+#  Custom directory
+export ZSHELL_CUSTOM_DIRECTORY="${HOME}/.zsh.d"
+
+#  Configuration files
+local ZSHELL_CUSTOM_FILES=(${ZSHELL_CUSTOM_DIRECTORY}/*)
 
 #  Environment files
 local ZSHELL_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
-
-#  Configuration files
-local ZSHELL_CONFIGURATION_FILES=(${HOME}/.zsh.d/*.sh)
-
-#  Source configuration files
-function configuration-load() {
-  for file in ${ZSHELL_CONFIGURATION_FILES}: do
-    source "${file}"
-  done
-}
 
 #  Source environment files
 function environment-load() {
@@ -21,6 +19,13 @@ function environment-load() {
     if [ -f "${file}" ]; then
       source "${HOME}/.${file}"
     fi
+  done
+}
+
+#  Source configuration files
+function custom-load() {
+  for file in ${ZSHELL_CUSTOM_FILES}: do
+    source "${file}"
   done
 }
 
@@ -35,6 +40,18 @@ local function verbose() {
   done
   return 0
 }
+
+#  Modules file
+local ZSHELL_MODULES_FILE="${ZSHELL_CUSTOM_DIRECTORY}/modules.conf"
+
+#  Write default modules file
+if [ ! -f "${ZSHELL_MODULES_FILE}" ]; then
+  echo "#  Modules" > "${ZSHELL_MODULES_FILE}"
+  echo "MODULES=(\"git\" \"ssh\")" >> "${ZSHELL_MODULES_FILE}"
+fi
+
+#  Source modules file
+source "${ZSHELL_MODULES_FILE}"
 
 #  Modules directory
 export ZSHELL_MODULES_DIRECTORY="${HOME}/.zsh.d.modules"
@@ -96,18 +113,12 @@ function modules-load() {
 #  Uninstall modules not in the modules array
 function modules-uninstall() {
   for module in ${ZSHELL_MODULES}; do
-    local MODULE_NAME="zshell-${module}"
-    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}"
+    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${module}}"
     if [[ ! "${module}" =~ "${MODULES}" ]]; then
       if [ $(verbose ${@}) ]; then
-        echo "==> Uninstalling ${MODULE_NAME}"
+        echo "==> Uninstalling $(basename ${module})"
       fi
       rm -rf "${MODULE_PATH}"
     fi
   done
-}
-
-#  Reload zshell configuration
-function reload() {
-  environment-load
 }

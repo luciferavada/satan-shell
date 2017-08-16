@@ -1,17 +1,14 @@
-#  Modules
-export MODULES=(
-  "docker" "git" "golang" "ls" "python" "redtube" "ssh" "tintin" "tmux" "tor"
-)
+#  Reload configuration
+function reload() {
+  environment-load
+}
 
-#  Load configuation files
-configuration-load
+#  Load custom files
+custom-load
 
 #  Uninstall modules not in the modules arary
-modules-uninstall
-
-#  Update installed modules
-modules-update
+modules-uninstall -v
 
 #  Install and load modules
-modules-install
+modules-install -v
 modules-load
