@@ -1,23 +1,23 @@
 #  Determine if array contains a value
 function contains() {
-  local VALUE="${1}"; shift
-  local ARRAY=("${@}")
+  local VALUE="${1}"
+  local ARRAY=(${@:2})
   for value in ${ARRAY[@]}; do
     if [ "${value}" = "${VALUE}" ]; then
-      return 1
+      return true
     fi
-    return 0
+    return false
   done
 }
 
 #  Check for verbose flag
 function verbose() {
   while getopts "v" option; do
-    case ${option} in
+    case "${option}" in
       v)
-        return 1
+        return true
       ;;
     esac
   done
-  return 0
+  return false
 }

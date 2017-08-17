@@ -3,7 +3,7 @@
 #  Source utility file
 source "${PWD}/util/util.sh"
 
-#  Skip the following files when installing
+#  Skip the following files and directories when installing
 local SKIP=(
   "install.sh" "install-github.sh" "README.md" "util" "zlogin.example"
 )
@@ -26,7 +26,7 @@ local FILES=(*)
 
 #  Link files
 if [ -n "${FILES}" ]; then
-  for file in ${FILES}; do
+  for file in ${FILES[@]}; do
 
     if [ $(contains "${file}" "${SKIP[@]}") ]; then
       continue
@@ -36,14 +36,9 @@ if [ -n "${FILES}" ]; then
     local DST="${HOME}/.${file}"
 
     echo "linking: ${SRC} -> ${DST}"
-    ln -sfh "${SRC}" "${DST}"
+    #ln -sfh "${SRC}" "${DST}"
 
   done
-fi
-
-#  Create zlogin file
-if [ ! -f "${HOME}/.zlogin" ]; then
-  touch "${HOME}/.zlogin"
 fi
 
 #  Modules file
@@ -51,9 +46,12 @@ local ZSHELL_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
 
 #  Write default modules file
 if [ ! -f "${ZSHELL_MODULES_FILE}" ]; then
-  echo "#  Modules" > "${ZSHELL_MODULES_FILE}"
-  echo "MODULES=(\"prompt\" \"git\" \"history\" \"man\" \"ssh\")" >> \
+  echo "#  Modules are loaded in order" > "${ZSHELL_MODULES_FILE}"
+  echo "MODULES=(" >> "${ZSHELL_MODULES_FILE}"
+  echo "  \"prompt\" \"history\" \"ls\" \"man\" \"ssh\" \"git\"" >> \
     "${ZSHELL_MODULES_FILE}"
+  echo ")" >> "${ZSHELL_MODULES_FILE}"
+  echo "\n" >> "${ZSHELL_MODULES_FILE}"
 fi
 
 #  RC file
@@ -74,6 +72,11 @@ if [ ! -f "${ZSHELL_RC_FILE}" ]; then
   echo "ZSHELL_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
     "${ZSHELL_RC_FILE}"
   echo "\n" >> "${ZSHELL_RC_FILE}"
+fi
+
+#  Create zlogin file
+if [ ! -f "${HOME}/.zlogin" ]; then
+  touch "${HOME}/.zlogin"
 fi
 
 #  Source environment-load function

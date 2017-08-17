@@ -1,6 +1,8 @@
-#  Uninstall modules not in the modules arary
+#  Uninstall modules
 modules-uninstall
 
-#  Install and load modules
+#  Install modules
 modules-install
+
+#  Load modules
 modules-load
