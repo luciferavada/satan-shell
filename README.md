@@ -1,4 +1,4 @@
-# zshell-configuration
+# satan-shell
 
 A modular ZShell configuration.
 
