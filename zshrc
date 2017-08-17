@@ -1,9 +1,6 @@
-#  Load custom files
-custom-load
-
 #  Uninstall modules not in the modules arary
-modules-uninstall -v
+modules-uninstall
 
 #  Install and load modules
-modules-install -v
+modules-install
 modules-load

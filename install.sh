@@ -52,7 +52,8 @@ local ZSHELL_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
 #  Write default modules file
 if [ ! -f "${ZSHELL_MODULES_FILE}" ]; then
   echo "#  Modules" > "${ZSHELL_MODULES_FILE}"
-  echo "MODULES=(\"git\" \"man\" \"ssh\")" >> "${ZSHELL_MODULES_FILE}"
+  echo "MODULES=(\"prompt\" \"git\" \"history\" \"man\" \"ssh\")" >> \
+    "${ZSHELL_MODULES_FILE}"
 fi
 
 #  RC file
@@ -73,7 +74,10 @@ if [ ! -f "${ZSHELL_RC_FILE}" ]; then
   echo "ZSHELL_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
     "${ZSHELL_RC_FILE}"
   echo "\n" >> "${ZSHELL_RC_FILE}"
-
-  echo "#  Custom directory" >> "${ZSHELL_RC_FILE}"
-  echo "ZSHELL_CUSTOM_DIRECTORY=\"${HOME}/.zsh.d\"" >> "${ZSHELL_RC_FILE}"
 fi
+
+#  Source environment-load function
+source "${HOME}/.zprofile"
+
+#  Load environment
+environment-load
