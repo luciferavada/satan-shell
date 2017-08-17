@@ -1,36 +1,18 @@
-#  If the glob is empty, supress the `no matches found` error.
-setopt +o nullglob
+#  Source required files
+source "${HOME}/.zsh.d/rc.conf"
+source "${HOME}/.zsh.d/modules.conf"
 
-#  If zlogin doesn't exist, create it.
-if [ ! -f "${HOME}/.zlogin" ]; then
-  touch "${HOME}/.zlogin"
-fi
-
-#  Configuration directory
-export ZSHELL_CONFIGURATION_DIRECTORY="${HOME}/.zsh.d.conf"
-
-#  Custom directory
-local ZSHELL_CUSTOM_DIRECTORY="${HOME}/.zsh.d"
-
-#  Configuration files
-local ZSHELL_CUSTOM_FILES=(${ZSHELL_CUSTOM_DIRECTORY}/*)
+source "${ZSHELL_INSTALL_DIRECTORY}/util/util.sh"
 
 #  Environment files
 local ZSHELL_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 
 #  Source environment files
-local function environment-load() {
+function environment-load() {
   for file in ${ZSHELL_FILES}; do
     if [ -f "${file}" ]; then
       source "${HOME}/.${file}"
     fi
-  done
-}
-
-#  Source configuration files
-local function custom-load() {
-  for file in ${ZSHELL_CUSTOM_FILES}; do
-    source "${file}"
   done
 }
 
@@ -39,32 +21,15 @@ function reload() {
   environment-load
 }
 
-#  Check for verbose flag
-local function verbose() {
-  while getopts "v:" option; do
-    case ${option} in
-      v)
-        return 1
-      ;;
-    esac
+#  Configuration files
+local ZSHELL_CUSTOM_FILES=(${ZSHELL_CUSTOM_DIRECTORY}/*)
+
+#  Source configuration files
+function custom-load() {
+  for file in ${ZSHELL_CUSTOM_FILES[@]}; do
+    source "${file}"
   done
-  return 0
 }
-
-#  Modules file
-local ZSHELL_MODULES_FILE="${ZSHELL_CUSTOM_DIRECTORY}/modules.conf"
-
-#  Write default modules file
-if [ ! -f "${ZSHELL_MODULES_FILE}" ]; then
-  echo "#  Modules" > "${ZSHELL_MODULES_FILE}"
-  echo "MODULES=(\"git\" \"ssh\")" >> "${ZSHELL_MODULES_FILE}"
-fi
-
-#  Source modules file
-source "${ZSHELL_MODULES_FILE}"
-
-#  Modules directory
-export ZSHELL_MODULES_DIRECTORY="${HOME}/.zsh.d.modules"
 
 #  Modules arary
 local ZSHELL_MODULES=(${ZSHELL_MODULES_DIRECTORY}/*)
@@ -82,7 +47,7 @@ function modules-available() {
 
 #  Install modules
 function modules-install() {
-  for module in ${MODULES}; do
+  for module in ${MODULES[@]}; do
     local MODULE_NAME="zshell-${module}"
     local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}"
     if [ ! -d "${MODULE_PATH}" ]; then
@@ -95,9 +60,24 @@ function modules-install() {
   done
 }
 
+#  Uninstall modules not in the modules array
+function modules-uninstall() {
+  for module in ${ZSHELL_MODULES[@]}; do
+    local MODULE_NAME="$(basename ${module})"
+    local MODULE_ID="$(echo ${MODULE_NAME} | sed 's/zshell-\(.*\)/\1/')"
+    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}}"
+    if [ $(contains "${MODULE_ID}" "${MODULES[@]}") ]; then
+      if [ $(verbose ${@}) ]; then
+        echo "==> Uninstalling ${MODULE_NAME}"
+      fi
+      rm -rf "${MODULE_PATH}"
+    fi
+  done
+}
+
 #  Update installed modules
 function modules-update() {
-  for module in ${ZSHELL_MODULES}; do
+  for module in ${ZSHELL_MODULES[@]}; do
     local MODULE_NAME="$(basename ${module})"
     if [ $(verbose ${@}) ]; then
       echo "==> Updating ${MODULE_NAME}"
@@ -108,7 +88,7 @@ function modules-update() {
 
 #  Load installed modules
 function modules-load() {
-  for module in ${ZSHELL_MODULES}; do
+  for module in ${ZSHELL_MODULES[@]}; do
     local MODULE_NAME="$(basename ${module})"
     local MODULE_FILES=(${module}/*.sh)
     for file in ${MODULE_FILES}; do
@@ -119,20 +99,5 @@ function modules-load() {
         source "${file}"
       fi
     done
-  done
-}
-
-#  Uninstall modules not in the modules array
-function modules-uninstall() {
-  for module in ${ZSHELL_MODULES}; do
-    local MODULE_NAME="$(basename ${module})"
-    local MODULE_ID="$(echo ${MODULE_NAME} | sed 's/zshell-\(.*\)/\1/')"
-    local MODULE_PATH="${ZSHELL_MODULES_DIRECTORY}/${MODULE_NAME}}"
-    if [[ ! "${MODULE_ID}" =~ "${MODULES}" ]]; then
-      if [ $(verbose ${@}) ]; then
-        echo "==> Uninstalling ${MODULE_NAME}"
-      fi
-      rm -rf "${MODULE_PATH}"
-    fi
   done
 }
