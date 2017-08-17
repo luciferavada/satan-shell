@@ -2,6 +2,12 @@
 
 A modular ZShell configuration.
 
+## Repositories
+
+  - [zshell-core](https://github.com/zshell-core)
+  - [zshell-extra](https://github.com/zshell-extra)
+  - [zshell-community](https://github.com/zshell-community)
+
 ## Requirements
 
   - zsh
