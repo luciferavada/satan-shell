@@ -76,7 +76,7 @@ The following variables are available to modules.
 
 If a module requires configuration, it should include an adaptation of the example below.
 
-The following example is from [zshell-ssh](https://github.com/luciferavada/zshell-ssh/blob/master/ssh.sh).
+The following example is from [zshell-ssh](https://github.com/zshell-extra/zshell-ssh/blob/master/ssh.sh).
 
 ```
 #  Module configuration
@@ -97,7 +97,7 @@ source "${MODULE_CONF}"
 
 The prompt can be configured from within a module, see the example below.
 
-The following example is from [zshell-git](https://github.com/luciferavada/zshell-git/blob/master/prompt.sh).
+The following example is from [zshell-git](https://github.com/zshell-core/zshell-git/blob/master/prompt.sh).
 
 ```
 local BRANCH="$(git-branch)"
