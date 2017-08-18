@@ -76,7 +76,7 @@ The following variables are available to modules.
 
 If a module requires configuration, it should include an adaptation of the example below.
 
-The following example is from [satan-ssh](https://github.com/satan-extra/ssh/blob/master/ssh.sh).
+The following example is from [satan-extra/ssh](https://github.com/satan-extra/ssh/blob/master/ssh.sh).
 
 ```
 #  Module configuration
@@ -97,7 +97,7 @@ source "${MODULE_CONF}"
 
 The prompt can be configured from within a module, see the example below.
 
-The following example is from [satan-git](https://github.com/satan-core/git/blob/master/prompt.sh).
+The following example is from [satan-core/git](https://github.com/satan-core/git/blob/master/prompt.sh).
 
 ```
 local BRANCH="$(git-branch)"
