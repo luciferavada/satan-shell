@@ -4,10 +4,10 @@ function contains() {
   local ARRAY=(${@:2})
   for value in ${ARRAY[@]}; do
     if [ "${value}" = "${VALUE}" ]; then
-      return true
+      return 0
     fi
-    return false
   done
+  return 1
 }
 
 #  Check for verbose flag
@@ -15,9 +15,9 @@ function verbose() {
   while getopts "v" option; do
     case "${option}" in
       v)
-        return true
+        return 0
       ;;
     esac
   done
-  return false
+  return 1
 }
