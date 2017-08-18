@@ -28,7 +28,7 @@ User configuration goes in `~/.zlogin`.
 
 `reload`
 
-  - Reloads the shell configuration.
+  - Reload the shell configuration.
 
 ## Modules
 
@@ -40,37 +40,21 @@ Installed modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
 
 Most of the following functions are used in `~/.zshrc` and are available in the shell.
 
-`modules-available`
-
-  - Lists the available modules.
-
-`modules-install`
-
-  - Installs modules in the `MODULES` array.
-
-`modules-uninstall`
-
-  - Uninstalls modules removed from the `MODULES` array.
-
-`modules-update`
-
-  - Updates installed modules.
-
-`modules-load`
-
-  - Loads modules in the `MODULES` arary.
-
 ### Variables
 
 The following variables are available to modules.
 
-`ZSHELL_MODULES_DIRECTORY`
+`ZSHELL_INSTALL_DIRECTORY`
 
-  - The path to the modules directory.
+  - The path to the installation directory.
 
 `ZSHELL_CONFIGURATION_DIRECTORY`
 
   - The path to the configuration directory.
+
+`ZSHELL_MODULES_DIRECTORY`
+
+  - The path to the modules directory.
 
 ### Boilerplate
 
