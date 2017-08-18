@@ -39,6 +39,15 @@ if [ ! -f "${SATAN_RC}" ]; then
 
   echo "#  Modules directory" >> "${SATAN_RC}"
   echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> "${SATAN_RC}"
+  echo "" >> "${SATAN_RC}"
+
+  echo "#  User repositories" >> "${SATAN_RC}"
+  echo "SATAN_USER_REPOSITORIES=()" >> "${SATAN_RC}"
+  echo "" >> "${SATAN_RC}"
+
+  echo "#  User repositories" >> "${SATAN_RC}"
+  echo "SATAN_ORGANIZATION_REPOSITORIES=()" >> "${SATAN_RC}"
+  echo "" >> "${SATAN_RC}"
 fi
 
 #  Write default modules file
