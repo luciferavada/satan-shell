@@ -1,8 +1,5 @@
-#  Uninstall modules
-modules-uninstall
-
 #  Install modules
-modules-install
+satan-modules-install
 
 #  Load modules
-modules-load
+satan-modules-load
