@@ -4,9 +4,9 @@ A modular ZShell configuration.
 
 ## Repositories
 
-  - [zshell-core](https://github.com/zshell-core)
-  - [zshell-extra](https://github.com/zshell-extra)
-  - [zshell-community](https://github.com/zshell-community)
+  - [satan-core](https://github.com/satan-core)
+  - [satan-extra](https://github.com/satan-extra)
+  - [satan-community](https://github.com/satan-community)
 
 ## Requirements
 
@@ -76,7 +76,7 @@ The following variables are available to modules.
 
 If a module requires configuration, it should include an adaptation of the example below.
 
-The following example is from [zshell-ssh](https://github.com/zshell-extra/ssh/blob/master/ssh.sh).
+The following example is from [satan-ssh](https://github.com/satan-extra/ssh/blob/master/ssh.sh).
 
 ```
 #  Module configuration
@@ -97,7 +97,7 @@ source "${MODULE_CONF}"
 
 The prompt can be configured from within a module, see the example below.
 
-The following example is from [zshell-git](https://github.com/zshell-core/git/blob/master/prompt.sh).
+The following example is from [satan-git](https://github.com/satan-core/git/blob/master/prompt.sh).
 
 ```
 local BRANCH="$(git-branch)"
