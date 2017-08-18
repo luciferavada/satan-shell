@@ -21,7 +21,7 @@ local SATAN_INDEX="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.index"
 local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.installed"
 
 #  Source environment files
-function environment-load() {
+function environment-load reload() {
   for file in ${SATAN_FILES[@]}; do
     if [ -f "${file}" ]; then
       source "${HOME}/.${file}"
@@ -30,41 +30,43 @@ function environment-load() {
 }
 
 #  Write to the modules index file
-function satan-write-index() {
+function _satan-write-index() {
   grep "\"name\"" | \
-  sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${repository}\/\1/" | \
-  sed -i "${SATAN_INDEX}" ""
+    sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${repository}\/\1/" | \
+    >> "${SATAN_INDEX}"
 }
 
 #  Index satan modules
-function satan-index() {
+function _satan-index() {
   for repository in ${SATAN_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | satan-write-index
+    curl --silent --request "GET" "${REPOSITORY_URL}" | _satan-write-index
   done
 }
 
 #  Index user modules
-function satan-index-user() {
+function _satan-index-user() {
   for repository in ${SATAN_USER_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/users/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | satan-write-index
+    curl --silent --request "GET" "${REPOSITORY_URL}" | _satan-write-index
   done
 }
 
 #  Index organization modules
-function satan-index-organization() {
+function _satan-index-organization() {
   for repository in ${SATAN_ORGANIZATION_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | satan-write-index
+    curl --silent --request "GET" "${REPOSITORY_URL}" | _satan-write-index
   done
 }
 
 #  Index core, user and organization modules
 function satan-index-all() {
-  satan-index
-  satan-index-user
-  satan-index-organization
+  rm -f "${SATAN_INDEX}"
+  touch "${SATAN_INDEX}"
+  _satan-index
+  _satan-index-user
+  _satan-index-organization
 }
 
 #  Find for a module
@@ -164,13 +166,6 @@ function satan-module() {
   if [ -n "${SEARCH}" ]; then
     satan-repository-search "${SEARCH}"
   fi
-}
-
-#  Install satan modules
-function satan-modules-install() {
-  for module in ${MODULES[@]}; do
-    satan-install "${module}"
-  done
 }
 
 #  Load satan modules
