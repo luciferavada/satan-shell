@@ -1,18 +1,24 @@
 #!/usr/bin/env zsh
 
 #  Install files
-local INSTALL_FILES=(
+local SATAN_FILES=(
   "zshenv" "zprofile" "zshrc"
   "zsh.d" "zsh.d.conf" "zsh.d.modules"
 )
 
+#  RC file
+local SATAN_RC="${HOME}/.zsh.d/rc.conf"
+
+#  Modules file
+local SATAN_MODULES="${HOME}/.zsh.d/modules.conf"
+
 #  Link source path
-local BASE="${PWD#${HOME}/}"
+local SATAN_HOME="${PWD#${HOME}/}"
 
 #  Link files
-for file in ${INSTALL_FILES[@]}; do
+for file in ${SATAN_FILES[@]}; do
 
-  local SRC="${BASE}/${file}"
+  local SRC="${SATAN_HOME}/${file}"
   local DST="${HOME}/.${file}"
 
   echo "linking: ${SRC} -> ${DST}"
@@ -20,35 +26,28 @@ for file in ${INSTALL_FILES[@]}; do
 
 done
 
-#  Modules file
-local ZSHELL_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
+#  Write default rc file
+if [ ! -f "${SATAN_RC}" ]; then
+  echo "#  Install dircetory" > "${SATAN_RC}"
+  echo "SATAN_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SATAN_RC}"
+  echo "" >> "${SATAN_RC}"
 
-#  Write default modules file
-if [ ! -f "${ZSHELL_MODULES_FILE}" ]; then
-  echo "#  Modules are loaded in order" > "${ZSHELL_MODULES_FILE}"
-  echo "MODULES=(" >> "${ZSHELL_MODULES_FILE}"
-  echo "  \"prompt\" \"history\" \"man\" \"ls\" \"git\"" >> \
-    "${ZSHELL_MODULES_FILE}"
-  echo ")" >> "${ZSHELL_MODULES_FILE}"
+  echo "#  Configuration directory" >> "${SATAN_RC}"
+  echo "SATAN_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
+    "${SATAN_RC}"
+  echo "" >> "${SATAN_RC}"
+
+  echo "#  Modules directory" >> "${SATAN_RC}"
+  echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> "${SATAN_RC}"
 fi
 
-#  RC file
-local ZSHELL_RC_FILE="${HOME}/.zsh.d/rc.conf"
-
-#  Write default rc file
-if [ ! -f "${ZSHELL_RC_FILE}" ]; then
-  echo "#  Install dircetory" > "${ZSHELL_RC_FILE}"
-  echo "ZSHELL_INSTALL_DIRECTORY=\"${PWD}\"" >> "${ZSHELL_RC_FILE}"
-  echo "" >> "${ZSHELL_RC_FILE}"
-
-  echo "#  Configuration directory" >> "${ZSHELL_RC_FILE}"
-  echo "ZSHELL_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
-    "${ZSHELL_RC_FILE}"
-  echo "" >> "${ZSHELL_RC_FILE}"
-
-  echo "#  Modules directory" >> "${ZSHELL_RC_FILE}"
-  echo "ZSHELL_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
-    "${ZSHELL_RC_FILE}"
+#  Write default modules file
+if [ ! -f "${SATAN_MODULES}" ]; then
+  echo "#  Modules are loaded in order" > "${SATAN_MODULES}"
+  echo "MODULES=(" >> "${SATAN_MODULES}"
+  echo "  \"prompt\" \"history\" \"man\" \"ls\" \"git\"" >> \
+    "${SATAN_MODULES}"
+  echo ")" >> "${SATAN_MODULES}"
 fi
 
 #  Create zlogin file
