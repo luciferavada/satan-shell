@@ -78,7 +78,6 @@ function satan-install() {
   local MODULE_REPO="${MODULE_INFO[1]}"
 
   if [ -n $(satan-installed-find "${MODULES_NAME}") ]; then
-    echo "${MODULE_NAME} already installed."
     return 1
   fi
 
@@ -96,8 +95,6 @@ function satan-install() {
     echo "${MODULE_NAME} git clone failed."
     return 1
   fi
-
-  return 0
 }
 
 #  Uninstall a module
@@ -113,7 +110,6 @@ function satan-uninstall() {
   fi
 
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
-  return 0
 }
 
 #  Satan module manager
@@ -144,6 +140,13 @@ function satan-module() {
   fi
 }
 
+#  Install satan modules
+function satan-modules-install() {
+  for module in ${MODULES[@]}; do
+    satan-install "${module}"
+  done
+}
+
 #  Load satan modules
 function satan-modules-load() {
   local REPOSITORIES=(${SATAN_MODULES_DIRECTORY}/*)
@@ -152,7 +155,7 @@ function satan-modules-load() {
     for repository in ${REPOSITORIES[@]}; do
 
       local MODULE_DIRECTORIES=(${repository}/*)
-      for module_directory in ${MODLUE_DIRECTORIES[@]}; do
+      for module_directory in ${MODULE_DIRECTORIES[@]}; do
 
         local MODULE_NAME=$(basename ${module_directory})
         if [ "${module}" = "${MODULE_NAME}" ]; then
