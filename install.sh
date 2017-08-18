@@ -13,18 +13,7 @@ local SATAN_RC="${HOME}/.zsh.d/rc.conf"
 local SATAN_MODULES="${HOME}/.zsh.d/modules.conf"
 
 #  Link source path
-local SATAN_HOME="${PWD#${HOME}/}"
-
-#  Link files
-for file in ${SATAN_FILES[@]}; do
-
-  local SRC="${SATAN_HOME}/${file}"
-  local DST="${HOME}/.${file}"
-
-  echo "linking: ${SRC} -> ${DST}"
-  ln -sfh "${SRC}" "${DST}"
-
-done
+local SATAN="${PWD#${HOME}/}"
 
 #  Write default rc file
 if [ ! -f "${SATAN_RC}" ]; then
@@ -59,6 +48,17 @@ if [ ! -f "${SATAN_MODULES}" ]; then
   echo ")" >> "${SATAN_MODULES}"
 fi
 
+#  Link files
+for file in ${SATAN_FILES[@]}; do
+
+  local SRC="${SATAN}/${file}"
+  local DST="${HOME}/.${file}"
+
+  echo "linking: ${SRC} -> ${DST}"
+  ln -sfh "${SRC}" "${DST}"
+
+done
+
 #  Create zlogin file
 if [ ! -f "${HOME}/.zlogin" ]; then
   touch "${HOME}/.zlogin"
@@ -67,5 +67,16 @@ fi
 #  Source environment-load function
 source "${HOME}/.zprofile"
 
-#  Load environment
+#  Load the environment
 environment-load
+
+#  Index repositoris
+satan-index-all
+
+#  Install modules
+for module in ${MODULES[@]}; do
+  satan-install "${module}"
+done
+
+#  Reload the environment
+reload
