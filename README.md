@@ -40,6 +40,10 @@ Installed modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
 
 Most of the following functions are used in `~/.zshrc` and are available in the shell.
 
+`satan-index`
+
+  - Index satan core, extra and community repositories.
+
 ### Variables
 
 The following variables are available to modules.
