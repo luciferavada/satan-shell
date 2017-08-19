@@ -70,7 +70,7 @@ source "${HOME}/.zprofile"
 #  Load the environment
 satan-load
 
-#  Index repositoris
+#  Index repositories
 satan-index-all
 
 #  Install modules
