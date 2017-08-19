@@ -152,34 +152,6 @@ function satan-uninstall() {
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 }
 
-#  Satan module manager
-function satan() {
-  local INSTALL=""
-  local SEARCH=""
-  local INDEX="false"
-
-  while getopts ":i:s:y" option; do
-    case $option in
-      "i") INSTALL="${OPTARG}" ;;
-      "s") SEARCH="${OPTARG}" ;;
-      "y") INDEX="true" ;;
-      *) ;;
-    esac
-  done
-
-  if [ "${INDEX}" = "true" ]; then
-    satan-index-all
-  fi
-
-  if [ -n "${INSTALL}" ]; then
-    return satan-install "${INSTALL}"
-  fi
-
-  if [ -n "${SEARCH}" ]; then
-    satan-repository-search "${SEARCH}"
-  fi
-}
-
 #  Echo a list of active module directories
 function satan-modules-active() {
   local REPOSITORIES=(${SATAN_MODULES_DIRECTORY}/*)
@@ -237,4 +209,32 @@ function satan-update() {
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
   satan-modules-active-update
   satan-reload
+}
+
+#  Satan module manager
+function satan() {
+  local INSTALL=""
+  local SEARCH=""
+  local INDEX="false"
+
+  while getopts ":i:s:y" option; do
+    case $option in
+      "i") INSTALL="${OPTARG}" ;;
+      "s") SEARCH="${OPTARG}" ;;
+      "y") INDEX="true" ;;
+      *) ;;
+    esac
+  done
+
+  if [ "${INDEX}" = "true" ]; then
+    satan-index-all
+  fi
+
+  if [ -n "${INSTALL}" ]; then
+    return satan-install "${INSTALL}"
+  fi
+
+  if [ -n "${SEARCH}" ]; then
+    satan-repository-search "${SEARCH}"
+  fi
 }
