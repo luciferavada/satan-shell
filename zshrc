@@ -1,3 +1,3 @@
 #  Do not modify this file
-#  Load modules
+#  Load active modules
 satan-modules-active-load
