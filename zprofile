@@ -125,7 +125,7 @@ function satan-install() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
-  if [ -z $(satan-installed-find "${MODULE_NAME}") ]; then
+  if [ -n $(satan-installed-find "${MODULE_NAME}") ]; then
     echo "${MODULE_NAME} already installed."
     return 1
   fi
