@@ -18,15 +18,6 @@ local SATAN_INDEX="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.index"
 #  Satan modules installed
 local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.installed"
 
-#  Source environment files
-function satan-load satan-reload() {
-  for file in ${SATAN_FILES[@]}; do
-    if [ -f "${file}" ]; then
-      source "${HOME}/.${file}"
-    fi
-  done
-}
-
 #  Write to the modules index file
 function _satan-write-index() {
   grep "\"name\"" | \
@@ -230,6 +221,15 @@ function satan-modules-active-update() {
   for module in ${MODULES_ACTIVE[@]}; then
     git -C "${module_directory}" pull
   fi
+}
+
+#  Source satan-shell environment files
+function satan-load satan-reload() {
+  for file in ${SATAN_FILES[@]}; do
+    if [ -f "${file}" ]; then
+      source "${HOME}/.${file}"
+    fi
+  done
 }
 
 #  Update satan-shell and active modules
