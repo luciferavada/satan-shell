@@ -1,3 +1,5 @@
+#  Do not modify this file
+
 autoload -Uz compinit promptinit
 
 compinit

@@ -68,7 +68,7 @@ fi
 source "${HOME}/.zprofile"
 
 #  Load the environment
-environment-load
+satan-load
 
 #  Index repositoris
 satan-index-all
@@ -79,4 +79,4 @@ for module in ${MODULES[@]}; do
 done
 
 #  Reload the environment
-reload
+satan-reload

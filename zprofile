@@ -1,9 +1,7 @@
+#  Do not modify this file
 #  Source required files
 source "${HOME}/.zsh.d/rc.conf"
 source "${HOME}/.zsh.d/modules.conf"
-
-#  Source utilities file
-source "${SATAN_INSTALL_DIRECTORY}/util/util.sh"
 
 #  Github API URL
 local GITHUB_API_URL="https://api.github.com"
@@ -15,13 +13,13 @@ local SATAN_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 local SATAN_REPOSITORIES=("satan-core" "satan-extra" "satan-community")
 
 #  Satan modules index
-local SATAN_INDEX="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.index"
+local SATAN_INDEX="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.index"
 
 #  Satan modules installed
 local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.installed"
 
 #  Source environment files
-function environment-load reload() {
+function satan-load satan-reload() {
   for file in ${SATAN_FILES[@]}; do
     if [ -f "${file}" ]; then
       source "${HOME}/.${file}"
@@ -32,7 +30,7 @@ function environment-load reload() {
 #  Write to the modules index file
 function _satan-write-index() {
   grep "\"name\"" | \
-    sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${repository}\/\1/" | \
+    sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${1}\/\1/" | \
     >> "${SATAN_INDEX}"
 }
 
@@ -40,7 +38,8 @@ function _satan-write-index() {
 function _satan-index() {
   for repository in ${SATAN_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | _satan-write-index
+    curl --silent --request "GET" "${REPOSITORY_URL}" | \
+      _satan-write-index "${repository}"
   done
 }
 
@@ -48,7 +47,8 @@ function _satan-index() {
 function _satan-index-user() {
   for repository in ${SATAN_USER_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/users/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | _satan-write-index
+    curl --silent --request "GET" "${REPOSITORY_URL}" | \
+      _satan-write-index "${repository}"
   done
 }
 
@@ -56,45 +56,65 @@ function _satan-index-user() {
 function _satan-index-organization() {
   for repository in ${SATAN_ORGANIZATION_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | _satan-write-index
+    curl --silent --request "GET" "${REPOSITORY_URL}" | \
+      _satan-write-index "${repository}"
   done
 }
 
 #  Index core, user and organization modules
 function satan-index-all() {
   rm -f "${SATAN_INDEX}"
-  touch "${SATAN_INDEX}"
   _satan-index
   _satan-index-user
   _satan-index-organization
 }
 
-#  Find for a module
+#  Find an available module
 function satan-repository-find() {
   if [ -f "${SATAN_INDEX}" ]; then
-    cat "${SATAN_INDEX}" | grep -e "/${1}$"
+    local SPLIT=(`echo ${1//\// }`)
+    if [ ${#SPLIT[@]} -eq 1 ]; then
+      cat "${SATAN_INDEX}" | grep --max-count "1" --regexp "/${1}$"
+    else
+      cat "${SATAN_INDEX}" | grep --max-count "1" --regexp "${1}$"
+    fi
   fi
-}
-
-#  Search for a module
-function satan-repository-search() {
-  if [ -f "${SATAN_INDEX}" ]; then
-    cat "${SATAN_INDEX}" | grep -e "/.*${1}.*"
-  fi
-
 }
 
 #  Find an installed module
 function satan-installed-find() {
   if [ ! -f "${SATAN_INSTALLED}" ]; then
-    cat "${SATAN_INSTALLED}" | grep -e "/${1}$"
+    local SPLIT=(`echo ${1//\// }`)
+    if [ ${#SPLIT[@]} -eq 1 ]; then
+      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
+    else
+      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "${1}$"
+    fi
   fi
 }
 
-#  Search for an installed module
+#  Search available modules
+function satan-repository-search() {
+  if [ -f "${SATAN_INDEX}" ]; then
+    local SPLIT=(`echo ${1//\// }`)
+    if [ ${#SPLIT[@]} -eq 1 ]; then
+      cat "${SATAN_INDEX}" | grep --regexp "/.*${1}.*"
+    else
+      cat "${SATAN_INDEX}" | grep --regexp ".*${1}.*"
+    fi
+  fi
+
+}
+
+#  Search installed modules
 function satan-installed-search() {
   if [ ! -f "${SATAN_INSTALLED}" ]; then
-    cat "${SATAN_INSTALLED}" | grep -e "/.*${1}.*"
+    local SPLIT=(`echo ${1//\// }`)
+    if [ ${#SPLIT[@]} -eq 1 ]; then
+      cat "${SATAN_INSTALLED}" | grep  --regexp "/.*${1}.*"
+    else
+      cat "${SATAN_INSTALLED}" | grep  --regexp ".*${1}.*"
+    fi
   fi
 }
 
@@ -105,7 +125,8 @@ function satan-install() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
-  if [ -n $(satan-installed-find "${MODULES_NAME}") ]; then
+  if [ -z $(satan-installed-find "${MODULE_NAME}") ]; then
+    echo "${MODULE_NAME} already installed."
     return 1
   fi
 
@@ -141,7 +162,7 @@ function satan-uninstall() {
 }
 
 #  Satan module manager
-function satan-module() {
+function satan() {
   local INSTALL=""
   local SEARCH=""
   local INDEX="false"
@@ -168,9 +189,10 @@ function satan-module() {
   fi
 }
 
-#  Load satan modules
-function satan-modules-load() {
+#  Echo a list of active module directories
+function satan-modules-active() {
   local REPOSITORIES=(${SATAN_MODULES_DIRECTORY}/*)
+  local MODULES_ACTIVE=()
 
   for module in ${MODULES[@]}; do
     for repository in ${REPOSITORIES[@]}; do
@@ -181,15 +203,38 @@ function satan-modules-load() {
         local MODULE_NAME=$(basename ${module_directory})
         if [ "${module}" = "${MODULE_NAME}" ]; then
 
-          local MODULE_FILES=(${module}/*.sh)
-          for file in ${MODULE_FILES[@]}; do
-            source "${file}"
-          done
-
-        fi
+          MODULES_ACTIVE+=("${module_directory}")
 
       done
 
     done
   done
+
+  echo "${MODULES_ACTIVE[@]}"
+}
+
+#  Load activated modules
+function satan-modules-active-load() {
+  local MODULES_ACTIVE=(`satan-modules-active`)
+  for module in ${MODULES_ACTIVE[@]}; then
+    local MODULE_FILES=(${module}/*.sh)
+    for file in ${MODULE_FILES[@]}; do
+      source "${file}"
+    done
+  fi
+}
+
+#  Update activated modules
+function satan-modules-active-update() {
+  local MODULES_ACTIVE=(`satan-modules-active`)
+  for module in ${MODULES_ACTIVE[@]}; then
+    git -C "${module_directory}" pull
+  fi
+}
+
+#  Update satan-shell and active modules
+function satan-update() {
+  git -C "${SATAN_INSTALL_DIRECTORY}" pull
+  satan-modules-active-update
+  satan-reload
 }
