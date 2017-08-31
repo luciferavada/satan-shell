@@ -30,12 +30,10 @@ if [ ! -f "${SATAN_RC}" ]; then
   echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> "${SATAN_RC}"
   echo "" >> "${SATAN_RC}"
 
-  echo "#  User repositories" >> "${SATAN_RC}"
-  echo "SATAN_USER_REPOSITORIES=()" >> "${SATAN_RC}"
-  echo "" >> "${SATAN_RC}"
-
-  echo "#  User repositories" >> "${SATAN_RC}"
-  echo "SATAN_ORGANIZATION_REPOSITORIES=()" >> "${SATAN_RC}"
+  echo "#  Repositories" >> "${SATAN_RC}"
+  echo "SATAN_REPOSITORIES=(" >> "${SATAN_RC}"
+  echo "  \"satan-core\" \"satan-extra\" \"satan-community\"" >> "${SATAN_RC}"
+  echo ")" >> "${SATAN_RC}"
   echo "" >> "${SATAN_RC}"
 fi
 
@@ -71,7 +69,7 @@ source "${HOME}/.zprofile"
 satan-load
 
 #  Index repositories
-satan-index-all
+satan-repository-index
 
 #  Install modules
 for module in ${MODULES[@]}; do
