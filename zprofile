@@ -3,14 +3,14 @@
 source "${HOME}/.zsh.d/rc.conf"
 source "${HOME}/.zsh.d/modules.conf"
 
+#  Github URL
+local GITHUB_URL="https://github.com"
+
 #  Github API URL
 local GITHUB_API_URL="https://api.github.com"
 
 #  Environment files
 local SATAN_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
-
-#  Satan repositories
-local SATAN_REPOSITORIES=("satan-core" "satan-extra" "satan-community")
 
 #  Satan modules index
 local SATAN_INDEX="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.index"
@@ -26,38 +26,13 @@ function _satan-write-index() {
 }
 
 #  Index satan modules
-function _satan-index() {
+function satan-repository-index() {
+  rm -f "${SATAN_INDEX}"
   for repository in ${SATAN_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
     curl --silent --request "GET" "${REPOSITORY_URL}" | \
       _satan-write-index "${repository}"
   done
-}
-
-#  Index user modules
-function _satan-index-user() {
-  for repository in ${SATAN_USER_REPOSITORIES[@]}; do
-    local REPOSITORY_URL="${GITHUB_API_URL}/users/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | \
-      _satan-write-index "${repository}"
-  done
-}
-
-#  Index organization modules
-function _satan-index-organization() {
-  for repository in ${SATAN_ORGANIZATION_REPOSITORIES[@]}; do
-    local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
-    curl --silent --request "GET" "${REPOSITORY_URL}" | \
-      _satan-write-index "${repository}"
-  done
-}
-
-#  Index core, user and organization modules
-function satan-index-all() {
-  rm -f "${SATAN_INDEX}"
-  _satan-index
-  _satan-index-user
-  _satan-index-organization
 }
 
 #  Find an available module
@@ -126,7 +101,7 @@ function satan-install() {
     return 1
   fi
 
-  git clone "https://github.com/${MODULE_REPO}/${MODULE_NAME}.git" \
+  git clone "${GITHUB_URL}/${MODULE_REPO}/${MODULE_NAME}.git" \
     "${SATAN_MODULES_DIRECTORY}/${MODULE_REPO}/${MODULE_NAME}"
 
   if [ ${?} ]; then
@@ -165,8 +140,8 @@ function satan-modules-active() {
 
         local MODULE_NAME=$(basename ${module_directory})
         if [ "${module}" = "${MODULE_NAME}" ]; then
-
           MODULES_ACTIVE+=("${module_directory}")
+        fi
 
       done
 
@@ -179,27 +154,27 @@ function satan-modules-active() {
 #  Load activated modules
 function satan-modules-active-load() {
   local MODULES_ACTIVE=(`satan-modules-active`)
-  for module in ${MODULES_ACTIVE[@]}; then
-    local MODULE_FILES=(${module}/*.sh)
+  for module_directory in ${MODULES_ACTIVE[@]}; do
+    local MODULE_FILES=(${module_directory}/*.sh)
     for file in ${MODULE_FILES[@]}; do
-      source "${file}"
+      MODULE_DIRECTORY="${module_directory}" source "${file}"
     done
-  fi
+  done
 }
 
 #  Update activated modules
 function satan-modules-active-update() {
   local MODULES_ACTIVE=(`satan-modules-active`)
-  for module in ${MODULES_ACTIVE[@]}; then
+  for module in ${MODULES_ACTIVE[@]}; do
     git -C "${module_directory}" pull
-  fi
+  done
 }
 
 #  Source satan-shell environment files
 function satan-load satan-reload() {
   for file in ${SATAN_FILES[@]}; do
     if [ -f "${file}" ]; then
-      source "${HOME}/.${file}"
+      source "${SATAN_INSTALL_DIRECTORY}/${file}"
     fi
   done
 }
@@ -227,7 +202,7 @@ function satan() {
   done
 
   if [ "${INDEX}" = "true" ]; then
-    satan-index-all
+    satan-repository-index
   fi
 
   if [ -n "${INSTALL}" ]; then
