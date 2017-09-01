@@ -126,7 +126,7 @@ function satan-module-uninstall() {
     return 1
   fi
 
-  rm -rfv "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" | grep -v ".git"
+  rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
   if [ ${?} -eq 0 ]; then
     if [ "$(uname)" = "Darwin" ]; then
@@ -174,54 +174,47 @@ function satan-module-update() {
   fi
 }
 
-#  Echo a list of active module directories
-function satan-modules-active() {
-  local REPOSITORIES=(${SATAN_MODULES_DIRECTORY}/*)
-  local MODULES_ACTIVE=()
-
-  for module in ${MODULES[@]}; do
-    for repository in ${REPOSITORIES[@]}; do
-
-      local MODULE_DIRECTORIES=(${repository}/*)
-      for module_directory in ${MODULE_DIRECTORIES[@]}; do
-
-        local MODULE_NAME=$(basename ${module_directory})
-        if [ "${module}" = "${MODULE_NAME}" ]; then
-          MODULES_ACTIVE+=("${module_directory}")
-        fi
-
-      done
-
-    done
-  done
-
-  echo "${MODULES_ACTIVE[@]}"
-}
-
-#  Install active modules
-function satan-modules-active-install() {
-  for module in ${MODULES[@]}; do
+#  Install a list of modules
+function satan-modules-install() {
+  for module in ${@}; do
     satan-module-install "${module}"
   done
 }
 
+#  Uninstall a list of modules
+function satan-modules-uninstall() {
+  for module in ${@}; do
+    satan-module-uninstall "${module}"
+  done
+}
+
+#  Load a list of modules
+function satan-modules-load() {
+  for module in ${@}; do
+    satan-module-load "${module}"
+  done
+}
+
+#  Update a list of modules
+function satan-modules-update() {
+  for module in ${@}; do
+    satan-module-update "${module}"
+  done
+}
+
+#  Install active modules
+function satan-modules-active-install() {
+  satan-modules-install ${MODULES[@]}
+}
+
 #  Load active modules
 function satan-modules-active-load() {
-  local MODULES_ACTIVE=(`satan-modules-active`)
-  for module_directory in ${MODULES_ACTIVE[@]}; do
-    local MODULE_FILES=(${module_directory}/*.sh)
-    for file in ${MODULE_FILES[@]}; do
-      MODULE_DIRECTORY="${module_directory}" source "${file}"
-    done
-  done
+  satan-modules-load ${MODULES[@]}
 }
 
 #  Update active modules
 function satan-modules-active-update() {
-  local MODULES_ACTIVE=(`satan-modules-active`)
-  for module in ${MODULES_ACTIVE[@]}; do
-    git -C "${module_directory}" pull
-  done
+  satan-modules-update ${MODULES[@]}
 }
 
 #  Source satan-shell environment files
