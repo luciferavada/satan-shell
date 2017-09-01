@@ -161,7 +161,14 @@ function satan-modules-active() {
   echo "${MODULES_ACTIVE[@]}"
 }
 
-#  Load activated modules
+#  Install active modules
+function satan-modules-active-install() {
+  for module in ${MODULES[@]}; do
+    satan-install "${module}"
+  done
+}
+
+#  Load active modules
 function satan-modules-active-load() {
   local MODULES_ACTIVE=(`satan-modules-active`)
   for module_directory in ${MODULES_ACTIVE[@]}; do
@@ -172,7 +179,7 @@ function satan-modules-active-load() {
   done
 }
 
-#  Update activated modules
+#  Update active modules
 function satan-modules-active-update() {
   local MODULES_ACTIVE=(`satan-modules-active`)
   for module in ${MODULES_ACTIVE[@]}; do
