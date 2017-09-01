@@ -13,21 +13,21 @@ local GITHUB_API_URL="https://api.github.com"
 local SATAN_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 
 #  Satan modules index
-local SATAN_INDEX="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.index"
+local SATAN_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.available"
 
 #  Satan modules installed
-local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/.zsh.d/.modules.installed"
+local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.installed"
 
 #  Write to the modules index file
 function _satan-write-index() {
   grep "\"name\"" | \
-    sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${1}\/\1/" | \
-    >> "${SATAN_INDEX}"
+    sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${1}\/\1/" \
+    >> "${SATAN_AVAILABLE}"
 }
 
 #  Index satan modules
 function satan-repository-index() {
-  rm -f "${SATAN_INDEX}"
+  rm -f "${SATAN_AVAILABLE}"
   for repository in ${SATAN_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
     curl --silent --request "GET" "${REPOSITORY_URL}" | \
@@ -37,19 +37,19 @@ function satan-repository-index() {
 
 #  Find an available module
 function satan-repository-find() {
-  if [ -f "${SATAN_INDEX}" ]; then
+  if [ -f "${SATAN_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_INDEX}" | grep --max-count "1" --regexp "/${1}$"
+      cat "${SATAN_AVAILABLE}" | grep --max-count "1" --regexp "/${1}$"
     else
-      cat "${SATAN_INDEX}" | grep --max-count "1" --regexp "${1}$"
+      cat "${SATAN_AVAILABLE}" | grep --max-count "1" --regexp "${1}$"
     fi
   fi
 }
 
 #  Find an installed module
 function satan-installed-find() {
-  if [ ! -f "${SATAN_INSTALLED}" ]; then
+  if [ -f "${SATAN_INSTALLED}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
       cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
@@ -61,12 +61,12 @@ function satan-installed-find() {
 
 #  Search available modules
 function satan-repository-search() {
-  if [ -f "${SATAN_INDEX}" ]; then
+  if [ -f "${SATAN_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_INDEX}" | grep --regexp "/.*${1}.*"
+      cat "${SATAN_AVAILABLE}" | grep --regexp "/.*${1}.*"
     else
-      cat "${SATAN_INDEX}" | grep --regexp ".*${1}.*"
+      cat "${SATAN_AVAILABLE}" | grep --regexp ".*${1}.*"
     fi
   fi
 
@@ -74,7 +74,7 @@ function satan-repository-search() {
 
 #  Search installed modules
 function satan-installed-search() {
-  if [ ! -f "${SATAN_INSTALLED}" ]; then
+  if [ -f "${SATAN_INSTALLED}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
       cat "${SATAN_INSTALLED}" | grep  --regexp "/.*${1}.*"
@@ -91,8 +91,8 @@ function satan-install() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
-  if [ -n $(satan-installed-find "${MODULE_NAME}") ]; then
-    echo "${MODULE_NAME} already installed."
+  if [ -n "$(satan-installed-find ${MODULE_LINE})" ]; then
+    echo "${MODULE_LINE} already installed."
     return 1
   fi
 
@@ -124,7 +124,17 @@ function satan-uninstall() {
     return 1
   fi
 
-  rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  rm -rfv "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" | grep -v ".git"
+
+  if [ ${?} ]; then
+    if [ "$(uname)" = "Darwin" ]; then
+      sed -i "" "/${MODULE_LINE//\//\\/}/d" "${SATAN_INSTALLED}"
+    else
+      sed -i "/${MODULE_LINE//\//\\/}/d" "${SATAN_INSTALLED}"
+    fi
+  else
+    echo "${MODULE_LINE} not properly removed."
+  fi
 }
 
 #  Echo a list of active module directories
