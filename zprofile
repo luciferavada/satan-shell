@@ -174,6 +174,40 @@ function satan-module-load() {
   done
 }
 
+#  Enable developer mode
+function satan-module-developer-enable() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+
+  if [ -z "${MODULE_LINE}" ]; then
+    echo "${MODULE} not installed."
+  fi
+
+  git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" \
+    remote set-url origin "git@github.com:${MODULE_LINE}.git"
+
+  if [ ! ${?} -eq 0 ]; then
+    echo "${MODULE_LINE} git remote set-url origin failed."
+  fi
+}
+
+#  Disable developer mode
+function satan-module-developer-disable() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+
+  if [ -z "${MODULE_LINE}" ]; then
+    echo "${MODULE} not installed."
+  fi
+
+  git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" \
+    remote set-url origin "https://github.com/${MODULE_LINE}.git"
+
+  if [ ! ${?} -eq 0 ]; then
+    echo "${MODULE_LINE} git remote set-url origin failed."
+  fi
+}
+
 #  Install a list of modules
 function satan-modules-install() {
   for module in ${@}; do
@@ -202,6 +236,20 @@ function satan-modules-load() {
   done
 }
 
+#  Enable developer mode for a list of modules
+function satan-modules-developer-enable() {
+  for module in ${@}; do
+    satan-module-developer-enable "${module}"
+  done
+}
+
+#  Disable developer mode for a list of modules
+function satan-modules-developer-disable() {
+  for module in ${@}; do
+    satan-module-developer-disable "${module}"
+  done
+}
+
 #  Install active modules
 function satan-modules-active-install() {
   satan-modules-install ${MODULES[@]}
@@ -215,6 +263,16 @@ function satan-modules-active-update() {
 #  Load active modules
 function satan-modules-active-load() {
   satan-modules-load ${MODULES[@]}
+}
+
+#  Enable developer mode for active modules
+function satan-modules-active-developer-enable() {
+  satan-modules-developer-enable ${MODULES[@]}
+}
+
+#  Disable developer mode for active modules
+function satan-modules-active-developer-disable() {
+  satan-modules-developer-disable ${MODULES[@]}
 }
 
 #  Source satan-shell environment files
