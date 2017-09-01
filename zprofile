@@ -85,8 +85,9 @@ function satan-installed-search() {
 }
 
 #  Install a module
-function satan-install() {
-  local MODULE_LINE=$(satan-repository-find "${1}")
+function satan-module-install() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-repository-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
@@ -97,36 +98,37 @@ function satan-install() {
   fi
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE_NAME} not found."
+    echo "${MODULE} not found."
     return 1
   fi
 
   git clone "${GITHUB_URL}/${MODULE_REPO}/${MODULE_NAME}.git" \
     "${SATAN_MODULES_DIRECTORY}/${MODULE_REPO}/${MODULE_NAME}"
 
-  if [ ${?} ]; then
+  if [ ${?} -eq 0 ]; then
     echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
   else
-    echo "${MODULE_NAME} git clone failed."
+    echo "${MODULE_LINE} git clone failed."
     return 1
   fi
 }
 
 #  Uninstall a module
-function satan-uninstall() {
-  local MODULE_LINE=$(satan-installed-find "${1}")
+function satan-module-uninstall() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-installed-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE_NAME} not installed."
+    echo "${MODULE} not installed."
     return 1
   fi
 
   rm -rfv "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" | grep -v ".git"
 
-  if [ ${?} ]; then
+  if [ ${?} -eq 0 ]; then
     if [ "$(uname)" = "Darwin" ]; then
       sed -i "" "/${MODULE_LINE//\//\\/}/d" "${SATAN_INSTALLED}"
     else
@@ -134,6 +136,41 @@ function satan-uninstall() {
     fi
   else
     echo "${MODULE_LINE} not properly removed."
+  fi
+}
+
+#  Load a module
+function satan-module-load() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
+
+  if [ -z "${MODULE_LINE}" ]; then
+    echo "${MODULE} not installed."
+    return 1
+  fi
+
+  for file in ${MODULE_FILES[@]}; do
+    MODULE_DIRECTORY="${MODULE_DIRECTORY}" source "${file}"
+  done
+}
+
+#  Update a module
+function satan-module-update() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+
+  if [ -z "${MODULE_LINE}" ]; then
+    echo "${MODULE} not installed."
+    return 1
+  fi
+
+  git -C "${MODULE_DIRECTORY}" pull
+
+  if [ ! ${?} -eq 0 ]; then
+    echo "${MODULE_LINE} git pull failed."
   fi
 }
 
@@ -164,7 +201,7 @@ function satan-modules-active() {
 #  Install active modules
 function satan-modules-active-install() {
   for module in ${MODULES[@]}; do
-    satan-install "${module}"
+    satan-module-install "${module}"
   done
 }
 
@@ -188,7 +225,7 @@ function satan-modules-active-update() {
 }
 
 #  Source satan-shell environment files
-function satan-load satan-reload() {
+function satan-init satan-reload() {
   for file in ${SATAN_FILES[@]}; do
     if [ -f "${file}" ]; then
       source "${SATAN_INSTALL_DIRECTORY}/${file}"
@@ -223,7 +260,7 @@ function satan() {
   fi
 
   if [ -n "${INSTALL}" ]; then
-    return satan-install "${INSTALL}"
+    return satan-module-install "${INSTALL}"
   fi
 
   if [ -n "${SEARCH}" ]; then
