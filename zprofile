@@ -47,18 +47,6 @@ function satan-repository-find() {
   fi
 }
 
-#  Find an installed module
-function satan-installed-find() {
-  if [ -f "${SATAN_INSTALLED}" ]; then
-    local SPLIT=(`echo ${1//\// }`)
-    if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
-    else
-      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "${1}$"
-    fi
-  fi
-}
-
 #  Search available modules
 function satan-repository-search() {
   if [ -f "${SATAN_AVAILABLE}" ]; then
@@ -70,6 +58,18 @@ function satan-repository-search() {
     fi
   fi
 
+}
+
+#  Find an installed module
+function satan-installed-find() {
+  if [ -f "${SATAN_INSTALLED}" ]; then
+    local SPLIT=(`echo ${1//\// }`)
+    if [ ${#SPLIT[@]} -eq 1 ]; then
+      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
+    else
+      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "${1}$"
+    fi
+  fi
 }
 
 #  Search installed modules
@@ -139,23 +139,6 @@ function satan-module-uninstall() {
   fi
 }
 
-#  Load a module
-function satan-module-load() {
-  local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
-  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
-  local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
-
-  if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE} not installed."
-    return 1
-  fi
-
-  for file in ${MODULE_FILES[@]}; do
-    MODULE_DIRECTORY="${MODULE_DIRECTORY}" source "${file}"
-  done
-}
-
 #  Update a module
 function satan-module-update() {
   local MODULE="${1}"
@@ -174,6 +157,23 @@ function satan-module-update() {
   fi
 }
 
+#  Load a module
+function satan-module-load() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
+
+  if [ -z "${MODULE_LINE}" ]; then
+    echo "${MODULE} not installed."
+    return 1
+  fi
+
+  for file in ${MODULE_FILES[@]}; do
+    MODULE_DIRECTORY="${MODULE_DIRECTORY}" source "${file}"
+  done
+}
+
 #  Install a list of modules
 function satan-modules-install() {
   for module in ${@}; do
@@ -188,17 +188,17 @@ function satan-modules-uninstall() {
   done
 }
 
-#  Load a list of modules
-function satan-modules-load() {
-  for module in ${@}; do
-    satan-module-load "${module}"
-  done
-}
-
 #  Update a list of modules
 function satan-modules-update() {
   for module in ${@}; do
     satan-module-update "${module}"
+  done
+}
+
+#  Load a list of modules
+function satan-modules-load() {
+  for module in ${@}; do
+    satan-module-load "${module}"
   done
 }
 
@@ -207,14 +207,14 @@ function satan-modules-active-install() {
   satan-modules-install ${MODULES[@]}
 }
 
-#  Load active modules
-function satan-modules-active-load() {
-  satan-modules-load ${MODULES[@]}
-}
-
 #  Update active modules
 function satan-modules-active-update() {
   satan-modules-update ${MODULES[@]}
+}
+
+#  Load active modules
+function satan-modules-active-load() {
+  satan-modules-load ${MODULES[@]}
 }
 
 #  Source satan-shell environment files
