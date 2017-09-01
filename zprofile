@@ -92,23 +92,40 @@ function satan-module-install() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
-  if [ -n "$(satan-installed-find ${MODULE_LINE})" ]; then
-    echo "${MODULE_LINE} already installed."
+  echo -n "$(tput bold; tput setaf 2)==> "
+
+  if [ -z "${MODULE_LINE}" ]; then
+    echo "${MODULE}"
+    echo -n "$(tput setaf 4)"
+    echo "--> not found."
     return 1
   fi
 
-  if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE} not found."
+  if [ -n "$(satan-installed-find ${MODULE_LINE})" ]; then
+    echo "${MODULE_LINE}"
+    echo -n "$(tput setaf 4)"
+    echo "--> already installed."
     return 1
   fi
+
+  echo "${MODULE_LINE}"
+  echo -n "$(tput setaf 6)"
+  echo "--> installing..."
+
+  echo -n "$(tput sgr0)"
 
   git clone "${GITHUB_URL}/${MODULE_REPO}/${MODULE_NAME}.git" \
     "${SATAN_MODULES_DIRECTORY}/${MODULE_REPO}/${MODULE_NAME}"
 
   if [ ${?} -eq 0 ]; then
     echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
+    echo -n "$(tput bold; tput setaf 6)"
+    echo "--> success."
+    echo -n "$(tput sgr0)"
   else
-    echo "${MODULE_LINE} git clone failed."
+    echo -n "$(tput bold; tput setaf 1)"
+    echo "--> failure."
+    echo -n "$(tput sgr0)"
     return 1
   fi
 }
@@ -121,10 +138,20 @@ function satan-module-uninstall() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
+  echo -n "$(tput bold; tput setaf 2)==> "
+
   if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE} not installed."
+    echo "${MODULE}"
+    echo -n "$(tput setaf 4)"
+    echo "--> not installed."
     return 1
   fi
+
+  echo "${MODULE_LINE}"
+  echo -n "$(tput setaf 6)"
+  echo "--> uinstalling..."
+
+  echo -n "$(tput sgr0)"
 
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
@@ -134,8 +161,13 @@ function satan-module-uninstall() {
     else
       sed -i "/${MODULE_LINE//\//\\/}/d" "${SATAN_INSTALLED}"
     fi
+    echo -n "$(tput bold; tput setaf 6)"
+    echo "--> success."
+    echo -n "$(tput sgr0)"
   else
-    echo "${MODULE_LINE} not properly removed."
+    echo -n "$(tput bold; tput setaf 1)"
+    echo "--> failure."
+    echo -n "$(tput sgr0)"
   fi
 }
 
