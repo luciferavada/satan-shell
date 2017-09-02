@@ -18,11 +18,20 @@ local SATAN_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.available"
 #  Satan modules installed
 local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.installed"
 
-#  Write to the modules index file
-function _satan-write-index() {
-  grep "\"name\"" | \
-    sed "s/.*\"name\"\:\ \"\([a-zA-Z0-9]*\)\",/${1}\/\1/" \
-    >> "${SATAN_AVAILABLE}"
+#  Write to the available modules index file
+function _satan-index-available-write() {
+  local REPOSITORY="${1}"
+  grep "\"full_name\"" | sed "s/.*\"full_name\"\:\ \"\(.*\)\",/\1/" >> \
+    "${SATAN_AVAILABLE}"
+}
+
+#  Remove a module from the installed index file
+function _satan-index-installed-remove() {
+  local MODULE_LINE="${1}"
+  local SATAN_INSTALLED_TEMP=$(mktemp)
+  cat "${SATAN_INSTALLED}" | sed "/${MODULE_LINE//\//\\/}/d" > \
+    "${SATAN_INSTALLED_TEMP}"
+  mv "${SATAN_INSTALLED_TEMP}" "${SATAN_INSTALLED}"
 }
 
 #  Index satan modules
@@ -31,7 +40,7 @@ function satan-repository-index() {
   for repository in ${SATAN_REPOSITORIES[@]}; do
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
     curl --silent --request "GET" "${REPOSITORY_URL}" | \
-      _satan-write-index "${repository}"
+      _satan-index-available-write
   done
 }
 
@@ -119,7 +128,7 @@ function satan-module-install() {
 
   if [ ${?} -eq 0 ]; then
     echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
-    echo -n "$(tput bold; tput setaf 6)"
+    echo -n "$(tput bold; tput setaf 4)"
     echo "--> success."
     echo -n "$(tput sgr0)"
   else
@@ -156,12 +165,8 @@ function satan-module-uninstall() {
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
   if [ ${?} -eq 0 ]; then
-    if [ "$(uname)" = "Darwin" ]; then
-      sed -i "" "/${MODULE_LINE//\//\\/}/d" "${SATAN_INSTALLED}"
-    else
-      sed -i "/${MODULE_LINE//\//\\/}/d" "${SATAN_INSTALLED}"
-    fi
-    echo -n "$(tput bold; tput setaf 6)"
+    _satan-index-installed-remove "${MODULE_LINE}"
+    echo -n "$(tput bold; tput setaf 4)"
     echo "--> success."
     echo -n "$(tput sgr0)"
   else
