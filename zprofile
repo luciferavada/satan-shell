@@ -101,40 +101,36 @@ function satan-module-install() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
-  echo -n "$(tput bold; tput setaf 2)==> "
+  echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
 
   if [ -z "${MODULE_LINE}" ]; then
     echo "${MODULE}"
-    echo -n "$(tput setaf 4)"
+    echo -n "$(tput setaf ${COLOR[magenta]})"
     echo "--> not found."
     return 1
   fi
 
   if [ -n "$(satan-installed-find ${MODULE_LINE})" ]; then
     echo "${MODULE_LINE}"
-    echo -n "$(tput setaf 4)"
+    echo -n "$(tput setaf ${COLOR[magenta]})"
     echo "--> already installed."
     return 1
   fi
 
   echo "${MODULE_LINE}"
-  echo -n "$(tput setaf 6)"
+  echo -n "$(tput setaf ${COLOR[blue]})"
   echo "--> installing..."
-
-  echo -n "$(tput sgr0)"
 
   git clone "${GITHUB_URL}/${MODULE_REPO}/${MODULE_NAME}.git" \
     "${SATAN_MODULES_DIRECTORY}/${MODULE_REPO}/${MODULE_NAME}"
 
   if [ ${?} -eq 0 ]; then
     echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
-    echo -n "$(tput bold; tput setaf 4)"
+    echo -n "$(tput bold; tput setaf ${COLOR[cyan]})"
     echo "--> success."
-    echo -n "$(tput sgr0)"
   else
-    echo -n "$(tput bold; tput setaf 1)"
+    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
     echo "--> failure."
-    echo -n "$(tput sgr0)"
     return 1
   fi
 }
@@ -147,32 +143,28 @@ function satan-module-uninstall() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
 
-  echo -n "$(tput bold; tput setaf 2)==> "
+  echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
 
   if [ -z "${MODULE_LINE}" ]; then
     echo "${MODULE}"
-    echo -n "$(tput setaf 4)"
+    echo -n "$(tput setaf ${COLOR[magenta]})"
     echo "--> not installed."
     return 1
   fi
 
   echo "${MODULE_LINE}"
-  echo -n "$(tput setaf 6)"
+  echo -n "$(tput setaf ${COLOR[blue]})"
   echo "--> uinstalling..."
-
-  echo -n "$(tput sgr0)"
 
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
   if [ ${?} -eq 0 ]; then
     _satan-index-installed-remove "${MODULE_LINE}"
-    echo -n "$(tput bold; tput setaf 4)"
+    echo -n "$(tput bold; tput setaf ${COLOR[cyan]})"
     echo "--> success."
-    echo -n "$(tput sgr0)"
   else
-    echo -n "$(tput bold; tput setaf 1)"
+    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
     echo "--> failure."
-    echo -n "$(tput sgr0)"
   fi
 }
 
@@ -182,15 +174,27 @@ function satan-module-update() {
   local MODULE_LINE=$(satan-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
+  echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
+
   if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE} not installed."
+    echo "${MODULE}"
+    echo -n "$(tput setaf ${COLOR[magenta]})"
+    echo "--> not installed."
     return 1
   fi
 
+  echo "${MODULE_LINE}"
+  echo -n "$(tput setaf ${COLOR[blue]})"
+  echo "--> updating..."
+
   git -C "${MODULE_DIRECTORY}" pull
 
-  if [ ! ${?} -eq 0 ]; then
-    echo "${MODULE_LINE} git pull failed."
+  if [ ${?} -eq 0 ]; then
+    echo -n "$(tput bold; tput setaf ${COLOR[cyan]})"
+    echo "--> success."
+  else
+    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
+    echo "--> failure."
   fi
 }
 
