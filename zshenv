@@ -14,18 +14,6 @@ COLOR[magenta]="5"
 COLOR[cyan]="6"
 COLOR[white]="7"
 
-#  Check for 256 color support
-if [ "${TERM}" = "xterm-256color" ]; then
-  COLOR[black]="0"
-  COLOR[red]="1"
-  COLOR[green]="2"
-  COLOR[yellow]="3"
-  COLOR[blue]="4"
-  COLOR[magenta]="5"
-  COLOR[cyan]="6"
-  COLOR[white]="7"
-fi
-
 autoload -Uz compinit promptinit
 
 compinit
