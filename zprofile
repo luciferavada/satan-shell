@@ -216,6 +216,10 @@ function satan-module-update() {
 function satan-module-load() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
+  local MODULE_NAME="${MODULE_INFO[2]}"
+  local MODULE_REPO="${MODULE_INFO[1]}"
+
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
   local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
 
@@ -226,7 +230,9 @@ function satan-module-load() {
   fi
 
   for file in ${MODULE_FILES[@]}; do
-    MODULE_DIRECTORY="${MODULE_DIRECTORY}" source "${file}"
+    MODULE_REPO="${MODULE_REPO}" MODULE_NAME="${MODULE_NAME}" \
+      MODULE_DIRECTORY="${MODULE_DIRECTORY}" \
+      source "${file}"
   done
 }
 
