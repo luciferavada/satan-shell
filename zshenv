@@ -37,5 +37,7 @@ setopt nullglob
 setopt auto_pushd
 setopt pushd_ignore_dups
 
+setopt prompt_subst
+
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
