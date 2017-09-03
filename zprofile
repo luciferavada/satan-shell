@@ -18,6 +18,27 @@ local SATAN_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.available"
 #  Satan modules installed
 local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.installed"
 
+#  Get module remote origin url
+function _satan-module-get-url() {
+  local MODULE_LINE="${1}"
+  git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" remote get-url origin
+}
+
+#  Set module remote origin URL
+function _satan-module-set-url() {
+  local MODULE_LINE="${1}"
+  local MODULE_PROTOCOL="${2}"
+  local MODULE_URL=""
+
+  case "${MODULE_PROTOCOL}" in
+    "ssh") MODULE_URL="git@github.com:${MODULE_LINE}.git" ;;
+    "https") MODULE_URL="https://github.com/${MODULE_LINE}.git" ;;
+  esac
+
+  git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" remote set-url origin \
+    "${MODULE_URL}"
+}
+
 #  Write to the available modules index file
 function _satan-index-available-write() {
   local REPOSITORY="${1}"
@@ -126,8 +147,6 @@ function satan-module-install() {
 
   if [ ${?} -eq 0 ]; then
     echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
-    echo -n "$(tput bold; tput setaf ${COLOR[cyan]})"
-    echo "--> success."
   else
     echo -n "$(tput bold; tput setaf ${COLOR[red]})"
     echo "--> failure."
@@ -160,8 +179,6 @@ function satan-module-uninstall() {
 
   if [ ${?} -eq 0 ]; then
     _satan-index-installed-remove "${MODULE_LINE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[cyan]})"
-    echo "--> success."
   else
     echo -n "$(tput bold; tput setaf ${COLOR[red]})"
     echo "--> failure."
@@ -189,10 +206,7 @@ function satan-module-update() {
 
   git -C "${MODULE_DIRECTORY}" pull
 
-  if [ ${?} -eq 0 ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[cyan]})"
-    echo "--> success."
-  else
+  if [ ! ${?} -eq 0 ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[red]})"
     echo "--> failure."
   fi
@@ -206,6 +220,7 @@ function satan-module-load() {
   local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
 
   if [ -z "${MODULE_LINE}" ]; then
+    echo -n "$(tput bold; tput setaf ${COLOR[red]})==> "
     echo "${MODULE} not installed."
     return 1
   fi
@@ -220,15 +235,32 @@ function satan-module-developer-enable() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-installed-find "${MODULE}")
 
+  echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
+
   if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE} not installed."
+    echo "${MODULE}"
+    echo -n "$(tput setaf ${COLOR[magenta]})"
+    echo "--> not installed."
   fi
 
-  git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" \
-    remote set-url origin "git@github.com:${MODULE_LINE}.git"
+  echo "${MODULE_LINE}"
+
+  local MODULE_SSH=$(_satan-module-get-url "${MODULE_LINE}" | grep "git@")
+
+  if [ -n "${MODULE_SSH}" ]; then
+    echo -n "$(tput setaf ${COLOR[magenta]})"
+    echo "--> developer mode already enabled."
+    return 1
+  fi
+
+  echo -n "$(tput setaf ${COLOR[blue]})"
+  echo "--> enabling developer mode..."
+
+  _satan-module-set-url "${MODULE_LINE}" "ssh"
 
   if [ ! ${?} -eq 0 ]; then
-    echo "${MODULE_LINE} git remote set-url origin failed."
+    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
+    echo "--> failure."
   fi
 }
 
@@ -237,15 +269,32 @@ function satan-module-developer-disable() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-installed-find "${MODULE}")
 
+  echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
+
   if [ -z "${MODULE_LINE}" ]; then
-    echo "${MODULE} not installed."
+    echo "${MODULE}"
+    echo -n "$(tput setaf ${COLOR[magenta]})"
+    echo "--> not installed."
   fi
 
-  git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" \
-    remote set-url origin "https://github.com/${MODULE_LINE}.git"
+  echo "${MODULE_LINE}"
+
+  local MODULE_HTTPS=$(_satan-module-get-url "${MODULE_LINE}" | grep "https")
+
+  if [ -n "${MODULE_HTTPS}" ]; then
+    echo -n "$(tput setaf ${COLOR[magenta]})"
+    echo "--> developer mode already disabled."
+    return 1
+  fi
+
+  echo -n "$(tput setaf ${COLOR[blue]})"
+  echo "--> disabling developer mode..."
+
+  _satan-module-set-url "${MODULE_LINE}" "https"
 
   if [ ! ${?} -eq 0 ]; then
-    echo "${MODULE_LINE} git remote set-url origin failed."
+    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
+    echo "--> failure."
   fi
 }
 
@@ -307,12 +356,12 @@ function satan-modules-active-load() {
 }
 
 #  Enable developer mode for active modules
-function satan-modules-active-developer-enable() {
+function satan-developer-enable() {
   satan-modules-developer-enable ${MODULES[@]}
 }
 
 #  Disable developer mode for active modules
-function satan-modules-active-developer-disable() {
+function satan-developer-disable() {
   satan-modules-developer-disable ${MODULES[@]}
 }
 
