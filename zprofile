@@ -74,7 +74,7 @@ function satan-repository-index() {
 }
 
 #  Find an available module
-function satan-repository-find() {
+function satan-available-find() {
   if [ -f "${SATAN_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -86,7 +86,7 @@ function satan-repository-find() {
 }
 
 #  Search available modules
-function satan-repository-search() {
+function satan-available-search() {
   if [ -f "${SATAN_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -125,7 +125,7 @@ function satan-installed-search() {
 #  Install a module
 function satan-module-install() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-repository-find "${MODULE}")
+  local MODULE_LINE=$(satan-available-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPO="${MODULE_INFO[1]}"
@@ -444,6 +444,6 @@ function satan() {
   fi
 
   if [ -n "${SEARCH}" ]; then
-    satan-repository-search "${SEARCH}"
+    satan-available-search "${SEARCH}"
   fi
 }
