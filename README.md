@@ -22,83 +22,176 @@ A modular ZShell configuration.
 
 ### Usage
 
-User configuration goes in `~/.zlogin`.
+User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
+
+### Variables
+
+The following variables are defined in `~/.zsh.d/rc.conf`.
+
+`SATAN_INSTALL_DIRECTORY`
+
+  - The path to the installation directory.
+
+`SATAN_CONFIGURATION_DIRECTORY`
+
+  - The path to the configuration directory.
+
+`SATAN_MODULES_DIRECTORY`
+
+  - The path to the modules directory.
+
+`SATAN_REPOSITORIES`
+
+  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
 
 ### Functions
 
-`reload`
+`satan-init`
 
-  - Reload the shell configuration.
+  - Read *zshenv*, *zprofile*, *zshrc* and *zprofile*.
+
+`satan-reload`
+
+  - Synonymous with *satan-init*.
+
+`satan-update`
+
+  - Update __satan-shell__ and activated modules then reload the environment with *satan-reload*.
+
+## Repositories
+
+### Usage
+
+Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/rc.conf`.
+
+### Functions
+
+`satan-repository-index`
+
+  - Index repositories in the repositories array.
+
+`satan-available-find`
+
+  - Find an available module by *name* or *repository/name*.
+
+`satan-available-search`
+
+  - Search through available modules.
+
+`satan-installed-find`
+
+  - Find an installed module by *name* or *repository/name*.
+
+`satan-installed-search`
+
+  - Search through installed modules.
 
 ## Modules
 
 ### Usage
 
-Installed modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
+Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
 
 ### Functions
 
-Most of the following functions are used in `~/.zshrc` and are available in the shell.
+`satan-module-install`
 
-`satan-index`
+  - Install an available module by *name* or *repository/name*.
 
-  - Index satan core, extra and community repositories.
+`satan-module-uninstall`
+
+  - Uninstall a module by *name* or *repository/name*.
+
+`satan-module-update`
+
+  - Update a module by *name* or *repository/name*.
+
+`satan-module-load`
+
+  - Load a module by *name* or *repository/name*.
+
+`satan-modules-install`
+
+  - Install a list of modules by *name* or *repository/name*.
+
+`satan-modules-uninstall`
+
+  - Uninstall a list of modules by *name* or *repository/name*.
+
+`satan-modules-update`
+
+  - Update a list of modules by *name* or *repository/name*.
+
+`satan-modules-load`
+
+  - Load a list of modules by *name* or *repository/name*.
+
+`satan-modules-active-install`
+
+  - Install modules in the activated modules array.
+
+`satan-modules-active-update`
+
+  - Update modules in the activated modules array.
+
+`satan-modules-active-load`
+
+  - Load modules in the activated modules array.
+
+## Developer
+
+### Usage
+
+Files of the format `*.sh` in the root of the module are loaded by default.
 
 ### Variables
 
-The following variables are available to modules.
+`MODULE_REPOSITORY`
 
-`ZSHELL_INSTALL_DIRECTORY`
+  - The name of the repository in which the module resides.
 
-  - The path to the installation directory.
+`MODULE_NAME`
 
-`ZSHELL_CONFIGURATION_DIRECTORY`
+  - The name of the module.
 
-  - The path to the configuration directory.
+`MODULE_DIRECTORY`
 
-`ZSHELL_MODULES_DIRECTORY`
+  - The path to the module.
 
-  - The path to the modules directory.
+### Functions
 
-### Boilerplate
+`satan-module-developer-enable`
 
-If a module requires configuration, it should include an adaptation of the example below.
+  - Set the git origin url for a module by *name* or *repository/name* to use the SSH protocol.
 
-The following example is from [satan-extra/ssh](https://github.com/satan-extra/ssh/blob/master/ssh.sh).
+`satan-module-developer-disable`
 
-```
-#  Module configuration
-local MODULE_CONF="${ZSHELL_CONFIGURATION_DIRECTORY}/ssh.conf"
+  - Set the git origin url for a module by *name* or *repository/name* to use the HTTPS protocol.
 
-#  Write default module configuration
-if [ ! -f "${MODULE_CONF}" ]; then
-  echo "#  SSH keys" > "${MODULE_CONF}"
-  echo "#  SSH_KEYS=(\"luciferavada\")" >> "${MODULE_CONF}"
-  echo "SSH_KEYS=()" >> "${MODULE_CONF}"
-fi
+`satan-module-developer-status`
 
-#  Source module configuration
-source "${MODULE_CONF}"
-```
+  - Report if a module by *name* or *repository/name* has any modified files.
 
-### Prompt
+`satan-modules-developer-enable`
 
-The prompt can be configured from within a module, see the example below.
+  - Set the git origin url for a list of modules by *name* or *repository/name* to use the SSH protocol.
 
-The following example is from [satan-core/git](https://github.com/satan-core/git/blob/master/prompt.sh).
+`satan-modules-developer-disable`
 
-```
-local BRANCH="$(git-branch)"
-local STATUS="$(git-status)"
+  - Set the git origin url for a list of modules by *name* or *repository/name* to use the HTTPS protocol.
 
-local BRANCH_COLOR
-BRANCH_COLOR="%F{red}%B${BRANCH}%b%f"
-BRANCH_COLOR="%F{yellow}%Bgit:(%b%f${BRANCH_COLOR}%F{yellow}%B)%b%f"
+`satan-modules-developer-status`
 
-local STATUS_COLOR="%F{yellow}%Bx%b%f"
+  - Report if a list of modules by *name* or *repository/name* have any modified files.
 
-local GIT_BRANCH="%(${BRANCH}: ${GIT_COLOR}:)"
-local GIT_STATUS="%(${STATUS}: ${STATUS_COLOR}:)"
+`satan-developer-enable`
 
-export PROMPT="${PROMPT}${GIT_BRANCH}${GIT_STATUS}"
-```
+  - Set the git origin url for activated modules to use the SSH protocol.
+
+`satan-developer-disable`
+
+  - Set the git origin url for activated modules to use the HTTPS protocol.
+
+`satan-developer-status`
+
+  - Report if any activated modules have modified files.
