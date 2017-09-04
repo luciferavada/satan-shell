@@ -22,9 +22,9 @@ A modular ZShell configuration.
 
 ### Usage
 
-The __satan-shell__ primary configuration files are `~/.zsh.d/rc.conf` and `~/.zsh.d/modules.conf.`
-
 User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
+
+The __satan-shell__ primary configuration files are `~/.zsh.d/rc.conf` and `~/.zsh.d/modules.conf.`
 
 Modules are installed to the `~/.zsh.d.modules` directory.
 
