@@ -13,10 +13,10 @@ local GITHUB_API_URL="https://api.github.com"
 local SATAN_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 
 #  Satan modules index
-local SATAN_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.available"
+local SATAN_INDEX_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.available"
 
 #  Satan modules installed
-local SATAN_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.modules.installed"
+local SATAN_INDEX_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.installed"
 
 #  Get module remote origin url
 function _satan-module-get-url() {
@@ -51,23 +51,23 @@ function _satan-module-modified() {
 function _satan-index-available-write() {
   local REPOSITORY="${1}"
   grep "\"full_name\"" | sed "s/.*\"full_name\"\:\ \"\(.*\)\",/\1/" | \
-    sort >> "${SATAN_AVAILABLE}"
+    sort >> "${SATAN_INDEX_AVAILABLE}"
 }
 
 #  Remove a module from the installed index file
 function _satan-index-installed-remove() {
   local MODULE_LINE="${1}"
-  local SATAN_INSTALLED_TEMP=$(mktemp)
-  cat "${SATAN_INSTALLED}" | sed "/${MODULE_LINE//\//\\/}/d" > \
-    "${SATAN_INSTALLED_TEMP}"
-  mv "${SATAN_INSTALLED_TEMP}" "${SATAN_INSTALLED}"
+  local SATAN_INDEX_INSTALLED_TEMP=$(mktemp)
+  cat "${SATAN_INDEX_INSTALLED}" | sed "/${MODULE_LINE//\//\\/}/d" > \
+    "${SATAN_INDEX_INSTALLED_TEMP}"
+  mv "${SATAN_INDEX_INSTALLED_TEMP}" "${SATAN_INDEX_INSTALLED}"
 }
 
 #  Index satan modules
 function satan-repository-index() {
   echo -n "$(tput bold; tput setaf ${COLOR[white]})"
   echo "--> Indexing repositories..."
-  rm -f "${SATAN_AVAILABLE}"
+  rm -f "${SATAN_INDEX_AVAILABLE}"
   for repository in ${SATAN_REPOSITORIES[@]}; do
     echo "$(tput bold; tput setaf ${COLOR[magenta]})==> ${repository}"
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
@@ -78,24 +78,24 @@ function satan-repository-index() {
 
 #  Find an available module
 function satan-module-available-find() {
-  if [ -f "${SATAN_AVAILABLE}" ]; then
+  if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_AVAILABLE}" | grep --max-count "1" --regexp "/${1}$"
+      cat "${SATAN_INDEX_AVAILABLE}" | grep --max-count "1" --regexp "/${1}$"
     else
-      cat "${SATAN_AVAILABLE}" | grep --max-count "1" --regexp "${1}$"
+      cat "${SATAN_INDEX_AVAILABLE}" | grep --max-count "1" --regexp "${1}$"
     fi
   fi
 }
 
 #  Search available modules
 function satan-module-available-search() {
-  if [ -f "${SATAN_AVAILABLE}" ]; then
+  if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_AVAILABLE}" | grep --regexp "/.*${1}.*"
+      cat "${SATAN_INDEX_AVAILABLE}" | grep --regexp "/.*${1}.*"
     else
-      cat "${SATAN_AVAILABLE}" | grep --regexp ".*${1}.*"
+      cat "${SATAN_INDEX_AVAILABLE}" | grep --regexp ".*${1}.*"
     fi
   fi
 
@@ -103,24 +103,24 @@ function satan-module-available-search() {
 
 #  Find an installed module
 function satan-module-installed-find() {
-  if [ -f "${SATAN_INSTALLED}" ]; then
+  if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
+      cat "${SATAN_INDEX_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
     else
-      cat "${SATAN_INSTALLED}" | grep --max-count "1" --regexp "${1}$"
+      cat "${SATAN_INDEX_INSTALLED}" | grep --max-count "1" --regexp "${1}$"
     fi
   fi
 }
 
 #  Search installed modules
 function satan-module-installed-search() {
-  if [ -f "${SATAN_INSTALLED}" ]; then
+  if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
-      cat "${SATAN_INSTALLED}" | grep  --regexp "/.*${1}.*"
+      cat "${SATAN_INDEX_INSTALLED}" | grep  --regexp "/.*${1}.*"
     else
-      cat "${SATAN_INSTALLED}" | grep  --regexp ".*${1}.*"
+      cat "${SATAN_INDEX_INSTALLED}" | grep  --regexp ".*${1}.*"
     fi
   fi
 }
@@ -150,7 +150,7 @@ function satan-module-install() {
       "${SATAN_MODULES_DIRECTORY}/${MODULE_REPOSITORY}/${MODULE_NAME}"
 
     if [ ${?} -eq 0 ]; then
-      echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
+      echo "${MODULE_LINE}" >> "${SATAN_INDEX_INSTALLED}"
     else
       echo -n "$(tput bold; tput setaf ${COLOR[red]})"
       echo "--> failure."
