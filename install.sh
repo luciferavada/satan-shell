@@ -40,7 +40,7 @@ fi
 #  Write default modules file
 if [ ! -f "${SATAN_MODULES}" ]; then
   echo "#  Modules are loaded in order" > "${SATAN_MODULES}"
-  echo "MODULES=(" >> "${SATAN_MODULES}"
+  echo "SATAN_MODULES=(" >> "${SATAN_MODULES}"
   echo "  \"prompt\" \"history\" \"man\" \"ls\" \"git\"" >> \
     "${SATAN_MODULES}"
   echo ")" >> "${SATAN_MODULES}"
@@ -52,6 +52,10 @@ for file in ${SATAN_FILES[@]}; do
   local SRC="${SATAN}/${file}"
   local DST="${HOME}/.${file}"
 
+  if [ -f "${DST}" ]; then
+    mv "${DST}" "${DST}.back"
+  fi
+
   echo "linking: ${SRC} -> ${DST}"
   ln -sfh "${SRC}" "${DST}"
 
@@ -62,19 +66,23 @@ if [ ! -f "${HOME}/.zlogin" ]; then
   touch "${HOME}/.zlogin"
 fi
 
-#  Source environment-load function
+#  Source satan-shell functions
 source "${HOME}/.zprofile"
 
-#  Load the environment
-satan-load
+#  Source satan-shell variables
+source "${HOME}/.zsh.d/rc.conf"
+
+#  Source activated modules array
+source "${HOME}/.zsh.d/modules.conf"
 
 #  Index repositories
 satan-repository-index
 
-#  Install modules
-for module in ${MODULES[@]}; do
-  satan-install "${module}"
-done
+#  Install activated modules
+satan-modules-active-install
 
-#  Reload the environment
-satan-reload
+#  Display ascii art and title
+source "${PWD}/ascii.sh"
+
+#  Load the environment
+satan-init
