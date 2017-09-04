@@ -2,7 +2,7 @@
 
 A modular ZShell configuration.
 
-## Repositories
+## Module Repositories
 
   - [satan-core](https://github.com/satan-core)
   - [satan-extra](https://github.com/satan-extra)
