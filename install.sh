@@ -15,6 +15,11 @@ local SATAN_MODULES="${HOME}/.zsh.d/modules.conf"
 #  Link source path
 local SATAN="${PWD#${HOME}/}"
 
+#  Colorize output
+echo -n "$(tput bold; tput setaf 7)"
+echo "--> Linking files..."
+echo -n "$(tput setaf ${COLOR[cyan]})"
+
 #  Link files
 for file in ${SATAN_FILES[@]}; do
 
@@ -25,10 +30,13 @@ for file in ${SATAN_FILES[@]}; do
     mv "${DST}" "${DST}.back"
   fi
 
-  echo "linking: ${SRC} -> ${DST}"
+  echo "${SRC} -> ${DST}"
   ln -sfh "${SRC}" "${DST}"
 
 done
+
+#  Reset colors
+echo -n "$(tput sgr0)"
 
 #  Write default rc file
 if [ ! -f "${SATAN_RC}" ]; then
