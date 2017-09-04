@@ -127,7 +127,7 @@ Module repositories are indexed in `~/.zsh.d/.modules.available` and installed m
 
 ### Usage
 
-Activated modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
+Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
 
 ### Variables
 
