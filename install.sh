@@ -18,7 +18,7 @@ local SATAN="${PWD#${HOME}/}"
 #  Colorize output
 echo -n "$(tput bold; tput setaf 7)"
 echo "--> Linking files..."
-echo -n "$(tput setaf 3)"
+echo -n "$(tput setaf 6)"
 
 #  Link files
 for file in ${SATAN_FILES[@]}; do
