@@ -427,7 +427,8 @@ function satan() {
     case $option in
       "i")
         INSTALL=("${OPTARG}")
-        until [[ $(eval "echo \${${OPTIND}}") =~ "^-.*" ]] || [[ -z $(eval "echo \${${OPTIND}}") ]]; do
+        until [[ $(eval "echo \${${OPTIND}}") =~ "^-.*" ]] || \
+              [[ -z $(eval "echo \${${OPTIND}}") ]]; do
           INSTALL+=($(eval "echo \${${OPTIND}}"))
           OPTIND=$((${OPTIND} + 1))
         done
