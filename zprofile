@@ -462,24 +462,18 @@ function satan() {
   local INDEX=""
   local MODULES=()
 
-  while getopts ":m:SRXQy" option; do
+  while getopts ":SRXQy" option; do
     case $option in
       "S") INSTALL="true" ;;
       "R") UNINSTALL="true" ;;
       "X") AVAILABLE_SEARCH="true" ;;
       "Q") INSTALLED_SEARCH="true" ;;
       "y") INDEX="true" ;;
-      "m")
-        MODULES=("${OPTARG}")
-        until [[ $(eval "echo \${${OPTIND}}") =~ "^-.*" ]] || \
-              [[ -z $(eval "echo \${${OPTIND}}") ]]; do
-          MODULES+=($(eval "echo \${${OPTIND}}"))
-          OPTIND=$((${OPTIND} + 1))
-        done
-        ;;
       *) ;;
     esac
   done
+
+  MODULES=(${@:${OPTIND}})
 
   if [ -n "${INDEX}" ]; then
     satan-repository-index
@@ -496,11 +490,19 @@ function satan() {
   fi
 
   if [ -n "${AVAILABLE_SEARCH}" ]; then
+    if [ -z "${MODULES[@]}" ]; then
+      satan-module-available-search
+      return ${?}
+    fi
     satan-modules-available-search ${MODULES[@]}
     return ${?}
   fi
 
   if [ -n "${INSTALLED_SEARCH}" ]; then
+    if [ -z "${MODULES[@]}" ]; then
+      satan-module-installed-search
+      return ${?}
+    fi
     satan-modules-installed-search ${MODULES[@]}
     return ${?}
   fi
