@@ -57,10 +57,6 @@ The __satan-shell__ module manager, `satan` has the following options.
 
   - The path to the modules directory.
 
-`SATAN_REPOSITORIES`
-
-  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
-
 ### Functions
 
 `satan-init`
@@ -82,6 +78,12 @@ The __satan-shell__ module manager, `satan` has the following options.
 Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/rc.conf`.
 
 Module repositories are indexed in `~/.zsh.d/.modules.available` and installed modules are tracked in `~/.zsh.d/.modules.installed`.
+
+### Variables
+
+`SATAN_REPOSITORIES`
+
+  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
 
 ### Functions
 
@@ -126,6 +128,12 @@ Module repositories are indexed in `~/.zsh.d/.modules.available` and installed m
 ### Usage
 
 Activated modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
+
+### Variables
+
+`SATAN_MODULES`
+
+  - An array of __satan-shell__ modules to load on start.
 
 ### Functions
 
