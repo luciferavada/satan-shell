@@ -66,6 +66,9 @@ if [ ! -f "${HOME}/.zlogin" ]; then
   touch "${HOME}/.zlogin"
 fi
 
+#  Source colors array
+source "${HOME}/.zshenv"
+
 #  Source satan-shell functions
 source "${HOME}/.zprofile"
 
