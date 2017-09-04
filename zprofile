@@ -74,7 +74,7 @@ function satan-repository-index() {
 }
 
 #  Find an available module
-function satan-available-find() {
+function satan-module-available-find() {
   if [ -f "${SATAN_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -86,7 +86,7 @@ function satan-available-find() {
 }
 
 #  Search available modules
-function satan-available-search() {
+function satan-module-available-search() {
   if [ -f "${SATAN_AVAILABLE}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -99,7 +99,7 @@ function satan-available-search() {
 }
 
 #  Find an installed module
-function satan-installed-find() {
+function satan-module-installed-find() {
   if [ -f "${SATAN_INSTALLED}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -111,7 +111,7 @@ function satan-installed-find() {
 }
 
 #  Search installed modules
-function satan-installed-search() {
+function satan-module-installed-search() {
   if [ -f "${SATAN_INSTALLED}" ]; then
     local SPLIT=(`echo ${1//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -125,7 +125,7 @@ function satan-installed-search() {
 #  Install a module
 function satan-module-install() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-available-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-available-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPOSITORY="${MODULE_INFO[1]}"
@@ -138,7 +138,7 @@ function satan-module-install() {
     return 0
   fi
 
-  if [ -z "$(satan-installed-find ${MODULE_LINE})" ]; then
+  if [ -z "$(satan-module-installed-find ${MODULE_LINE})" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
     echo "${MODULE_LINE}"
 
@@ -160,7 +160,7 @@ function satan-module-install() {
 #  Uninstall a module
 function satan-module-uninstall() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
 
   if [ -z "${MODULE_LINE}" ]; then
     return 0
@@ -183,7 +183,7 @@ function satan-module-uninstall() {
 #  Update a module
 function satan-module-update() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
   if [ -z "${MODULE_LINE}" ]; then
@@ -210,7 +210,7 @@ function satan-module-update() {
 #  Load a module
 function satan-module-load() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPOSITORY="${MODULE_INFO[1]}"
@@ -234,7 +234,7 @@ function satan-module-load() {
 #  Enable developer mode
 function satan-module-developer-enable() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
@@ -263,7 +263,7 @@ function satan-module-developer-enable() {
 #  Disable developer mode
 function satan-module-developer-disable() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
@@ -292,7 +292,7 @@ function satan-module-developer-disable() {
 #  Check for changes in modules
 function satan-module-developer-status() {
   local MODULE="${1}"
-  local MODULE_LINE=$(satan-installed-find "${MODULE}")
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
@@ -308,6 +308,42 @@ function satan-module-developer-status() {
     echo -n "$(tput setaf ${COLOR[magenta]})"
     echo "--> modified."
   fi
+}
+
+#  Find a list of available modules
+function satan-modules-available-find() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Finding available modules..."
+  for module in ${@}; do
+    satan-module-available-find "${module}"
+  done
+}
+
+#  Search a list of available modules
+function satan-modules-available-search() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Searching available modules..."
+  for module in ${@}; do
+    satan-module-available-search "${module}"
+  done
+}
+
+#  Find a list of installed modules
+function satan-modules-installed-find() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Finding installed modules..."
+  for module in ${@}; do
+    satan-module-installed-find "${module}"
+  done
+}
+
+#  Search a list of installed modules
+function satan-modules-installed-search() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Searching installed modules..."
+  for module in ${@}; do
+    satan-module-installed-search "${module}"
+  done
 }
 
 #  Install a list of modules
@@ -420,35 +456,52 @@ function satan-update() {
 #  Satan module manager
 function satan() {
   local INSTALL=""
-  local SEARCH=""
-  local INDEX="false"
+  local UNINSTALL=""
+  local AVALIABLE_SEARCH=""
+  local INSTALLED_SEARCH=""
+  local INDEX=""
+  local MODULES=()
 
-  while getopts ":i:s:y" option; do
+  while getopts ":m:SRXQy" option; do
     case $option in
-      "i")
-        INSTALL=("${OPTARG}")
+      "S") INSTALL="true" ;;
+      "R") UNINSTALL="true" ;;
+      "X") AVAILABLE_SEARCH="true" ;;
+      "Q") INSTALLED_SEARCH="true" ;;
+      "y") INDEX="true" ;;
+      "m")
+        MODULES=("${OPTARG}")
         until [[ $(eval "echo \${${OPTIND}}") =~ "^-.*" ]] || \
               [[ -z $(eval "echo \${${OPTIND}}") ]]; do
-          INSTALL+=($(eval "echo \${${OPTIND}}"))
+          MODULES+=($(eval "echo \${${OPTIND}}"))
           OPTIND=$((${OPTIND} + 1))
         done
         ;;
-      "s") SEARCH="${OPTARG}" ;;
-      "y") INDEX="true" ;;
       *) ;;
     esac
   done
 
-  if [ "${INDEX}" = "true" ]; then
+  if [ -n "${INDEX}" ]; then
     satan-repository-index
   fi
 
   if [ -n "${INSTALL}" ]; then
-    satan-modules-install ${INSTALL[@]}
+    satan-modules-install ${MODULES[@]}
     return ${?}
   fi
 
-  if [ -n "${SEARCH}" ]; then
-    satan-available-search "${SEARCH}"
+  if [ -n "${UNINSTALL}" ]; then
+    satan-modules-uninstall ${MODULES[@]}
+    return ${?}
+  fi
+
+  if [ -n "${AVAILABLE_SEARCH}" ]; then
+    satan-modules-available-search ${MODULES[@]}
+    return ${?}
+  fi
+
+  if [ -n "${INSTALLED_SEARCH}" ]; then
+    satan-modules-installed-search ${MODULES[@]}
+    return ${?}
   fi
 }
