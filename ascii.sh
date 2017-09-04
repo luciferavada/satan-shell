@@ -1,13 +1,13 @@
 #!/usr/bin/env zsh
 
 #  Set color to red
-echo -n "$(tput sgr0; tput bold; tput setaf 0)\n"
+echo "$(tput sgr0; tput bold; tput setaf 0)"
 
 #  Display ascii-art
 cat "${PWD}/ascii-art"
 
 #  Set color to bold red
-echo -n "$(tput bold; tput setaf 1)\n"
+echo "$(tput bold; tput setaf 1)"
 
 #  Display ascii-title
 cat "${PWD}/ascii-title"
