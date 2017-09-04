@@ -76,21 +76,37 @@ Module repositories are indexed in `~/.zsh.d/.modules.available` and installed m
 
   - Index repositories in the repositories array.
 
-`satan-available-find`
+`satan-module-available-find`
 
   - Find an available module by *name* or *repository/name*.
 
-`satan-available-search`
+`satan-module-available-search`
 
   - Search through available modules.
 
-`satan-installed-find`
+`satan-module-installed-find`
 
   - Find an installed module by *name* or *repository/name*.
 
-`satan-installed-search`
+`satan-module-installed-search`
 
   - Search through installed modules.
+
+`satan-modules-available-find`
+
+  - Find a list of available module by *name* or *repository/name*.
+
+`satan-modules-available-search`
+
+  - Search through a list of available modules.
+
+`satan-modules-installed-find`
+
+  - Find a list of installed module by *name* or *repository/name*.
+
+`satan-modules-installed-search`
+
+  - Search through a list of installed modules.
 
 ## Modules
 
