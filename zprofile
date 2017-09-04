@@ -18,6 +18,11 @@ local SATAN_INDEX_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.available"
 #  Satan modules installed
 local SATAN_INDEX_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.installed"
 
+#  Display ascii art
+function satan-ascii-art() {
+  source "${SATAN_INSTALL_DIRECTORY}/ascii.sh"
+}
+
 #  Get module remote origin url
 function _satan-module-get-url() {
   local MODULE_LINE="${1}"
