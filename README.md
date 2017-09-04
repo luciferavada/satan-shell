@@ -26,9 +26,9 @@ The __satan-shell__ primary configuration files are `~/.zsh.d/rc.conf` and `~/.z
 
 User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
 
-Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
-
 Modules are installed to the `~/.zsh.d.modules` directory.
+
+Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
 
 ### Variables
 
