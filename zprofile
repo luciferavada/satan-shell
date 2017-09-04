@@ -459,51 +459,62 @@ function satan() {
   local UNINSTALL=""
   local AVALIABLE_SEARCH=""
   local INSTALLED_SEARCH=""
+  local ACTIVATED_MODULES=""
   local INDEX=""
-  local MODULES=()
 
-  while getopts ":SRXQy" option; do
+  local MODULE_LIST=()
+
+  while getopts ":SRXQay" option; do
     case $option in
       "S") INSTALL="true" ;;
       "R") UNINSTALL="true" ;;
       "X") AVAILABLE_SEARCH="true" ;;
       "Q") INSTALLED_SEARCH="true" ;;
+      "a") ACTIVATED_MODULES="true" ;;
       "y") INDEX="true" ;;
       *) ;;
     esac
   done
 
-  MODULES=(${@:${OPTIND}})
+  MODULE_LIST=(${@:${OPTIND}})
+
+  if [ -n "${ACTIVATED_MODULES}" ]; then
+    MODULE_LIST=(${MODULES[@]})
+  fi
 
   if [ -n "${INDEX}" ]; then
     satan-repository-index
   fi
 
   if [ -n "${INSTALL}" ]; then
-    satan-modules-install ${MODULES[@]}
+    satan-modules-install ${MODULE_LIST[@]}
     return ${?}
   fi
 
   if [ -n "${UNINSTALL}" ]; then
-    satan-modules-uninstall ${MODULES[@]}
+    satan-modules-uninstall ${MODULE_LIST[@]}
     return ${?}
   fi
 
   if [ -n "${AVAILABLE_SEARCH}" ]; then
-    if [ -z "${MODULES[@]}" ]; then
+    if [ -z "${MODULE_LIST[@]}" ]; then
+      echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+      echo "--> Available modules..."
       satan-module-available-search
       return ${?}
     fi
-    satan-modules-available-search ${MODULES[@]}
+    satan-modules-available-search ${MODULE_LIST[@]}
     return ${?}
   fi
 
   if [ -n "${INSTALLED_SEARCH}" ]; then
-    if [ -z "${MODULES[@]}" ]; then
+    if [ -z "${MODULE_LIST[@]}" ]; then
+      echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+      echo "--> Installed modules..."
       satan-module-installed-search
       return ${?}
     fi
-    satan-modules-installed-search ${MODULES[@]}
+    satan-modules-installed-search ${MODULE_LIST[@]}
     return ${?}
   fi
 }
