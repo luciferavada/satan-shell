@@ -66,26 +66,8 @@ if [ ! -f "${HOME}/.zlogin" ]; then
   touch "${HOME}/.zlogin"
 fi
 
-#  Source satan-shell variables
-source "${HOME}/.zsh.d/rc.conf"
-
-#  Source activated modules array
-source "${HOME}/.zsh.d/modules.conf"
-
-#  Source colors array
-source "${HOME}/.zshenv"
-
-#  Source satan-shell functions
-source "${HOME}/.zprofile"
-
-#  Index repositories
-satan-repository-index
-
-#  Install activated modules
-satan-modules-active-install
-
-#  Display ascii art and title
-source "${PWD}/ascii.sh"
-
 #  Load the environment
-satan-init
+source "${HOME}/.zshenv"
+source "${HOME}/.zprofile"
+source "${HOME}/.zshrc"
+source "${HOME}/.zlogin"
