@@ -440,9 +440,7 @@ function satan-developer-status() {
 #  Source satan-shell environment files
 function satan-init satan-reload() {
   for file in ${SATAN_FILES[@]}; do
-    if [ -f "${file}" ]; then
-      source "${SATAN_INSTALL_DIRECTORY}/${file}"
-    fi
+    source "${SATAN_INSTALL_DIRECTORY}/${file}"
   done
 }
 
