@@ -9,7 +9,6 @@ local INSTALL_DIRECTORY="${HOME}/.satan-shell"
 #  Colorize output
 echo -n "$(tput bold; tput setaf 7)"
 echo "--> Cloning satan-shell..."
-echo -n "$(tput setaf 6)"
 
 #  Clone the repository
 git clone "${GITHUB_URL}" "${INSTALL_DIRECTORY}"
