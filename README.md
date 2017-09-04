@@ -22,11 +22,15 @@ A modular ZShell configuration.
 
 ### Usage
 
+The __satan-shell__ primary configuration files are `~/.zsh.d/rc.conf` and `~/.zsh.d/modules.conf.`
+
 User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
 
-### Variables
+Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
 
-The following variables are defined in `~/.zsh.d/rc.conf`.
+Modules are installed to the `~/.zsh.d.modules` directory.
+
+### Variables
 
 `SATAN_INSTALL_DIRECTORY`
 
@@ -63,6 +67,8 @@ The following variables are defined in `~/.zsh.d/rc.conf`.
 ### Usage
 
 Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/rc.conf`.
+
+Module repositories are indexed in `~/.zsh.d/.modules.available` and installed modules are tracked in `~/.zsh.d/.modules.installed`.
 
 ### Functions
 
