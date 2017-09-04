@@ -425,7 +425,13 @@ function satan() {
 
   while getopts ":i:s:y" option; do
     case $option in
-      "i") INSTALL="${OPTARG}" ;;
+      "i")
+        INSTALL=("${OPTARG}")
+        until [[ $(eval "echo \${${OPTIND}}") =~ "^-.*" ]] || [[ -z $(eval "echo \${${OPTIND}}") ]]; do
+          INSTALL+=($(eval "echo \${${OPTIND}}"))
+          OPTIND=$((${OPTIND} + 1))
+        done
+        ;;
       "s") SEARCH="${OPTARG}" ;;
       "y") INDEX="true" ;;
       *) ;;
@@ -437,7 +443,8 @@ function satan() {
   fi
 
   if [ -n "${INSTALL}" ]; then
-    satan-module-install "${INSTALL}"
+    satan-modules-install ${INSTALL[@]}
+    return ${?}
   fi
 
   if [ -n "${SEARCH}" ]; then
