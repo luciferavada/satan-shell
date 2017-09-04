@@ -13,4 +13,4 @@ git clone "${GITHUB_URL}" "${INSTALL_DIRECTORY}"
 cd "${INSTALL_DIRECTORY}"
 
 #  Run the install script
-exec "./install.sh"
+source "./install.sh"
