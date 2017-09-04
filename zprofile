@@ -459,8 +459,8 @@ function satan() {
   local UNINSTALL_MODULES=""
   local AVALIABLE_SEARCH=""
   local INSTALLED_SEARCH=""
-  local ACTIVATED_MODULES=""
   local GENERATE_INDEX=""
+  local ACTIVATED_MODULES=""
 
   local MODULE_LIST=()
 
