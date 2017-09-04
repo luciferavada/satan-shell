@@ -128,7 +128,7 @@ function satan-module-install() {
   local MODULE_LINE=$(satan-available-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
-  local MODULE_REPO="${MODULE_INFO[1]}"
+  local MODULE_REPOSITORY="${MODULE_INFO[1]}"
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
@@ -143,8 +143,8 @@ function satan-module-install() {
     echo "${MODULE_LINE}"
 
     echo -n "$(tput setaf ${COLOR[cyan]})"
-    git clone "${GITHUB_URL}/${MODULE_REPO}/${MODULE_NAME}.git" \
-      "${SATAN_MODULES_DIRECTORY}/${MODULE_REPO}/${MODULE_NAME}"
+    git clone "${GITHUB_URL}/${MODULE_REPOSITORY}/${MODULE_NAME}.git" \
+      "${SATAN_MODULES_DIRECTORY}/${MODULE_REPOSITORY}/${MODULE_NAME}"
 
     if [ ${?} -eq 0 ]; then
       echo "${MODULE_LINE}" >> "${SATAN_INSTALLED}"
@@ -161,9 +161,6 @@ function satan-module-install() {
 function satan-module-uninstall() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-installed-find "${MODULE}")
-  local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
-  local MODULE_NAME="${MODULE_INFO[2]}"
-  local MODULE_REPO="${MODULE_INFO[1]}"
 
   if [ -z "${MODULE_LINE}" ]; then
     return 0
@@ -216,7 +213,7 @@ function satan-module-load() {
   local MODULE_LINE=$(satan-installed-find "${MODULE}")
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
-  local MODULE_REPO="${MODULE_INFO[1]}"
+  local MODULE_REPOSITORY="${MODULE_INFO[1]}"
 
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
   local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
@@ -228,7 +225,7 @@ function satan-module-load() {
   fi
 
   for file in ${MODULE_FILES[@]}; do
-    MODULE_REPO="${MODULE_REPO}" MODULE_NAME="${MODULE_NAME}" \
+    MODULE_REPOSITORY="${MODULE_REPOSITORY}" MODULE_NAME="${MODULE_NAME}" \
       MODULE_DIRECTORY="${MODULE_DIRECTORY}" \
       source "${file}"
   done
