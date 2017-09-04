@@ -6,7 +6,7 @@ if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   satan-modules-active-install
 
   # Display ascii art.
-  source "${SATAN_INSTALL_DIRECTORY}/ascii.sh"
+  satan-ascii-art
 fi
 
 #  Load active modules
