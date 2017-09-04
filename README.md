@@ -30,6 +30,19 @@ Modules are installed to the `~/.zsh.d.modules` directory.
 
 Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
 
+### Manager
+
+The __satan-shell__ module manager, `satan` has the following options.
+
+`satan`
+
+  - `-S` Install a list of modules.
+  - `-R` Uninstall a list of modules.
+  - `-Q` Search for available modules.
+  - `-X` Search for installed modules.
+  - `-y` Update the repository index.
+  - `-a` Use the `MODULES` array from `~/.zsh.d/modules.conf`.
+
 ### Variables
 
 `SATAN_INSTALL_DIRECTORY`
@@ -112,7 +125,7 @@ Module repositories are indexed in `~/.zsh.d/.modules.available` and installed m
 
 ### Usage
 
-Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
+Activated modules are managed by the `MODULES` array in `~/.zsh.d/modules.conf`.
 
 ### Functions
 
