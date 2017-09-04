@@ -50,8 +50,8 @@ function _satan-module-modified() {
 #  Write to the available modules index file
 function _satan-index-available-write() {
   local REPOSITORY="${1}"
-  grep "\"full_name\"" | sed "s/.*\"full_name\"\:\ \"\(.*\)\",/\1/" >> \
-    "${SATAN_AVAILABLE}"
+  grep "\"full_name\"" | sed "s/.*\"full_name\"\:\ \"\(.*\)\",/\1/" | \
+    sort >> "${SATAN_AVAILABLE}"
 }
 
 #  Remove a module from the installed index file
@@ -409,32 +409,32 @@ function satan-modules-developer-status() {
 
 #  Install active modules
 function satan-modules-active-install() {
-  satan-modules-install ${MODULES[@]}
+  satan-modules-install ${SATAN_MODULES[@]}
 }
 
 #  Update active modules
 function satan-modules-active-update() {
-  satan-modules-update ${MODULES[@]}
+  satan-modules-update ${SATAN_MODULES[@]}
 }
 
 #  Load active modules
 function satan-modules-active-load() {
-  satan-modules-load ${MODULES[@]}
+  satan-modules-load ${SATAN_MODULES[@]}
 }
 
 #  Enable developer mode for active modules
 function satan-developer-enable() {
-  satan-modules-developer-enable ${MODULES[@]}
+  satan-modules-developer-enable ${SATAN_MODULES[@]}
 }
 
 #  Disable developer mode for active modules
 function satan-developer-disable() {
-  satan-modules-developer-disable ${MODULES[@]}
+  satan-modules-developer-disable ${SATAN_MODULES[@]}
 }
 
 #  Check for changes in active modules
 function satan-developer-status() {
-  satan-modules-developer-status ${MODULES[@]}
+  satan-modules-developer-status ${SATAN_MODULES[@]}
 }
 
 #  Source satan-shell environment files
@@ -455,23 +455,23 @@ function satan-update() {
 
 #  Satan module manager
 function satan() {
-  local INSTALL=""
-  local UNINSTALL=""
+  local INSTALL_MODULES=""
+  local UNINSTALL_MODULES=""
   local AVALIABLE_SEARCH=""
   local INSTALLED_SEARCH=""
   local ACTIVATED_MODULES=""
-  local INDEX=""
+  local GENERATE_INDEX=""
 
   local MODULE_LIST=()
 
-  while getopts ":SRXQay" option; do
+  while getopts ":SRQXya" option; do
     case $option in
-      "S") INSTALL="true" ;;
-      "R") UNINSTALL="true" ;;
-      "X") AVAILABLE_SEARCH="true" ;;
-      "Q") INSTALLED_SEARCH="true" ;;
+      "S") INSTALL_MODULES="true" ;;
+      "R") UNINSTALL_MODULES="true" ;;
+      "Q") AVAILABLE_SEARCH="true" ;;
+      "X") INSTALLED_SEARCH="true" ;;
+      "y") GENERATE_INDEX="true" ;;
       "a") ACTIVATED_MODULES="true" ;;
-      "y") INDEX="true" ;;
       *) ;;
     esac
   done
@@ -479,19 +479,19 @@ function satan() {
   MODULE_LIST=(${@:${OPTIND}})
 
   if [ -n "${ACTIVATED_MODULES}" ]; then
-    MODULE_LIST=(${MODULES[@]})
+    MODULE_LIST=(${SATAN_MODULES[@]})
   fi
 
-  if [ -n "${INDEX}" ]; then
+  if [ -n "${GENERATE_INDEX}" ]; then
     satan-repository-index
   fi
 
-  if [ -n "${INSTALL}" ]; then
+  if [ -n "${INSTALL_MODULES}" ]; then
     satan-modules-install ${MODULE_LIST[@]}
     return ${?}
   fi
 
-  if [ -n "${UNINSTALL}" ]; then
+  if [ -n "${UNINSTALL_MODULES}" ]; then
     satan-modules-uninstall ${MODULE_LIST[@]}
     return ${?}
   fi
