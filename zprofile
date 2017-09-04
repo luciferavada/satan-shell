@@ -437,7 +437,7 @@ function satan() {
   fi
 
   if [ -n "${INSTALL}" ]; then
-    return satan-module-install "${INSTALL}"
+    satan-module-install "${INSTALL}"
   fi
 
   if [ -n "${SEARCH}" ]; then
