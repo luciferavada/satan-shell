@@ -16,7 +16,7 @@ A modular ZShell configuration.
 
 ## Install
 
-`zsh -c $(curl -s "https://raw.githubusercontent.com/luciferavada/satan-shell/master/install-github.sh")`
+`zsh <(curl -s "https://raw.githubusercontent.com/luciferavada/satan-shell/master/install-github.sh")`
 
 ## General
 
