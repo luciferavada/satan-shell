@@ -79,3 +79,6 @@ source "${HOME}/.zshenv"
 source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
 source "${HOME}/.zlogin"
+
+#  Move to the home directory
+cd "${HOME}"
