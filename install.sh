@@ -88,4 +88,4 @@ satan-modules-active-install
 source "${PWD}/ascii.sh"
 
 #  Load the environment
-satan-init
+exec zsh
