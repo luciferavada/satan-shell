@@ -15,6 +15,21 @@ local SATAN_MODULES="${HOME}/.zsh.d/modules.conf"
 #  Link source path
 local SATAN="${PWD#${HOME}/}"
 
+#  Link files
+for file in ${SATAN_FILES[@]}; do
+
+  local SRC="${SATAN}/${file}"
+  local DST="${HOME}/.${file}"
+
+  if [ -f "${DST}" ]; then
+    mv "${DST}" "${DST}.back"
+  fi
+
+  echo "linking: ${SRC} -> ${DST}"
+  ln -sfh "${SRC}" "${DST}"
+
+done
+
 #  Write default rc file
 if [ ! -f "${SATAN_RC}" ]; then
   echo "#  Install dircetory" > "${SATAN_RC}"
@@ -45,21 +60,6 @@ if [ ! -f "${SATAN_MODULES}" ]; then
     "${SATAN_MODULES}"
   echo ")" >> "${SATAN_MODULES}"
 fi
-
-#  Link files
-for file in ${SATAN_FILES[@]}; do
-
-  local SRC="${SATAN}/${file}"
-  local DST="${HOME}/.${file}"
-
-  if [ -f "${DST}" ]; then
-    mv "${DST}" "${DST}.back"
-  fi
-
-  echo "linking: ${SRC} -> ${DST}"
-  ln -sfh "${SRC}" "${DST}"
-
-done
 
 #  Create zlogin file
 if [ ! -f "${HOME}/.zlogin" ]; then
