@@ -65,8 +65,11 @@ function _satan-index-installed-remove() {
 
 #  Index satan modules
 function satan-repository-index() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Indexing repositories..."
   rm -f "${SATAN_AVAILABLE}"
   for repository in ${SATAN_REPOSITORIES[@]}; do
+    echo "$(tput bold; tput setaf ${COLOR[magenta]})==> ${repository}"
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
     curl --silent --request "GET" "${REPOSITORY_URL}" | \
       _satan-index-available-write
