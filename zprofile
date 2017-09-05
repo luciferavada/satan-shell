@@ -511,20 +511,20 @@ function satan() {
   local AVALIABLE_SEARCH=""
   local INSTALLED_SEARCH=""
   local GENERATE_INDEX=""
-  local ACTIVATED_MODULES=""
   local LOAD_MODULES=""
+  local ACTIVATED_MODULES=""
 
   local MODULE_LIST=()
 
-  while getopts ":SRQXyal" option; do
+  while getopts ":SRQXyla" option; do
     case $option in
       "S") INSTALL_MODULES="true" ;;
       "R") UNINSTALL_MODULES="true" ;;
       "Q") AVAILABLE_SEARCH="true" ;;
       "X") INSTALLED_SEARCH="true" ;;
       "y") GENERATE_INDEX="true" ;;
-      "a") ACTIVATED_MODULES="true" ;;
       "l") LOAD_MODULES="true" ;;
+      "a") ACTIVATED_MODULES="true" ;;
       *) ;;
     esac
   done
