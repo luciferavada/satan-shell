@@ -41,7 +41,8 @@ The __satan-shell__ module manager, `satan` has the following options.
   - `-Q` Search for available modules.
   - `-X` Search for installed modules.
   - `-y` Update the repository index.
-  - `-a` Use the `MODULES` array from `~/.zsh.d/modules.conf`.
+  - `-l` Load a list of modules.
+  - `-a` Use the `SATAN_MODULES` array as the list of modules.
 
 ### Variables
 
