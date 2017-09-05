@@ -15,7 +15,28 @@ local SATAN_MODULES="${HOME}/.zsh.d/modules.conf"
 #  Link source path
 local SATAN="${PWD#${HOME}/}"
 
-#  Colorize output
+#  Colorized output
+echo -n "$(tput bold; tput setaf 2)"
+echo "--> Backing up files..."
+echo -n "$(tput sgr0)"
+
+#  Date stamp
+local DATE_STAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+
+#  Backup files
+for file in ${SATAN_FILES[@]}; do
+
+  local SRC="${SATAN}/${file}"
+  local DST="${HOME}/.${file}"
+
+  if [ -f "${DST}" ]; then
+    echo "${SRC} -> ${DST}.${DATE_STAMP}"
+    mv "${DST}" "${DST}.${DATE_STAMP}"
+  fi
+
+done
+
+#  Colorized output
 echo -n "$(tput bold; tput setaf 2)"
 echo "--> Linking files..."
 echo -n "$(tput sgr0)"
@@ -25,10 +46,6 @@ for file in ${SATAN_FILES[@]}; do
 
   local SRC="${SATAN}/${file}"
   local DST="${HOME}/.${file}"
-
-  if [ -f "${DST}" ]; then
-    mv "${DST}" "${DST}.back"
-  fi
 
   echo "${SRC} -> ${DST}"
   ln -sfh "${SRC}" "${DST}"
