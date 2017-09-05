@@ -177,15 +177,16 @@ if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
   echo "#satan-ascii-title" >> "${SATAN_ZLOGIN_FILE}"
 fi
 
-#  Ignore gitkeep files
-git update-index --assume-unchanged "${HOME}/.zsh.d/.gitkeep"
-git update-index --assume-unchanged "${HOME}/.zsh.d.conf/.gitkeep"
-git update-index --assume-unchanged "${HOME}/.zsh.d.modules/.gitkeep"
-
-#  Remove gitkeep files
-rm -f "${HOME}/.zsh.d/.gitkeep"
-rm -f "${HOME}/.zsh.d.conf/.gitkeep"
-rm -f "${HOME}/.zsh.d.modules/.gitkeep"
+#  Remove and ignore gitkeep files
+for files in ${SATAN_FILES[@]}; do
+  if [ -d "${file}" ]; then
+    local GITKEEP="${PWD}/${file}/.gitkeep"
+    if [ -f "${GITKEEP}" ]; then
+      git update-index --assume-unchanged "${GITKEEP}"
+      rm -f "${GITKEEP}"
+    fi
+  fi
+done
 
 #  Load the environment
 source "${HOME}/.zshenv"
