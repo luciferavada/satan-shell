@@ -18,7 +18,7 @@ local SATAN="${PWD#${HOME}/}"
 #  Colorize output
 echo -n "$(tput bold; tput setaf 2)"
 echo "--> Linking files..."
-echo -n "$(tput sgr0; tput setaf 7)"
+echo -n "$(tput sgr0)"
 
 #  Link files
 for file in ${SATAN_FILES[@]}; do
@@ -34,9 +34,6 @@ for file in ${SATAN_FILES[@]}; do
   ln -sfh "${SRC}" "${DST}"
 
 done
-
-#  Reset colors
-echo -n "$(tput sgr0)"
 
 #  Write default rc file
 if [ ! -f "${SATAN_RC}" ]; then
