@@ -71,9 +71,9 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 ### Usage
 
-Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/rc.conf`.
+Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
 
-Module repositories are indexed in `~/.zsh.d/.modules.available` and installed modules are tracked in `~/.zsh.d/.modules.installed`.
+Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
 
 ### Variables
 
