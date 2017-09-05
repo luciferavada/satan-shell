@@ -179,8 +179,8 @@ fi
 
 #  Remove and ignore gitkeep files
 for files in ${SATAN_FILES[@]}; do
-  if [ -d "${file}" ]; then
-    local GITKEEP="${HOME}/.${file}/.gitkeep"
+  if [ -d "${PWD}/${file}" ]; then
+    local GITKEEP="${PWD}/.${file}/.gitkeep"
     if [ -f "${GITKEEP}" ]; then
       git update-index --assume-unchanged "${GITKEEP}"
       rm -f "${GITKEEP}"
