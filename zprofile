@@ -355,6 +355,7 @@ function satan-module-developer-status() {
 function satan-modules-available-find() {
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Finding available modules..."
+  echo -n "$(tput ${COLOR[reset]})"
   for module in ${@}; do
     satan-module-available-find "${module}"
   done
@@ -364,6 +365,7 @@ function satan-modules-available-find() {
 function satan-modules-available-search() {
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Searching available modules..."
+  echo -n "$(tput ${COLOR[reset]})"
   for module in ${@}; do
     satan-module-available-search "${module}"
   done
@@ -373,6 +375,7 @@ function satan-modules-available-search() {
 function satan-modules-installed-find() {
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Finding installed modules..."
+  echo -n "$(tput ${COLOR[reset]})"
   for module in ${@}; do
     satan-module-installed-find "${module}"
   done
@@ -382,6 +385,7 @@ function satan-modules-installed-find() {
 function satan-modules-installed-search() {
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Searching installed modules..."
+  echo -n "$(tput ${COLOR[reset]})"
   for module in ${@}; do
     satan-module-installed-search "${module}"
   done
@@ -545,6 +549,7 @@ function satan() {
     if [ -z "${MODULE_LIST[@]}" ]; then
       echo -n "$(tput bold; tput setaf ${COLOR[green]})"
       echo "--> Available modules..."
+      echo -n "$(tput ${COLOR[reset]})"
       satan-module-available-search
       return ${?}
     fi
@@ -556,6 +561,7 @@ function satan() {
     if [ -z "${MODULE_LIST[@]}" ]; then
       echo -n "$(tput bold; tput setaf ${COLOR[green]})"
       echo "--> Installed modules..."
+      echo -n "$(tput ${COLOR[reset]})"
       satan-module-installed-search
       return ${?}
     fi
