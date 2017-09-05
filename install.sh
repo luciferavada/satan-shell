@@ -13,7 +13,7 @@ local SATAN_FILES_BACKUPS=()
 local SATAN_FILES_LINKS=()
 
 #  Link source path
-local SATAN_SHELL="${PWD#${HOME}/}"
+local SATAN_SHELL_SOURCE="${PWD#${HOME}/}"
 
 #  Modules file
 local SATAN_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
@@ -33,7 +33,10 @@ local DATE_STAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 #  Check for files to backup
 for file in ${SATAN_FILES[@]}; do
 
-  if [ -f "${HOME}/.${file}}" ]; then
+  local FILE="${HOME}/.${file}"
+
+  #  Don't backup links
+  if [ -f "${FILE}" ] && [ ! -L "${FILE}" ]; then
     SATAN_FILES_BACKUPS+=("${file}")
   fi
 
@@ -65,12 +68,11 @@ for file in ${SATAN_FILES[@]}; do
     continue
   fi
 
+  local SRC="${SATAN_SHELL_SOURCE}/${file}"
   local DST="${HOME}/.${file}"
 
-  if [ -L "${DST}" ]; then
-    if [ ! "$(readlink ${DST})" = "${SATAN_SHELL}" ]; then
-      SATAN_FILES_LINKS+=("${file}")
-    fi
+  if [ ! "$(readlink ${DST})" = "${SRC}" ]; then
+    SATAN_FILES_LINKS+=("${file}")
   fi
 
 done
@@ -84,7 +86,7 @@ if [ -n "${SATAN_FILES_LINKS}" ]; then
 
   for file in ${SATAN_FILES_LINKS[@]}; do
 
-    local SRC="${SATAN_SHELL}/${file}"
+    local SRC="${SATAN_SHELL_SOURCE}/${file}"
     local DST="${HOME}/.${file}"
 
     echo "${SRC} -> ${DST}"
