@@ -177,6 +177,11 @@ if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
   echo "#satan-ascii-title" >> "${SATAN_ZLOGIN_FILE}"
 fi
 
+#  Remove gitkeep files
+rm -f "${HOME}/.zsh.d/.gitkeep"
+rm -f "${HOME}/.zsh.d.conf/.gitkeep"
+rm -f "${HOME}/.zsh.d.modules/.gitkeep"
+
 #  Load the environment
 source "${HOME}/.zshenv"
 source "${HOME}/.zprofile"
