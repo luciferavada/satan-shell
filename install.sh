@@ -177,6 +177,11 @@ if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
   echo "#satan-ascii-title" >> "${SATAN_ZLOGIN_FILE}"
 fi
 
+#  Ignore gitkeep files
+git update-index --assume-unchanged "${HOME}/.zsh.d/.gitkeep"
+git update-index --assume-unchanged "${HOME}/.zsh.d.conf/.gitkeep"
+git update-index --assume-unchanged "${HOME}/.zsh.d.modules/.gitkeep"
+
 #  Remove gitkeep files
 rm -f "${HOME}/.zsh.d/.gitkeep"
 rm -f "${HOME}/.zsh.d.conf/.gitkeep"
