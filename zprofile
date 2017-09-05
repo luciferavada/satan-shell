@@ -454,7 +454,9 @@ function satan-developer-status() {
 }
 
 #  Source satan-shell environment files
-function satan-init satan-reload() {
+function satan-reload() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Reloading satan-shell..."
   for file in ${SATAN_FILES[@]}; do
     source "${HOME}/.${file}"
   done
@@ -462,6 +464,9 @@ function satan-init satan-reload() {
 
 #  Update satan-shell and active modules
 function satan-update() {
+  echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+  echo "--> Updating satan-shell..."
+  echo -n "$(tput setaf ${COLOR[cyan]})"
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
   satan-modules-active-update
   satan-reload
