@@ -20,6 +20,7 @@ local SATAN_INDEX_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.installed"
 
 #  Display ascii art
 function satan-ascii-art() {
+  echo ""
   echo "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
   cat "${SATAN_INSTALL_DIRECTORY}/ascii-art"
   echo ""
