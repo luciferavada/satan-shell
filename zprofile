@@ -21,14 +21,32 @@ local SATAN_INDEX_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.installed"
 #  Display ascii art
 function satan-ascii-art() {
   echo ""
-  echo "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
+  echo ""
+  echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
   cat "${SATAN_INSTALL_DIRECTORY}/ascii-art"
   echo ""
-  echo "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
-  echo "   By: Lucifer Avada | Github: luciferavada | Twitter: @luciferavada"
-  echo "$(tput bold; tput setaf ${COLOR[red]})"
+}
+
+#  Display ascii title
+function satan-ascii-title() {
+  echo -n "$(tput bold; tput setaf ${COLOR[red]})"
   cat "${SATAN_INSTALL_DIRECTORY}/ascii-title"
   echo ""
+}
+
+#  Display credit
+function satan-credit() {
+  echo ""
+  echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
+  echo "   By: Lucifer Avada | Github: luciferavada | Twitter: @luciferavada"
+  echo ""
+}
+
+#  Display ascii header
+function satan-ascii-header() {
+  satan-ascii-art
+  satan-credit
+  satan-ascii-title
 }
 
 #  Get module remote origin url
