@@ -19,3 +19,6 @@ cd "${INSTALL_DIRECTORY}"
 
 #  Run the install script
 source "./install.sh"
+
+#  Move to the home directory
+cd "${HOME}"
