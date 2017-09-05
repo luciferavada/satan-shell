@@ -20,10 +20,15 @@ compinit
 promptinit
 
 #  man zshoptions
-setopt nullglob
+setopt null_glob
 
 setopt auto_pushd
 setopt pushd_ignore_dups
+
+setopt inc_append_history_time
+setopt extended_history
+setopt hist_verify
+setopt hist_ignore_dups
 
 setopt prompt_subst
 
