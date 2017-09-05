@@ -512,10 +512,11 @@ function satan() {
   local INSTALLED_SEARCH=""
   local GENERATE_INDEX=""
   local ACTIVATED_MODULES=""
+  local LOAD_MODULES=""
 
   local MODULE_LIST=()
 
-  while getopts ":SRQXya" option; do
+  while getopts ":SRQXyal" option; do
     case $option in
       "S") INSTALL_MODULES="true" ;;
       "R") UNINSTALL_MODULES="true" ;;
@@ -523,6 +524,7 @@ function satan() {
       "X") INSTALLED_SEARCH="true" ;;
       "y") GENERATE_INDEX="true" ;;
       "a") ACTIVATED_MODULES="true" ;;
+      "l") LOAD_MODULES="true" ;;
       *) ;;
     esac
   done
@@ -530,15 +532,28 @@ function satan() {
   MODULE_LIST=(${@:${OPTIND}})
 
   if [ -n "${ACTIVATED_MODULES}" ]; then
+    source "${HOME}/.zsh.d/modules.conf"
     MODULE_LIST=(${SATAN_MODULES[@]})
   fi
 
   if [ -n "${GENERATE_INDEX}" ]; then
+    source "${HOME}/.zsh.d/repositories.conf"
     satan-repository-index
   fi
 
   if [ -n "${INSTALL_MODULES}" ]; then
     satan-modules-install ${MODULE_LIST[@]}
+
+    if [ ! ${?} -eq 0 ]; then
+      return ${?}
+    fi
+  fi
+
+  if [ -n "${LOAD_MODULES}" ]; then
+    echo -n "$(tput bold; tput setaf ${COLOR[green]})"
+    echo "--> Loading modules..."
+    echo -n "$(tput ${COLOR[reset]})"
+    satan-modules-load ${MODULE_LIST[@]}
     return ${?}
   fi
 
