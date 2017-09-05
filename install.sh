@@ -100,7 +100,7 @@ if [ ! -f "${HOME}/.zlogin" ]; then
   echo "" >> "${HOME}/.zlogin"
 
   echo "#  Display ascii artwork with title and credit" >> "${HOME}/.zlogin"
-  echo "#satan-ascii-header" >> "${HOME}/.zlogin"
+  echo "satan-ascii-header" >> "${HOME}/.zlogin"
   echo "" >> "${HOME}/.zlogin"
 
   echo "#  Display ascii artwork" >> "${HOME}/.zlogin"
@@ -108,22 +108,17 @@ if [ ! -f "${HOME}/.zlogin" ]; then
   echo "" >> "${HOME}/.zlogin"
 
   echo "#  Display credit" >> "${HOME}/.zlogin"
-  echo "satan-credit" >> "${HOME}/.zlogin"
+  echo "#satan-credit" >> "${HOME}/.zlogin"
   echo "" >> "${HOME}/.zlogin"
 
   echo "#  Display ascii title" >> "${HOME}/.zlogin"
-  echo "satan-ascii-title" >> "${HOME}/.zlogin"
+  echo "#satan-ascii-title" >> "${HOME}/.zlogin"
 fi
 
 #  Load the environment
 source "${HOME}/.zshenv"
 source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
-
-#  Display ascii art
-satan-ascii-art
-
-#  Load zlogin
 source "${HOME}/.zlogin"
 
 #  Move to the home directory
