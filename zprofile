@@ -1,7 +1,8 @@
 #  Do not modify this file
 #  Source required files
-source "${HOME}/.zsh.d/rc.conf"
 source "${HOME}/.zsh.d/modules.conf"
+source "${HOME}/.zsh.d/repositories.conf"
+source "${HOME}/.zsh.d/variables.conf"
 
 #  Github URL
 local GITHUB_URL="https://github.com"
