@@ -158,7 +158,7 @@ function satan-module-install() {
     echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
     echo "${MODULE_LINE}"
 
-    echo -n "$(tput setaf ${COLOR[cyan]})"
+    echo -n "$(tput sgr0; tput setaf ${COLOR[white]})"
     git clone "${GITHUB_URL}/${MODULE_REPOSITORY}/${MODULE_NAME}.git" \
       "${SATAN_MODULES_DIRECTORY}/${MODULE_REPOSITORY}/${MODULE_NAME}"
 
@@ -184,7 +184,7 @@ function satan-module-uninstall() {
 
   echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
   echo "${MODULE_LINE}"
-  echo -n "$(tput setaf ${COLOR[cyan]})"
+  echo -n "$(tput sgr0; tput setaf ${COLOR[white]})"
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
   if [ ${?} -eq 0 ]; then
@@ -213,7 +213,7 @@ function satan-module-update() {
   echo -n "$(tput bold; tput setaf ${COLOR[green]})==> "
   echo "${MODULE_LINE}"
 
-  echo -n "$(tput setaf ${COLOR[cyan]})"
+  echo -n "$(tput sgr0; tput setaf ${COLOR[white]})"
   git -C "${MODULE_DIRECTORY}" pull
 
   if [ ! ${?} -eq 0 ]; then
@@ -460,15 +460,15 @@ function satan-reload() {
   for file in ${SATAN_FILES[@]}; do
     source "${HOME}/.${file}"
   done
-  echo -n "$(tput setaf ${COLOR[cyan]})"
-  echo "Reloaded."
+  echo -n "$(tput sgr0; tput setaf ${COLOR[white]})"
+  echo "--> Reloaded."
 }
 
 #  Update satan-shell and active modules
 function satan-update() {
   echo -n "$(tput bold; tput setaf ${COLOR[white]})"
   echo "--> Updating satan-shell..."
-  echo -n "$(tput setaf ${COLOR[cyan]})"
+  echo -n "$(tput sgr0; tput setaf ${COLOR[white]})"
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
   satan-modules-active-update
   satan-reload
