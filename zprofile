@@ -67,6 +67,12 @@ function _satan-index-available-write() {
     sort >> "${SATAN_INDEX_AVAILABLE}"
 }
 
+#  Add a module to the installed index file
+function _satan-index-installed-write() {
+  local MODULE_LINE="${1}"
+  echo "${MODULE_LINE}" >> "${SATAN_INDEX_INSTALLED}"
+}
+
 #  Remove a module from the installed index file
 function _satan-index-installed-remove() {
   local MODULE_LINE="${1}"
@@ -163,7 +169,7 @@ function satan-module-install() {
       "${SATAN_MODULES_DIRECTORY}/${MODULE_REPOSITORY}/${MODULE_NAME}"
 
     if [ ${?} -eq 0 ]; then
-      echo "${MODULE_LINE}" >> "${SATAN_INDEX_INSTALLED}"
+      _satan-index-installed-write "${MODULE_LINE}"
     else
       echo -n "$(tput bold; tput setaf ${COLOR[red]})"
       echo "--> failure."
