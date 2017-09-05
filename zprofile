@@ -494,6 +494,8 @@ function satan-reload() {
 
 #  Update satan-shell and active modules
 function satan-update() {
+  #  Allow us to change installation directories before updating
+  source "${HOME}/.zsh.d/variables.conf"
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Updating satan-shell..."
   echo -n "$(tput ${COLOR[reset]})"
