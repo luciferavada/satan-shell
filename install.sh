@@ -71,7 +71,7 @@ fi
 
 #  Create zlogin file
 if [ ! -f "${HOME}/.zlogin" ]; then
-  touch "${HOME}/.zlogin"
+  echo "satan-ascii-art" > "${HOME}/.zlogin"
 fi
 
 #  Load the environment

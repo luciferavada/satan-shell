@@ -4,9 +4,6 @@
 if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   satan-repository-index
   satan-modules-active-install
-
-  # Display ascii art.
-  satan-ascii-art
 fi
 
 #  Load active modules
