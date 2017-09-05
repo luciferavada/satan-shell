@@ -68,8 +68,15 @@ fi
 
 #  Create zlogin file
 if [ ! -f "${HOME}/.zlogin" ]; then
-  echo "#  Display ascii artwork and title" > "${HOME}/.zlogin"
+  echo "## User customization goes here" > "${HOME}/.zlogin"
+  echo "#  Display ascii artwork with title and credit" >> "${HOME}/.zlogin"
   echo "#satan-ascii-header" >> "${HOME}/.zlogin"
+  echo "" >> "${HOME}/.zlogin"
+  echo "#  Display ascii artwork" >> "${HOME}/.zlogin"
+  echo "#satan-ascii-art" >> "${HOME}/.zlogin"
+  echo "" >> "${HOME}/.zlogin"
+  echo "#  Display credit" >> "${HOME}/.zlogin"
+  echo "satan-credit" >> "${HOME}/.zlogin"
   echo "" >> "${HOME}/.zlogin"
   echo "#  Display ascii title" >> "${HOME}/.zlogin"
   echo "satan-ascii-title" >> "${HOME}/.zlogin"
@@ -79,11 +86,11 @@ fi
 source "${HOME}/.zshenv"
 source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
-source "${HOME}/.zlogin"
 
 #  Display art and credit
 satan-ascii-art
-satan-credit
+
+source "${HOME}/.zlogin"
 
 #  Move to the home directory
 cd "${HOME}"
