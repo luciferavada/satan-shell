@@ -69,6 +69,7 @@ fi
 #  Create zlogin file
 if [ ! -f "${HOME}/.zlogin" ]; then
   echo "## User customization goes here" > "${HOME}/.zlogin"
+  echo "" >> "${HOME}/.zlogin"
   echo "#  Display ascii artwork with title and credit" >> "${HOME}/.zlogin"
   echo "#satan-ascii-header" >> "${HOME}/.zlogin"
   echo "" >> "${HOME}/.zlogin"
