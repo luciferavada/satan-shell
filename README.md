@@ -59,13 +59,9 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 ### Functions
 
-`satan-init`
-
-  - Read *zshenv*, *zprofile*, *zshrc* and *zprofile*.
-
 `satan-reload`
 
-  - Synonymous with *satan-init*.
+  - Read *zshenv*, *zprofile*, *zshrc* and *zprofile*.
 
 `satan-update`
 
