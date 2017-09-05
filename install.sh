@@ -2,117 +2,177 @@
 
 #  Install files
 local SATAN_FILES=(
-  "zshenv" "zprofile" "zshrc"
+  "zshenv" "zprofile" "zshrc" "zlogin"
   "zsh.d" "zsh.d.conf" "zsh.d.modules"
 )
 
-#  RC file
-local SATAN_RC="${HOME}/.zsh.d/rc.conf"
+#  Files to backup
+local SATAN_FILES_BACKUPS=()
 
-#  Modules file
-local SATAN_MODULES="${HOME}/.zsh.d/modules.conf"
+#  Files to link
+local SATAN_FILES_LINKS=()
 
 #  Link source path
-local SATAN="${PWD#${HOME}/}"
+local SATAN_SHELL="${PWD#${HOME}/}"
 
-#  Colorized output
-echo -n "$(tput bold; tput setaf 2)"
-echo "--> Linking files..."
-echo -n "$(tput sgr0)"
+#  Modules file
+local SATAN_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
 
-#  Link files
+#  Repositories file
+local SATAN_REPOSITORIES_FILE="${HOME}/.zsh.d/repositories.conf"
+
+#  Variables file
+local SATAN_VARIABLES_FILE="${HOME}/.zsh.d/variables.conf"
+
+#  Zlogin file
+local SATAN_ZLOGIN_FILE="${HOME}/.zlogin"
+
+#  Date stamp
+local DATE_STAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+
+#  Check for files to backup
 for file in ${SATAN_FILES[@]}; do
 
-  local SRC="${SATAN}/${file}"
-  local DST="${HOME}/.${file}"
-
-  echo "${SRC} -> ${DST}"
-  ln -sfh "${SRC}" "${DST}"
+  if [ -f "${HOME}/.${file}}" ]; then
+    SATAN_FILES_BACKUPS+=("${file}")
+  fi
 
 done
 
-#  Write default rc file
-if [ ! -f "${SATAN_RC}" ]; then
+#  Backup files
+if [ -n "${SATAN_FILES_BACKUPS}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
-  echo "--> Writing default ~/.zsh.d/rc.conf..."
+  echo "--> Backing up files..."
   echo -n "$(tput sgr0)"
 
-  #  Write file
-  echo "#  Install dircetory" > "${SATAN_RC}"
-  echo "SATAN_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SATAN_RC}"
-  echo "" >> "${SATAN_RC}"
+  for file in ${SATAN_FILES_BACKUPS[@]}; do
 
-  echo "#  Configuration directory" >> "${SATAN_RC}"
-  echo "SATAN_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
-    "${SATAN_RC}"
-  echo "" >> "${SATAN_RC}"
+    local SRC="${HOME}/.${file}"
+    local DST="${HOME}/.${file}.${DATE_STAMP}"
 
-  echo "#  Modules directory" >> "${SATAN_RC}"
-  echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> "${SATAN_RC}"
-  echo "" >> "${SATAN_RC}"
+    echo "${SRC} -> ${DST}"
+    mv "${SRC}" "${DST}"
 
-  echo "#  Repositories" >> "${SATAN_RC}"
-  echo "SATAN_REPOSITORIES=(" >> "${SATAN_RC}"
-  echo "  \"satan-core\" \"satan-extra\" \"satan-community\"" >> "${SATAN_RC}"
-  echo ")" >> "${SATAN_RC}"
+  done
+fi
+
+#  Check for files to link
+for file in ${SATAN_FILES[@]}; do
+
+  #  Don't link zlogin
+  if [ "${file}" = "zlogin" ]; then
+    continue
+  fi
+
+  local DST="${HOME}/.${file}"
+
+  if [ -L "${DST}" ]; then
+    if [ ! "$(readlink ${DST})" = "${SATAN_SHELL}" ]; then
+      SATAN_FILES_LINKS+=("${file}")
+    fi
+  fi
+
+done
+
+#  Link files
+if [ -n "${SATAN_FILES_LINKS}" ]; then
+  #  Colorized output
+  echo -n "$(tput bold; tput setaf 2)"
+  echo "--> Linking files..."
+  echo -n "$(tput sgr0)"
+
+  for file in ${SATAN_FILES_LINKS[@]}; do
+
+    local SRC="${SATAN_SHELL}/${file}"
+    local DST="${HOME}/.${file}"
+
+    echo "${SRC} -> ${DST}"
+    ln -sfh "${SRC}" "${DST}"
+
+  done
 fi
 
 #  Write default modules file
-if [ ! -f "${SATAN_MODULES}" ]; then
+if [ ! -f "${SATAN_MODULES_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zsh.d/modules.conf..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "#  Modules are loaded in order" > "${SATAN_MODULES}"
-  echo "SATAN_MODULES=(" >> "${SATAN_MODULES}"
+  echo "#  Modules are loaded in order" > "${SATAN_MODULES_FILE}"
+  echo "SATAN_MODULES=(" >> "${SATAN_MODULES_FILE}"
   echo "  \"prompt\" \"history\" \"man\" \"ls\" \"git\"" >> \
-    "${SATAN_MODULES}"
-  echo ")" >> "${SATAN_MODULES}"
+    "${SATAN_MODULES_FILE}"
+  echo ")" >> "${SATAN_MODULES_FILE}"
 fi
 
-#  Backup zlogin
-if [ -f "${HOME}/.zlogin" ]; then
+#  Write default repositories file
+if [ ! -f "${SATAN_REPOSITORIES_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
-  echo "--> Backing up ~/.zlogin..."
+  echo "--> Writing default ~/.zsh.d/repositories.conf..."
   echo -n "$(tput sgr0)"
 
-  #  Date stamp
-  local DATE_STAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+  #  Write file
+  echo "#  Repositories are indexed in order" > "${SATAN_REPOSITORIES_FILE}"
+  echo "SATAN_REPOSITORIES=(" >> "${SATAN_REPOSITORIES_FILE}"
+  echo "  \"satan-core\" \"satan-extra\" \"satan-community\"" >> \
+    "${SATAN_REPOSITORIES_FILE}"
+  echo ")" >> "${SATAN_REPOSITORIES_FILE}"
 
-  #  Add datestamp to old zlogin
-  echo "~/.zlogin -> ~/.zlogin.${DATE_STAMP}"
-  mv "${HOME}/.zlogin" "${HOME}/.zlogin.${DATE_STAMP}"
 fi
 
-#  Create zlogin file
-if [ ! -f "${HOME}/.zlogin" ]; then
+#  Write default variables file
+if [ ! -f "${SATAN_VARIABLES_FILE}" ]; then
+  #  Colorized output
+  echo -n "$(tput bold; tput setaf 2)"
+  echo "--> Writing default ~/.zsh.d/rc.conf..."
+  echo -n "$(tput sgr0)"
+
+  #  Write file
+  echo "#  Install dircetory" > "${SATAN_VARIABLES_FILE}"
+  echo "SATAN_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SATAN_VARIABLES_FILE}"
+  echo "" >> "${SATAN_VARIABLES_FILE}"
+
+  echo "#  Configuration directory" >> "${SATAN_VARIABLES_FILE}"
+  echo "SATAN_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
+    "${SATAN_VARIABLES_FILE}"
+  echo "" >> "${SATAN_VARIABLES_FILE}"
+
+  echo "#  Modules directory" >> "${SATAN_VARIABLES_FILE}"
+  echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
+    "${SATAN_VARIABLES_FILE}"
+  echo "" >> "${SATAN_VARIABLES_FILE}"
+fi
+
+#  Write default zlogin file
+if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zlogin..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "## User customization goes here" > "${HOME}/.zlogin"
-  echo "" >> "${HOME}/.zlogin"
+  echo "## User customization goes here" > "${SATAN_ZLOGIN_FILE}"
+  echo "" >> "${SATAN_ZLOGIN_FILE}"
 
-  echo "#  Display ascii artwork with title and credit" >> "${HOME}/.zlogin"
-  echo "satan-ascii-header" >> "${HOME}/.zlogin"
-  echo "" >> "${HOME}/.zlogin"
+  echo "#  Display ascii artwork with title and credit" >> \
+    "${SATAN_ZLOGIN_FILE}"
+  echo "satan-ascii-header" >> "${SATAN_ZLOGIN_FILE}"
+  echo "" >> "${SATAN_ZLOGIN_FILE}"
 
-  echo "#  Display ascii artwork" >> "${HOME}/.zlogin"
-  echo "#satan-ascii-art" >> "${HOME}/.zlogin"
-  echo "" >> "${HOME}/.zlogin"
+  echo "#  Display ascii artwork" >> "${SATAN_ZLOGIN_FILE}"
+  echo "#satan-ascii-art" >> "${SATAN_ZLOGIN_FILE}"
+  echo "" >> "${SATAN_ZLOGIN_FILE}"
 
-  echo "#  Display credit" >> "${HOME}/.zlogin"
-  echo "#satan-credit" >> "${HOME}/.zlogin"
-  echo "" >> "${HOME}/.zlogin"
+  echo "#  Display credit" >> "${SATAN_ZLOGIN_FILE}"
+  echo "#satan-credit" >> "${SATAN_ZLOGIN_FILE}"
+  echo "" >> "${SATAN_ZLOGIN_FILE}"
 
-  echo "#  Display ascii title" >> "${HOME}/.zlogin"
-  echo "#satan-ascii-title" >> "${HOME}/.zlogin"
+  echo "#  Display ascii title" >> "${SATAN_ZLOGIN_FILE}"
+  echo "#satan-ascii-title" >> "${SATAN_ZLOGIN_FILE}"
 fi
 
 #  Load the environment
@@ -120,6 +180,3 @@ source "${HOME}/.zshenv"
 source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
 source "${HOME}/.zlogin"
-
-#  Move to the home directory
-cd "${HOME}"
