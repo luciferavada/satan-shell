@@ -24,7 +24,7 @@ function satan-ascii-art() {
   cat "${SATAN_INSTALL_DIRECTORY}/ascii-art"
   echo ""
   echo "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
-  echo "   By: Lucifer Avada | Github: luciferavada | Twitter: @napalmbrain"
+  echo "   By: Lucifer Avada | Github: luciferavada | Twitter: @luciferavada"
   echo "$(tput bold; tput setaf ${COLOR[red]})"
   cat "${SATAN_INSTALL_DIRECTORY}/ascii-title"
   echo ""
