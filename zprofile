@@ -460,6 +460,8 @@ function satan-reload() {
   for file in ${SATAN_FILES[@]}; do
     source "${HOME}/.${file}"
   done
+  echo -n "$(tput setaf ${COLOR[cyan]})"
+  echo "Reloaded."
 }
 
 #  Update satan-shell and active modules
