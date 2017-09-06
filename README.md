@@ -49,6 +49,16 @@ The __satan-shell__ module manager, `satan` has the following options.
   - `-l` Load a list of modules.
   - `-a` Use the `SATAN_MODULES` array as the list of modules.
 
+### Documentation
+
+The __satan-shell__ documentation viewer, `satan-info` can display *README.md* files for a module.
+
+If no module is specified, `satan-info` displays the __satan-shell__ *README.md*.
+
+If `mdv` is available on the system, it is used to display *README.md* files.
+
+  - [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation)
+
 ### Variables
 
 #### Directories
