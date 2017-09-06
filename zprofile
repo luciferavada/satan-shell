@@ -1,8 +1,4 @@
 #  Do not modify this file
-#  Source required files
-source "${HOME}/.zsh.d/modules.conf"
-source "${HOME}/.zsh.d/repositories.conf"
-source "${HOME}/.zsh.d/variables.conf"
 
 #  Github URL
 local GITHUB_URL="https://github.com"
@@ -14,10 +10,25 @@ local GITHUB_API_URL="https://api.github.com"
 local SATAN_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
 
 #  Satan modules index
-local SATAN_INDEX_AVAILABLE="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.available"
+local SATAN_INDEX_AVAILABLE="${HOME}/.zsh.d/.index.available"
 
 #  Satan modules installed
-local SATAN_INDEX_INSTALLED="${SATAN_INSTALL_DIRECTORY}/zsh.d/.index.installed"
+local SATAN_INDEX_INSTALLED="${HOME}/.zsh.d/.index.installed"
+
+#  Satan configuration files
+local SATAN_DIRECTORIES_FILE="${HOME}/.zsh.d/directories.conf"
+local SATAN_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
+local SATAN_REPOSITORIES_FILE="${HOME}/.zsh.d/repositories.conf"
+local SATAN_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
+
+#  Load configuration variables
+function satan-load-configuration-variables \
+         satan-reload-configuration-variables() {
+  source "${SATAN_DIRECTORIES_FILE}"
+  source "${SATAN_MODULES_FILE}"
+  source "${SATAN_REPOSITORIES_FILE}"
+  source "${SATAN_SETTINGS_FILE}"
+}
 
 #  Display ascii art
 function satan-ascii-art() {
@@ -104,7 +115,11 @@ function _satan-index-installed-remove() {
 function satan-repository-index() {
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Indexing repositories..."
+
+  satan-reload-configuration-variables
+
   rm -f "${SATAN_INDEX_AVAILABLE}"
+
   for repository in ${SATAN_REPOSITORIES[@]}; do
     echo "$(tput bold; tput setaf ${COLOR[magenta]})==> ${repository}"
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
@@ -170,6 +185,8 @@ function satan-module-install() {
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPOSITORY="${MODULE_INFO[1]}"
 
+  satan-reload-configuration-variables
+
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
     echo "${MODULE}"
@@ -202,6 +219,8 @@ function satan-module-uninstall() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
 
+  satan-reload-configuration-variables
+
   if [ -z "${MODULE_LINE}" ]; then
     return 0
   fi
@@ -226,6 +245,8 @@ function satan-module-update() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+
+  satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
@@ -259,10 +280,20 @@ function satan-module-load() {
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
   local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
 
+  satan-reload-configuration-variables
+
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[red]})==> "
-    echo "${MODULE} not installed."
+    echo "${MODULE}"
+    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+    echo "--> not installed."
     return 1
+  fi
+
+  if [ "${SATAN_DISPLAY_MODULES_LOAD}" = "true" ]; then
+    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
+    echo "${MODULE_LINE}"
+    echo -n "$(tput ${COLOR[reset]})"
   fi
 
   for file in ${MODULE_FILES[@]}; do
@@ -276,6 +307,8 @@ function satan-module-load() {
 function satan-module-developer-enable() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
+
+  satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
@@ -306,6 +339,8 @@ function satan-module-developer-disable() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
 
+  satan-reload-configuration-variables
+
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
     echo "${MODULE}"
@@ -334,6 +369,8 @@ function satan-module-developer-disable() {
 function satan-module-developer-status() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
+
+  satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
@@ -420,6 +457,13 @@ function satan-modules-update() {
 
 #  Load a list of modules
 function satan-modules-load() {
+  satan-reload-configuration-variables
+
+  if [ "${SATAN_DISPLAY_MODULES_LOAD}" = "true" ]; then
+    echo -n "$(tput bold; tput setaf ${COLOR[green]})"
+    echo "--> Loading modules..."
+  fi
+
   for module in ${@}; do
     satan-module-load "${module}"
   done
@@ -494,12 +538,14 @@ function satan-reload() {
 
 #  Update satan-shell and active modules
 function satan-update() {
-  #  Allow us to change installation directories before updating
-  source "${HOME}/.zsh.d/variables.conf"
   echo -n "$(tput bold; tput setaf ${COLOR[green]})"
   echo "--> Updating satan-shell..."
   echo -n "$(tput ${COLOR[reset]})"
+
+  satan-reload-configuration-variables
+
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
+
   satan-modules-active-update
   satan-reload
 }
@@ -529,15 +575,15 @@ function satan() {
     esac
   done
 
+  satan-reload-configuration-variables
+
   MODULE_LIST=(${@:${OPTIND}})
 
   if [ -n "${ACTIVATED_MODULES}" ]; then
-    source "${HOME}/.zsh.d/modules.conf"
     MODULE_LIST=(${SATAN_MODULES[@]})
   fi
 
   if [ -n "${GENERATE_INDEX}" ]; then
-    source "${HOME}/.zsh.d/repositories.conf"
     satan-repository-index
   fi
 
@@ -550,9 +596,6 @@ function satan() {
   fi
 
   if [ -n "${LOAD_MODULES}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-    echo "--> Loading modules..."
-    echo -n "$(tput ${COLOR[reset]})"
     satan-modules-load ${MODULE_LIST[@]}
     return ${?}
   fi
