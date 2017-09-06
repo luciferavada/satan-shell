@@ -591,6 +591,8 @@ function satan-info() {
     mdv -t "${MDV_THEME}" "${README}" | less -R
   else
     cat "${README}" | less
+    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+    echo "--> install mdv (terminal markdown viewer) for formated output."
   fi
 }
 
