@@ -197,7 +197,7 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
   echo "#  Display loaded modules" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_MODULES_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_DISPLAY_MODULE_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 fi
 

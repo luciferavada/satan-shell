@@ -290,7 +290,7 @@ function satan-module-load() {
     return 1
   fi
 
-  if [ "${SATAN_DISPLAY_MODULES_LOAD}" = "true" ]; then
+  if [ "${SATAN_DISPLAY_MODULE_LOAD}" = "true" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
     echo "${MODULE_LINE}"
     echo -n "$(tput ${COLOR[reset]})"
@@ -459,7 +459,7 @@ function satan-modules-update() {
 function satan-modules-load() {
   satan-reload-configuration-variables
 
-  if [ "${SATAN_DISPLAY_MODULES_LOAD}" = "true" ]; then
+  if [ "${SATAN_DISPLAY_MODULE_LOAD}" = "true" ]; then
     echo -n "$(tput bold; tput setaf ${COLOR[green]})"
     echo "--> Loading modules..."
   fi
