@@ -564,7 +564,6 @@ function satan-update() {
 function satan-info() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
-  local MDV_THEME="785.6556"
   local README=""
 
   satan-reload-configuration-variables
@@ -588,7 +587,7 @@ function satan-info() {
   fi
 
   if [ -n "$(command -v mdv)" ]; then
-    mdv -t "${MDV_THEME}" "${README}" | less -R
+    mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R
   else
     cat "${README}" | less
     echo -n "$(tput bold; tput setaf ${COLOR[white]})"

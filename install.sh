@@ -199,6 +199,10 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "#  Display loaded modules" >> "${SATAN_SETTINGS_FILE}"
   echo "SATAN_DISPLAY_MODULE_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
+
+  echo "#  Markdown Viewer (mdv) theme" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_MARKDOWN_VIEWER_THEME=\"880.1331\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
 fi
 
 #  Write default zlogin file
