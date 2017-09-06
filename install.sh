@@ -201,8 +201,7 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
   echo "#  Markdown Viewer (mdv) theme" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_MARKDOWN_VIEWER_THEME=\"960.847\" # Marieke" >> \
-    "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_MARKDOWN_VIEWER_THEME=\"960.847\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 fi
 
