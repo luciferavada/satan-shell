@@ -65,7 +65,7 @@ function satan-message() {
   local TYPE="${1}"
   local MESSAGE="${2}"
 
-  case ${TYPE} in
+  case "${TYPE}" in
     "title") echo -n "$(tput bold; tput setaf ${COLOR[green]})--> " ;;
     "bold") echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> " ;;
     "info") echo -n "$(tput bold; tput setaf ${COLOR[white]})--> " ;;
