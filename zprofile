@@ -60,6 +60,22 @@ function satan-ascii-header() {
   satan-ascii-title
 }
 
+#  Display colorized message
+function satan-message() {
+  local TYPE="${1}"
+  local MESSAGE="${2}"
+
+  case ${TYPE} in
+    "title") echo -n "$(tput bold; tput setaf ${COLOR[green]})--> " ;;
+    "bold") echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> " ;;
+    "info") echo -n "$(tput bold; tput setaf ${COLOR[white]})--> " ;;
+    "error") echo -n "$(tput bold; tput setaf ${COLOR[red]})--> " ;;
+  esac
+
+  echo "${MESSAGE}"
+  echo -n "$(tput ${COLOR[reset]})"
+}
+
 #  Get module remote origin url
 function _satan-module-get-url() {
   local MODULE_LINE="${1}"
@@ -113,18 +129,20 @@ function _satan-index-installed-remove() {
 
 #  Index satan modules
 function satan-repository-index() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Indexing repositories..."
+  satan-message "title" "Indexing repositories..."
 
   satan-reload-configuration-variables
 
   rm -f "${SATAN_INDEX_AVAILABLE}"
 
   for repository in ${SATAN_REPOSITORIES[@]}; do
-    echo "$(tput bold; tput setaf ${COLOR[magenta]})==> ${repository}"
+
+    satan-message "bold" "${repository}"
+
     local REPOSITORY_URL="${GITHUB_API_URL}/orgs/${repository}/repos"
     curl --silent --request "GET" "${REPOSITORY_URL}" | \
       _satan-index-available-write
+
   done
 }
 
@@ -198,30 +216,26 @@ function satan-module-install() {
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> not found."
+    satan-message "bold" "${MODULE}"
+    satan-message "info" "not found."
     return 0
   fi
 
   if [ -z "$(satan-module-installed-find ${MODULE_LINE})" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE_LINE}"
 
-    echo -n "$(tput ${COLOR[reset]})"
+    satan-message "bold" "${MODULE_LINE}"
+
     git clone "${GITHUB_URL}/${MODULE_REPOSITORY}/${MODULE_NAME}.git" \
       "${SATAN_MODULES_DIRECTORY}/${MODULE_REPOSITORY}/${MODULE_NAME}"
 
     if [ ${?} -eq 0 ]; then
       _satan-index-installed-write "${MODULE_LINE}"
     else
-      echo -n "$(tput bold; tput setaf ${COLOR[red]})"
-      echo "--> failure."
+      satan-message "error" "failure."
       return 1
     fi
-  fi
 
+  fi
 }
 
 #  Uninstall a module
@@ -235,17 +249,14 @@ function satan-module-uninstall() {
     return 0
   fi
 
-  echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-  echo "${MODULE_LINE}"
+  satan-message "bold" "${MODULE_LINE}"
 
-  echo -n "$(tput ${COLOR[reset]})"
   rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
   if [ ${?} -eq 0 ]; then
     _satan-index-installed-remove "${MODULE_LINE}"
   else
-    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
-    echo "--> failure."
+    satan-message "error" "failure."
     return 1
   fi
 }
@@ -259,22 +270,17 @@ function satan-module-update() {
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> not installed."
+    satan-message "bold" "${MODULE}"
+    satan-message "info" "not installed."
     return 0
   fi
 
-  echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-  echo "${MODULE_LINE}"
+  satan-message "bold" "${MODULE_LINE}"
 
-  echo -n "$(tput ${COLOR[reset]})"
   git -C "${MODULE_DIRECTORY}" pull
 
   if [ ! ${?} -eq 0 ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[red]})"
-    echo "--> failure."
+    satan-message "error" "failure."
     return 1
   fi
 }
@@ -293,17 +299,13 @@ function satan-module-load() {
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[red]})==> "
-    echo "${MODULE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> not installed."
+    satan-message "bold" "${MODULE}"
+    satan-message "error" "not installed."
     return 1
   fi
 
   if [ "${SATAN_DISPLAY_MODULE_LOAD}" = "true" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE_LINE}"
-    echo -n "$(tput ${COLOR[reset]})"
+    satan-message "bold" "${MODULE_LINE}"
   fi
 
   for file in ${MODULE_FILES[@]}; do
@@ -321,24 +323,20 @@ function satan-module-developer-enable() {
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> not installed."
+    satan-message "bold" "${MODULE}"
+    satan-message "info" "not installed."
     return 0
   fi
 
   local MODULE_SSH=$(_satan-module-get-url "${MODULE_LINE}" | grep "git@")
 
   if [ -z "${MODULE_SSH}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE_LINE}"
+    satan-message "bold" "${MODULE_LINE}"
 
     _satan-module-set-url "${MODULE_LINE}" "ssh"
 
     if [ ! ${?} -eq 0 ]; then
-      echo -n "$(tput bold; tput setaf ${COLOR[red]})"
-      echo "--> failure."
+      satan-message "error" "failure."
       return 1
     fi
   fi
@@ -352,24 +350,20 @@ function satan-module-developer-disable() {
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> not installed."
+    satan-message "bold" "${MODULE}"
+    satan-message "info" "not installed."
     return 0
   fi
 
   local MODULE_HTTPS=$(_satan-module-get-url "${MODULE_LINE}" | grep "https")
 
   if [ -z "${MODULE_HTTPS}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE_LINE}"
+    satan-message "bold" "${MODULE_LINE}"
 
     _satan-module-set-url "${MODULE_LINE}" "https"
 
     if [ ! ${?} -eq 0 ]; then
-      echo -n "$(tput bold; tput setaf ${COLOR[red]})"
-      echo "--> failure."
+      satan-message "error" "failure."
       return 1
     fi
   fi
@@ -383,26 +377,20 @@ function satan-module-developer-status() {
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE}"
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> not installed."
+    satan-message "bold" "${MODULE}"
+    satan-message "info" "not installed."
     return 0
   fi
 
   if [ -n "$(_satan-module-modified ${MODULE_LINE})" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> "
-    echo "${MODULE_LINE}"
-    echo -n "$(tput setaf ${COLOR[white]})"
-    echo "--> modified."
+    satan-message "bold" "${MODULE_LINE}"
+    satan-message "info" "modified."
   fi
 }
 
 #  Find a list of available modules
 function satan-modules-available-find() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Finding available modules..."
-  echo -n "$(tput ${COLOR[reset]})"
+  satan-message "title" "Finding available modules..."
   for module in ${@}; do
     satan-module-available-find "${module}"
   done
@@ -410,9 +398,7 @@ function satan-modules-available-find() {
 
 #  Search a list of available modules
 function satan-modules-available-search() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Searching available modules..."
-  echo -n "$(tput ${COLOR[reset]})"
+  satan-message "title" "Searching available modules..."
   for module in ${@}; do
     satan-module-available-search "${module}"
   done
@@ -420,9 +406,7 @@ function satan-modules-available-search() {
 
 #  Find a list of installed modules
 function satan-modules-installed-find() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Finding installed modules..."
-  echo -n "$(tput ${COLOR[reset]})"
+  satan-message "title" "Finding installed modules..."
   for module in ${@}; do
     satan-module-installed-find "${module}"
   done
@@ -430,9 +414,7 @@ function satan-modules-installed-find() {
 
 #  Search a list of installed modules
 function satan-modules-installed-search() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Searching installed modules..."
-  echo -n "$(tput ${COLOR[reset]})"
+  satan-message "title" "Searching installed modules..."
   for module in ${@}; do
     satan-module-installed-search "${module}"
   done
@@ -440,8 +422,7 @@ function satan-modules-installed-search() {
 
 #  Install a list of modules
 function satan-modules-install() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Installing modules..."
+  satan-message "title" "Installing modules..."
   for module in ${@}; do
     satan-module-install "${module}"
   done
@@ -449,8 +430,7 @@ function satan-modules-install() {
 
 #  Uninstall a list of modules
 function satan-modules-uninstall() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Uninstalling modules..."
+  satan-message "title" "Uninstalling modules..."
   for module in ${@}; do
     satan-module-uninstall "${module}"
   done
@@ -458,8 +438,7 @@ function satan-modules-uninstall() {
 
 #  Update a list of modules
 function satan-modules-update() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Updating modules..."
+  satan-message "title" "Updating modules..."
   for module in ${@}; do
     satan-module-update "${module}"
   done
@@ -470,8 +449,7 @@ function satan-modules-load() {
   satan-reload-configuration-variables
 
   if [ "${SATAN_DISPLAY_MODULE_LOAD}" = "true" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-    echo "--> Loading modules..."
+    satan-message "title" "Loading modules..."
   fi
 
   for module in ${@}; do
@@ -481,8 +459,7 @@ function satan-modules-load() {
 
 #  Enable developer mode for a list of modules
 function satan-modules-developer-enable() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Enabling developer mode..."
+  satan-message "title" "Enabling developer mode..."
   for module in ${@}; do
     satan-module-developer-enable "${module}"
   done
@@ -490,8 +467,7 @@ function satan-modules-developer-enable() {
 
 #  Disable developer mode for a list of modules
 function satan-modules-developer-disable() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Disabling developer mode..."
+  satan-message "title" "Disabling developer mode..."
   for module in ${@}; do
     satan-module-developer-disable "${module}"
   done
@@ -499,8 +475,7 @@ function satan-modules-developer-disable() {
 
 #  Check for changes in a list of modules
 function satan-modules-developer-status() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Checking modules for changes..."
+  satan-message "title" "Checking modules for changes..."
   for module in ${@}; do
     satan-module-developer-status "${module}"
   done
@@ -538,9 +513,7 @@ function satan-developer-status() {
 
 #  Source satan-shell environment files
 function satan-reload() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Reloading satan-shell..."
-  echo -n "$(tput ${COLOR[reset]})"
+  satan-message "title" "Reloading satan-shell..."
   for file in ${SATAN_FILES[@]}; do
     source "${HOME}/.${file}"
   done
@@ -548,9 +521,7 @@ function satan-reload() {
 
 #  Update satan-shell and active modules
 function satan-update() {
-  echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-  echo "--> Updating satan-shell..."
-  echo -n "$(tput ${COLOR[reset]})"
+  satan-message "title" "Updating satan-shell..."
 
   satan-reload-configuration-variables
 
@@ -572,8 +543,7 @@ function satan-info() {
     if [ -n "${MODULE_LINE}" ]; then
       README="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}/README.md"
     else
-      echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-      echo "--> module not found."
+      satan-message "info" "module not found."
       return
     fi
   else
@@ -581,8 +551,7 @@ function satan-info() {
   fi
 
   if [ ! -f "${README}" ]; then
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> readme not found."
+    satan-message "info" "readme not found."
     return
   fi
 
@@ -590,8 +559,7 @@ function satan-info() {
     mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R
   else
     cat "${README}" | less
-    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
-    echo "--> install mdv (terminal markdown viewer) for formated output."
+    satan-message "info" "install mdv (terminal markdown viewer) for formated output."
   fi
 }
 
@@ -652,9 +620,7 @@ function satan() {
 
   if [ -n "${AVAILABLE_SEARCH}" ]; then
     if [ -z "${MODULE_LIST[@]}" ]; then
-      echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-      echo "--> Available modules..."
-      echo -n "$(tput ${COLOR[reset]})"
+      satan-message "title" "Available modules..."
       satan-module-available-search
       return ${?}
     fi
@@ -664,9 +630,7 @@ function satan() {
 
   if [ -n "${INSTALLED_SEARCH}" ]; then
     if [ -z "${MODULE_LIST[@]}" ]; then
-      echo -n "$(tput bold; tput setaf ${COLOR[green]})"
-      echo "--> Installed modules..."
-      echo -n "$(tput ${COLOR[reset]})"
+      satan-message "title" "Installing modules..."
       satan-module-installed-search
       return ${?}
     fi
