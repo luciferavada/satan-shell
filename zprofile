@@ -6,9 +6,6 @@ local GITHUB_URL="https://github.com"
 #  Github API URL
 local GITHUB_API_URL="https://api.github.com"
 
-#  Environment files
-local SATAN_FILES=("zshenv" "zprofile" "zshrc" "zlogin")
-
 #  Satan modules index
 local SATAN_INDEX_AVAILABLE="${HOME}/.zsh.d/.index.available"
 
@@ -514,9 +511,7 @@ function satan-developer-status() {
 #  Source satan-shell environment files
 function satan-reload() {
   satan-message "title" "Reloading satan-shell..."
-  for file in ${SATAN_FILES[@]}; do
-    source "${HOME}/.${file}"
-  done
+  exec -l $(command -v zsh)
 }
 
 #  Update satan-shell and active modules
