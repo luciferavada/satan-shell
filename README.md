@@ -26,6 +26,11 @@ User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
 
 Primary configuration files are in the `~/.zsh.d` directory.
 
+  - `~/.zsh.d/directories.conf`
+  - `~/.zsh.d/modules.conf`
+  - `~/.zsh.d/repositories.conf`
+  - `~/.zsh.d/settings.conf`
+
 Modules are installed to the `~/.zsh.d.modules` directory.
 
 Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
@@ -46,6 +51,8 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 ### Variables
 
+#### Directories
+
 `SATAN_INSTALL_DIRECTORY`
 
   - The path to the installation directory.
@@ -57,6 +64,20 @@ The __satan-shell__ module manager, `satan` has the following options.
 `SATAN_MODULES_DIRECTORY`
 
   - The path to the modules directory.
+
+#### Settings
+
+`SATAN_DISPLAY_ASCII_ART`
+
+  - Display ASCII artwork on load.
+
+`SATAN_DISPLAY_ASCII_TITLE`
+
+  - Display ASCII title on load.
+
+`SATAN_DISPLAY_MODULE_LOAD`
+
+  - Display loaded modules.
 
 ### Functions
 
