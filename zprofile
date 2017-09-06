@@ -130,8 +130,12 @@ function satan-repository-index() {
 
 #  Find an available module
 function satan-module-available-find() {
+  local MODULE="${1}"
+  if [ -z "${MODULE}" ]; then
+    return
+  fi
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
-    local SPLIT=(`echo ${1//\// }`)
+    local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
       cat "${SATAN_INDEX_AVAILABLE}" | grep --max-count "1" --regexp "/${1}$"
     else
@@ -142,8 +146,9 @@ function satan-module-available-find() {
 
 #  Search available modules
 function satan-module-available-search() {
+  local MODULE="${1}"
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
-    local SPLIT=(`echo ${1//\// }`)
+    local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
       cat "${SATAN_INDEX_AVAILABLE}" | grep --regexp "/.*${1}.*"
     else
@@ -155,8 +160,12 @@ function satan-module-available-search() {
 
 #  Find an installed module
 function satan-module-installed-find() {
+  local MODULE="${1}"
+  if [ -z "${MODULE}" ]; then
+    return
+  fi
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
-    local SPLIT=(`echo ${1//\// }`)
+    local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
       cat "${SATAN_INDEX_INSTALLED}" | grep --max-count "1" --regexp "/${1}$"
     else
@@ -167,8 +176,9 @@ function satan-module-installed-find() {
 
 #  Search installed modules
 function satan-module-installed-search() {
+  local MODULE="${1}"
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
-    local SPLIT=(`echo ${1//\// }`)
+    local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
       cat "${SATAN_INDEX_INSTALLED}" | grep  --regexp "/.*${1}.*"
     else
@@ -548,6 +558,40 @@ function satan-update() {
 
   satan-modules-active-update
   satan-reload
+}
+
+#  Display readme for satan-shell or a module
+function satan-info() {
+  local MODULE="${1}"
+  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
+  local MDV_THEME="785.6556"
+  local README=""
+
+  satan-reload-configuration-variables
+
+  if [ -n "${MODULE}" ]; then
+    if [ -n "${MODULE_LINE}" ]; then
+      README="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}/README.md"
+    else
+      echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+      echo "--> module not found."
+      return
+    fi
+  else
+    README="${SATAN_INSTALL_DIRECTORY}/README.md"
+  fi
+
+  if [ ! -f "${README}" ]; then
+    echo -n "$(tput bold; tput setaf ${COLOR[white]})"
+    echo "--> readme not found."
+    return
+  fi
+
+  if [ -n "$(command -v mdv)" ]; then
+    mdv -t "${MDV_THEME}" "${README}" | less -R
+  else
+    cat "${README}" | less
+  fi
 }
 
 #  Satan module manager
