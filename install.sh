@@ -19,14 +19,17 @@ local SATAN_LINKS=()
 #  Gitkeep files
 local SATAN_GITKEEP_FILES=()
 
+#  Directories file
+local SATAN_DIRECTORIES_FILE="${HOME}/.zsh.d/directories.conf"
+
 #  Modules file
 local SATAN_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
 
 #  Repositories file
 local SATAN_REPOSITORIES_FILE="${HOME}/.zsh.d/repositories.conf"
 
-#  Variables file
-local SATAN_VARIABLES_FILE="${HOME}/.zsh.d/variables.conf"
+#  Settings file
+local SATAN_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
 
 #  Zlogin file
 local SATAN_ZLOGIN_FILE="${HOME}/.zlogin"
@@ -124,6 +127,29 @@ if [ -n "${SATAN_GITKEEP_FILES}" ]; then
   done
 fi
 
+#  Write default directories file
+if [ ! -f "${SATAN_DIRECTORIES_FILE}" ]; then
+  #  Colorized output
+  echo -n "$(tput bold; tput setaf 2)"
+  echo "--> Writing default ~/.zsh.d/directories.conf..."
+  echo -n "$(tput sgr0)"
+
+  #  Write file
+  echo "#  Install dircetory" > "${SATAN_DIRECTORIES_FILE}"
+  echo "SATAN_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SATAN_DIRECTORIES_FILE}"
+  echo "" >> "${SATAN_DIRECTORIES_FILE}"
+
+  echo "#  Configuration directory" >> "${SATAN_DIRECTORIES_FILE}"
+  echo "SATAN_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
+    "${SATAN_DIRECTORIES_FILE}"
+  echo "" >> "${SATAN_DIRECTORIES_FILE}"
+
+  echo "#  Modules directory" >> "${SATAN_DIRECTORIES_FILE}"
+  echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
+    "${SATAN_DIRECTORIES_FILE}"
+  echo "" >> "${SATAN_DIRECTORIES_FILE}"
+fi
+
 #  Write default modules file
 if [ ! -f "${SATAN_MODULES_FILE}" ]; then
   #  Colorized output
@@ -155,27 +181,24 @@ if [ ! -f "${SATAN_REPOSITORIES_FILE}" ]; then
 
 fi
 
-#  Write default variables file
-if [ ! -f "${SATAN_VARIABLES_FILE}" ]; then
+#  Wride default settings file
+if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
-  echo "--> Writing default ~/.zsh.d/rc.conf..."
+  echo "--> Writing default ~/.zsh.d/settings.conf..."
   echo -n "$(tput sgr0)"
 
-  #  Write file
-  echo "#  Install dircetory" > "${SATAN_VARIABLES_FILE}"
-  echo "SATAN_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SATAN_VARIABLES_FILE}"
-  echo "" >> "${SATAN_VARIABLES_FILE}"
+  echo "#  Display ascii art" > "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_DISPLAY_ASCII_ART=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
 
-  echo "#  Configuration directory" >> "${SATAN_VARIABLES_FILE}"
-  echo "SATAN_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
-    "${SATAN_VARIABLES_FILE}"
-  echo "" >> "${SATAN_VARIABLES_FILE}"
+  echo "#  Display ascii title" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_DISPLAY_ASCII_TITLE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
 
-  echo "#  Modules directory" >> "${SATAN_VARIABLES_FILE}"
-  echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
-    "${SATAN_VARIABLES_FILE}"
-  echo "" >> "${SATAN_VARIABLES_FILE}"
+  echo "#  Display loaded modules" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_DISPLAY_MODULES_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
 fi
 
 #  Write default zlogin file
@@ -187,23 +210,6 @@ if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
 
   #  Write file
   echo "## User customization goes here" > "${SATAN_ZLOGIN_FILE}"
-  echo "" >> "${SATAN_ZLOGIN_FILE}"
-
-  echo "#  Display ascii artwork with title and credit" >> \
-    "${SATAN_ZLOGIN_FILE}"
-  echo "satan-ascii-header" >> "${SATAN_ZLOGIN_FILE}"
-  echo "" >> "${SATAN_ZLOGIN_FILE}"
-
-  echo "#  Display ascii artwork" >> "${SATAN_ZLOGIN_FILE}"
-  echo "#satan-ascii-art" >> "${SATAN_ZLOGIN_FILE}"
-  echo "" >> "${SATAN_ZLOGIN_FILE}"
-
-  echo "#  Display credit" >> "${SATAN_ZLOGIN_FILE}"
-  echo "#satan-credit" >> "${SATAN_ZLOGIN_FILE}"
-  echo "" >> "${SATAN_ZLOGIN_FILE}"
-
-  echo "#  Display ascii title" >> "${SATAN_ZLOGIN_FILE}"
-  echo "#satan-ascii-title" >> "${SATAN_ZLOGIN_FILE}"
 fi
 
 #  Load the environment
