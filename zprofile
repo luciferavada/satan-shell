@@ -374,7 +374,8 @@ function satan-module-developer-init() {
 
     satan-message "title" "Setting git origin url..."
 
-    OUTPUT=$(git -C "${MODULE_DIRECTORY}" remote add origin "${MODULE_ORIGIN_URL}" 2>&1)
+    OUTPUT=$(git -C "${MODULE_DIRECTORY}" remote add origin \
+      "${MODULE_ORIGIN_URL}" 2>&1)
 
     if [ -z "${OUTPUT}" ]; then
       echo "${MODULE_ORIGIN_URL}"
@@ -676,7 +677,7 @@ function satan-info() {
   else
     cat "${README}" | sed "s/<br>//" | \
       less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
-    satan-message "info" "install mdv (terminal markdown viewer) for formated output."
+    satan-message "title" "install mdv for formated output."
   fi
 }
 
