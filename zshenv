@@ -25,10 +25,6 @@ setopt null_glob
 setopt auto_pushd
 setopt pushd_ignore_dups
 
-setopt inc_append_history_time
-setopt hist_verify
-setopt hist_ignore_dups
-
 setopt prompt_subst
 
 zstyle ':completion:*' menu select
