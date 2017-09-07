@@ -81,7 +81,7 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
 `SATAN_MARKDOWN_VIEWER_THEME`
 
-  - blank
+  - The [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) theme to use.
 
 #### Settings
 
