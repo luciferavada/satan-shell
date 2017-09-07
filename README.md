@@ -28,17 +28,6 @@ A modular ZShell configuration.
 
 User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
 
-Primary configuration files are in the `~/.zsh.d` directory.
-
-  - `~/.zsh.d/directories.conf`
-  - `~/.zsh.d/modules.conf`
-  - `~/.zsh.d/repositories.conf`
-  - `~/.zsh.d/settings.conf`
-
-Modules are installed to the `~/.zsh.d.modules` directory.
-
-Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
-
 ### Manager
 
 The __satan-shell__ module manager, `satan` has the following options.
@@ -57,12 +46,42 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
-`satan-info [module] <search>`
+`satan-info [module] <pattern>`
 
   - Display documentation for *module*.
-  - Optionally *search* for a pattern.
+  - Optionally search for a *pattern* in the documentation.
   - If no module is specified, the __satan-shell__ documentation is displayed.
   - If [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) is available on the system, use it to display documentation.
+
+### Functions
+
+`satan-reload`
+
+  - Replace the current shell with a new login shell.
+
+`satan-update`
+
+  - Update __satan-shell__.
+  - Update activated modules.
+  - Reload the shell with *satan-reload*.
+
+`satan-message [type] [message]`
+
+  - Display a formatted *message* of *type*:
+
+    - `title` *Green   -->* `[message]`
+    - `bold`  *Magenta ==>* `[message]`
+    - `info`  *White   -->* `[message]`
+    - `error` *Red     -->* `[message]`
+
+### Configuration
+
+The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
+
+  - `~/.zsh.d/directories.conf`
+  - `~/.zsh.d/modules.conf`
+  - `~/.zsh.d/repositories.conf`
+  - `~/.zsh.d/settings.conf`
 
 ### Variables
 
@@ -79,6 +98,18 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 `SATAN_MODULES_DIRECTORY`
 
   - The path to the modules directory.
+
+#### Modules
+
+`SATAN_MODULES`
+
+  - An array of __satan-shell__ modules to load on start.
+
+#### Repositories
+
+`SATAN_REPOSITORIES`
+
+  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
 
 #### Settings
 
@@ -102,96 +133,17 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
   - The [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) theme to use.
 
-### Functions
-
-`satan-reload`
-
-  - Replace the current shell with a new login shell.
-
-`satan-update`
-
-  - Update __satan-shell__.
-  - Update activated modules.
-  - Reload the shell with *satan-reload*.
-
-`satan-message [type] [message]`
-
-  - Display a formatted *message* of *type*:
-
-    - `title` *Green   -->* `[message]`
-    - `bold`  *Magenta ==>* `[message]`
-    - `info`  *White   -->* `[message]`
-    - `error` *Red     -->* `[message]`
-
-## Repositories
-
-### Usage
-
-Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
-
-Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
-
-Modules can be found by *name* or *repository/name*.
-
-Modules can be searched by *keyword*.
-
-### Variables
-
-`SATAN_REPOSITORIES`
-
-  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
-
-### Functions
-
-`satan-repository-index`
-
-  - Index repositories in the repositories array.
-
-`satan-module-available-find [module]`
-
-  - Find an available module.
-
-`satan-module-available-search [keyword]`
-
-  - Search through available modules.
-
-`satan-module-installed-find [module]`
-
-  - Find an installed module.
-
-`satan-module-installed-search [keyword]`
-
-  - Search through installed modules.
-
-`satan-modules-available-find [module] <module...>`
-
-  - Find a list of available module.
-
-`satan-modules-available-search [keyword] <keyword...>`
-
-  - Search through a list of available modules.
-
-`satan-modules-installed-find [module] <module...>`
-
-  - Find a list of installed module.
-
-`satan-modules-installed-search [keyword] <keyword...>`
-
-  - Search through a list of installed modules.
-
 ## Modules
 
 ### Usage
 
-Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
+Modules can be activated, installed, uninstalled, updated and loaded by *name* or *repository/name*.
 
-Modules can be managed by *name* or *repository/name*.
+Activated modules are handled by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
 
-### Variables
+Modules are installed to the `~/.zsh.d.modules` directory.
 
-`SATAN_MODULES`
-
-  - An array of __satan-shell__ modules to load on start.
+Modules can create, store and use configuration files in the `~/.zsh.d.conf` directory.
 
 ### Functions
 
@@ -239,23 +191,73 @@ Modules can be managed by *name* or *repository/name*.
 
   - Load modules in the activated modules array.
 
+## Repositories
+
+### Usage
+
+Modules can be found by *name* or *repository/name*.
+
+Modules can be searched for by *pattern*.
+
+Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
+
+Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
+
+### Functions
+
+`satan-repository-index`
+
+  - Index repositories in the repositories array.
+
+`satan-module-available-find [module]`
+
+  - Find an available module.
+
+`satan-module-available-search [pattern]`
+
+  - Search through available modules.
+
+`satan-module-installed-find [module]`
+
+  - Find an installed module.
+
+`satan-module-installed-search [pattern]`
+
+  - Search through installed modules.
+
+`satan-modules-available-find [module] <module...>`
+
+  - Find a list of available module.
+
+`satan-modules-available-search [pattern] <pattern...>`
+
+  - Search through a list of available modules.
+
+`satan-modules-installed-find [module] <module...>`
+
+  - Find a list of installed module.
+
+`satan-modules-installed-search [pattern] <pattern...>`
+
+  - Search through a list of installed modules.
+
 ## Developer
 
 ### Usage
 
-Files of the format `*.sh` in the root of the module are loaded by default.
-
 Developer state for a module can be managed by *name* or *repository/name*.
 
+Files of the format `*.sh` in the root of the module are loaded by default.
+
 ### Variables
-
-`MODULE_REPOSITORY`
-
-  - The name of the module's the repository.
 
 `MODULE_NAME`
 
   - The name of the module.
+
+`MODULE_REPOSITORY`
+
+  - The name of the module the repository.
 
 `MODULE_DIRECTORY`
 
