@@ -78,7 +78,7 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.<b
 `satan-update`
 
   - Update __satan-shell__.
-  - Update activated modules.
+  - Update enabled modules.
   - Reload the shell with *satan-reload*.<br>
 
 `satan-message [type] [message]`
@@ -153,9 +153,9 @@ The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 ### Usage<br>
 
-Modules can be activated, installed, uninstalled, updated and loaded by *name* or *repository/name*.<br>
+Modules can be enabled, installed, uninstalled, updated and loaded by *name* or *repository/name*.<br>
 
-Activated modules are handled by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.<br>
+Enabled modules are handled by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.<br>
 
 Modules are installed to the `~/.zsh.d.modules` directory.<br>
 
@@ -195,17 +195,17 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
   - Load a list of modules.<br>
 
-`satan-modules-active-install`
+`satan-modules-enabled-install`
 
-  - Install modules in the activated modules array.<br>
+  - Install modules in the enabled modules array.<br>
 
-`satan-modules-active-update`
+`satan-modules-enabled-update`
 
-  - Update modules in the activated modules array.<br>
+  - Update modules in the enabled modules array.<br>
 
-`satan-modules-active-load`
+`satan-modules-enabled-load`
 
-  - Load modules in the activated modules array.
+  - Load modules in the enabled modules array.
 
 ## Repositories
 
@@ -315,17 +315,17 @@ The following variables are available inside module files.
 
   - Report if a list of modules have any modified files.<br>
 
-`satan-modules-developer-active-enable`
+`satan-modules-developer-enabled-enable`
 
-  - Set the git origin url for activated modules to use the SSH protocol.<br>
+  - Set the git origin url for enabled modules to use the SSH protocol.<br>
 
-`satan-modules-developer-active-disable`
+`satan-modules-developer-enabled-disable`
 
-  - Set the git origin url for activated modules to use the HTTPS protocol.<br>
+  - Set the git origin url for enabled modules to use the HTTPS protocol.<br>
 
-`satan-modules-developer-active-status`
+`satan-modules-developer-enabled-status`
 
-  - Report if any activated modules have modified files.<br>
+  - Report if any enabled modules have modified files.<br>
 
 `satan-modules-developer-installed-enable`
 

@@ -268,7 +268,7 @@ function satan-module-update() {
 
   if [ -z "${MODULE_LINE}" ]; then
     satan-message "bold" "${MODULE}"
-    satan-message "info" "not installed."
+    satan-message "error" "not installed."
     return 0
   fi
 
@@ -543,18 +543,18 @@ function satan-modules-developer-status() {
   done
 }
 
-#  Install active modules
-function satan-modules-active-install() {
+#  Install enabled modules
+function satan-modules-enabled-install() {
   satan-modules-install ${SATAN_MODULES[@]}
 }
 
-#  Update active modules
-function satan-modules-active-update() {
+#  Update enabled modules
+function satan-modules-enabled-update() {
   satan-modules-update ${SATAN_MODULES[@]}
 }
 
-#  Load active modules
-function satan-modules-active-load() {
+#  Load enabled modules
+function satan-modules-enabled-load() {
   satan-modules-load ${SATAN_MODULES[@]}
 }
 
@@ -568,18 +568,18 @@ function satan-modules-installed-load() {
   satan-modules-load $(cat "${SATAN_INDEX_INSTALLED}")
 }
 
-#  Enable developer mode for active modules
-function satan-modules-developer-active-enable() {
+#  Enable developer mode for enabled modules
+function satan-modules-developer-enabled-enable() {
   satan-modules-developer-enable ${SATAN_MODULES[@]}
 }
 
-#  Disable developer mode for active modules
-function satan-modules-developer-active-disable() {
+#  Disable developer mode for enabled modules
+function satan-modules-developer-enabled-disable() {
   satan-modules-developer-disable ${SATAN_MODULES[@]}
 }
 
-#  Check for changes in active modules
-function satan-modules-developer-active-status() {
+#  Check for changes in enabled modules
+function satan-modules-developer-enabled-status() {
   satan-modules-developer-status ${SATAN_MODULES[@]}
 }
 
@@ -604,7 +604,7 @@ function satan-reload reload() {
   exec -l zsh
 }
 
-#  Update satan-shell and active modules
+#  Update satan-shell and enabled modules
 function satan-update update() {
   satan-message "title" "Updating satan-shell..."
 
@@ -612,7 +612,7 @@ function satan-update update() {
 
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
 
-  satan-modules-active-update
+  satan-modules-enabled-update
   satan-reload
 }
 
@@ -662,11 +662,14 @@ function satan-info() {
 function satan() {
   local INSTALL_MODULES=""
   local UNINSTALL_MODULES=""
+  local UPDATE_MODULES=""
+  local LOAD_MODULES=""
   local AVALIABLE_SEARCH=""
   local INSTALLED_SEARCH=""
   local GENERATE_INDEX=""
-  local LOAD_MODULES=""
-  local ACTIVATED_MODULES=""
+  local ENABLED_MODULES=""
+  local INSTALLED_MODULES=""
+  local RELOAD_SATAN_SHELL=""
   local DISPLAY_HELP=""
 
   local MODULE_LIST=()
@@ -676,15 +679,18 @@ function satan() {
     return ${?}
   fi
 
-  while getopts ":SRQXylah" option; do
+  while getopts ":SRULQXyairh" option; do
     case $option in
       "S") INSTALL_MODULES="true" ;;
       "R") UNINSTALL_MODULES="true" ;;
+      "U") UPDATE_MODULES="true" ;;
+      "L") LOAD_MODULES="true" ;;
       "Q") AVAILABLE_SEARCH="true" ;;
       "X") INSTALLED_SEARCH="true" ;;
       "y") GENERATE_INDEX="true" ;;
-      "l") LOAD_MODULES="true" ;;
-      "a") ACTIVATED_MODULES="true" ;;
+      "a") ENABLED_MODULES="true" ;;
+      "i") INSTALLED_MODULES="true" ;;
+      "r") RELOAD_SATAN_SHELL="true" ;;
       "h") DISPLAY_HELP="true" ;;
       *) DISPLAY_HELP="true" ;;
     esac
@@ -699,7 +705,11 @@ function satan() {
 
   MODULE_LIST=(${@:${OPTIND}})
 
-  if [ -n "${ACTIVATED_MODULES}" ]; then
+  if [ -n "${INSTALLED_MODULES}" ]; then
+    MODULE_LIST=($(cat "${SATAN_INDEX_INSTALLED}"))
+  fi
+
+  if [ -n "${ENABLED_MODULES}" ]; then
     MODULE_LIST=(${SATAN_MODULES[@]})
   fi
 
@@ -707,41 +717,55 @@ function satan() {
     satan-repository-index
   fi
 
-  if [ -n "${INSTALL_MODULES}" ]; then
-    satan-modules-install ${MODULE_LIST[@]}
-
-    if [ ! ${?} -eq 0 ]; then
-      return ${?}
-    fi
+  if [ -n "${UPDATE_MODULES}" ]; then
+    satan-modules-update ${MODULE_LIST[@]}
   fi
 
-  if [ -n "${LOAD_MODULES}" ]; then
-    satan-modules-load ${MODULE_LIST[@]}
-    return ${?}
+  if [ -n "${INSTALL_MODULES}" ]; then
+    satan-modules-install ${MODULE_LIST[@]}
   fi
 
   if [ -n "${UNINSTALL_MODULES}" ]; then
     satan-modules-uninstall ${MODULE_LIST[@]}
-    return ${?}
+  fi
+
+  if [ -n "${LOAD_MODULES}" ]; then
+    satan-modules-load ${MODULE_LIST[@]}
+  fi
+
+  if [ -n "${RELOAD_SATAN_SHELL}" ]; then
+    satan-reload
   fi
 
   if [ -n "${AVAILABLE_SEARCH}" ]; then
-    if [ -z "${MODULE_LIST[@]}" ]; then
+    local MODULES=()
+    if [ -n "${MODULE_LIST}" ]; then
+      satan-message "title" "Searching available modules..."
+      for module in ${MODULE_LIST[@]}; do
+        MODULES+=($(satan-module-available-search "${module}"))
+      done
+    else
       satan-message "title" "Available modules..."
-      satan-module-available-search
-      return ${?}
+      MODULES=($(cat "${SATAN_INDEX_AVAILABLE}"))
     fi
-    satan-modules-available-search ${MODULE_LIST[@]}
-    return ${?}
+    for module in ${MODULES[@]}; do
+      satan-message "bold" "${module}"
+    done
   fi
 
   if [ -n "${INSTALLED_SEARCH}" ]; then
-    if [ -z "${MODULE_LIST[@]}" ]; then
-      satan-message "title" "Installing modules..."
-      satan-module-installed-search
-      return ${?}
+    local MODULES=()
+    if [ -n "${MODULE_LIST}" ]; then
+      satan-message "title" "Searching installed modules..."
+      for module in ${MODULE_LIST[@]}; do
+        MODULES+=($(satan-module-installed-search "${module}"))
+      done
+    else
+      satan-message "title" "Installed modules..."
+      MODULES=($(cat "${SATAN_INDEX_INSTALLED}"))
     fi
-    satan-modules-installed-search ${MODULE_LIST[@]}
-    return ${?}
+    for module in ${MODULES[@]}; do
+      satan-message "bold" "${module}"
+    done
   fi
 }

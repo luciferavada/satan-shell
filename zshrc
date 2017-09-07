@@ -4,14 +4,14 @@
 satan-load-configuration-variables
 
 #  If the available modules index file doesn't exist
-#  index repositories and install active modules.
+#  index repositories and install enabled modules.
 if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   satan-repository-index
-  satan-modules-active-install
+  satan-modules-enabled-install
 fi
 
-#  Load active modules
-satan-modules-active-load
+#  Load enabled modules
+satan-modules-enabled-load
 
 #  Display ascii art
 if [ "${SATAN_DISPLAY_ASCII_ART}" = "true" ]; then
