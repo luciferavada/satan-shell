@@ -51,7 +51,7 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
   - Display documentation for a *module*.
   - Optionally search for a *pattern* in the documentation.
   - If no module is specified, the __satan-shell__ documentation is displayed.
-  - If [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) is available on the system, use it to display documentation.
+  - If [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) is available on the system, it is used to display documentation.
 
 ### Functions
 
