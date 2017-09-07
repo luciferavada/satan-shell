@@ -36,11 +36,16 @@ The __satan-shell__ module manager, `satan` has the following options.<br>
 
   - `-S` Install a list of modules.
   - `-R` Uninstall a list of modules.
+  - `-U` Update a list of modules.
+  - `-L` Load a list of modules.
   - `-Q` Search for available modules.
   - `-X` Search for installed modules.
   - `-y` Update the repository index.
-  - `-l` Load a list of modules.
   - `-a` Use the `SATAN_MODULES` array as the list of modules.
+  - `-i` Use all installed modules as the list of modules.
+  - `-f` Force uninstall of modules with modifications.
+  - `-r` Reload __satan-shell__.
+  - `-h` Display help.
 
 ### Documentation<br>
 
@@ -167,9 +172,10 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
   - Install an available module.<br>
 
-`satan-module-uninstall [module]`
+`satan-module-uninstall [module] <force>`
 
-  - Uninstall a module.<br>
+  - Uninstall a module.
+  - Optionally *force* uninstall a module with modifications.<br>
 
 `satan-module-update [module]`
 
