@@ -79,10 +79,6 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
   - The path to the modules directory.
 
-`SATAN_MARKDOWN_VIEWER_THEME`
-
-  - The [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) theme to use.
-
 #### Settings
 
 `SATAN_DISPLAY_ASCII_ART`
@@ -96,6 +92,14 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 `SATAN_DISPLAY_MODULE_LOAD`
 
   - Display loaded modules.
+
+`SATAN_USE_MARKDOWN_VIEWER`
+
+  - Display documentation with [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation).
+
+`SATAN_MARKDOWN_VIEWER_THEME`
+
+  - The [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) theme to use.
 
 ### Functions
 
