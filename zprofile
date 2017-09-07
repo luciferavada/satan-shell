@@ -239,6 +239,8 @@ function satan-module-install() {
 function satan-module-uninstall() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
+  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  local MODULE_UNINSTALL="yes"
 
   satan-reload-configuration-variables
 
@@ -248,13 +250,31 @@ function satan-module-uninstall() {
 
   satan-message "bold" "${MODULE_LINE}"
 
-  rm -rf "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  if [ -n "$(git -C ${MODULE_DIRECTORY} status --porcelain)" ]; then
+    satan-message "error" "${MODULE_LINE} has modifications."
+    echo -n "Do you want to uninstall anyway? (yes/no) "
+    read MODULE_UNINSTALL
+    until [ "${MODULE_UNINSTALL}" = "yes" ] || \
+          [ "${MODULE_UNINSTALL}" = "no" ]; do
+      echo "Do you want to uninstall anyway? (yes/no)"
+      echo -n "Enter yes or no... "
+      read MODULE_UNINSTALL
+    done
+    if [ "${MODULE_UNINSTALL}" = "yes" ]; then
+      satan-message "info" "uninstalling..."
+    else
+      satan-message "info" "not uninstalling..."
+    fi
+  fi
 
-  if [ ${?} -eq 0 ]; then
-    _satan-index-installed-remove "${MODULE_LINE}"
-  else
-    satan-message "error" "failure."
-    return 1
+  if [ "${MODULE_UNINSTALL}" = "yes" ]; then
+    rm -rf "${MODULE_DIRECTORY}"
+    if [ ${?} -eq 0 ]; then
+      _satan-index-installed-remove "${MODULE_LINE}"
+    else
+      satan-message "error" "failure."
+      return 1
+    fi
   fi
 }
 
