@@ -511,6 +511,14 @@ function satan-modules-load() {
   done
 }
 
+#  Initialize a list of modules
+function satan-modules-developer-init() {
+  satan-message "title" "Initializing modules..."
+  for module in ${@}; do
+    satan-module-developer-init "${module}"
+  done
+}
+
 #  Enable developer mode for a list of modules
 function satan-modules-developer-enable() {
   satan-message "title" "Enabling developer mode..."
@@ -551,18 +559,33 @@ function satan-modules-active-load() {
 }
 
 #  Enable developer mode for active modules
-function satan-developer-enable() {
+function satan-modules-developer-active-enable() {
   satan-modules-developer-enable ${SATAN_MODULES[@]}
 }
 
 #  Disable developer mode for active modules
-function satan-developer-disable() {
+function satan-modules-developer-active-disable() {
   satan-modules-developer-disable ${SATAN_MODULES[@]}
 }
 
 #  Check for changes in active modules
-function satan-developer-status() {
+function satan-modules-developer-active-status() {
   satan-modules-developer-status ${SATAN_MODULES[@]}
+}
+
+#  Enable developer mode for all installed modules
+function satan-modules-developer-installed-enable() {
+  satan-modules-developer-enable $(cat "${SATAN_INDEX_INSTALLED}")
+}
+
+#  Disable developer mode for all installed modules
+function satan-modules-developer-installed-disable() {
+  satan-modules-developer-disable $(cat "${SATAN_INDEX_INSTALLED}")
+}
+
+#  Check for changes in all installed modules
+function satan-modules-developer-installed-status() {
+  satan-modules-developer-status $(cat "${SATAN_INDEX_INSTALLED}")
 }
 
 #  Source satan-shell environment files

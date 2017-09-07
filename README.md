@@ -283,6 +283,10 @@ The following variables are available inside module files.
 
 ### Functions<br>
 
+`satan-module-developer-init [module]`
+
+  - Initialize a new module.<br>
+
 `satan-module-developer-enable [module]`
 
   - Set the git origin url for a module to use the SSH protocol.<br>
@@ -294,6 +298,10 @@ The following variables are available inside module files.
 `satan-module-developer-status [module]`
 
   - Report if a module has any modified files.<br>
+
+`satan-modules-developer-init [module] <module...>`
+
+  - Initialize a list of new modules.<br>
 
 `satan-modules-developer-enable [module] <module...>`
 
@@ -307,14 +315,26 @@ The following variables are available inside module files.
 
   - Report if a list of modules have any modified files.<br>
 
-`satan-developer-enable`
+`satan-modules-developer-active-enable`
 
   - Set the git origin url for activated modules to use the SSH protocol.<br>
 
-`satan-developer-disable`
+`satan-modules-developer-active-disable`
 
   - Set the git origin url for activated modules to use the HTTPS protocol.<br>
 
-`satan-developer-status`
+`satan-modules-developer-active-status`
 
-  - Report if any activated modules have modified files.
+  - Report if any activated modules have modified files.<br>
+
+`satan-modules-developer-installed-enable`
+
+  - Set the git origin url for installed modules to use the SSH protocol.<br>
+
+`satan-modules-developer-installed-disable`
+
+  - Set the git origin url for installed modules to use the HTTPS protocol.<br>
+
+`satan-modules-developer-installed-status`
+
+  - Report if any installed modules have modified files.
