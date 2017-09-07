@@ -338,7 +338,7 @@ function satan-module-developer-init() {
     OUTPUT=$(mkdir -p ${MODULE_DIRECTORY} 2>&1)
 
     if [ -z "${OUTPUT}" ]; then
-      satan-message "info" "${MODULE_DIRECTORY}"
+      echo "${MODULE_DIRECTORY}"
     else
       satan-message "error" "${OUTPUT}"
     fi
@@ -355,7 +355,7 @@ function satan-module-developer-init() {
     OUTPUT=$(git -C "${MODULE_DIRECTORY}" remote add origin "${MODULE_ORIGIN_URL}" 2>&1)
 
     if [ -z "${OUTPUT}" ]; then
-      satan-message "info" "${MODULE_ORIGIN_URL}"
+      echo "${MODULE_ORIGIN_URL}"
       _satan-index-installed-write "${MODULE_LINE}"
     else
       satan-message "error" "${OUTPUT}"
@@ -556,6 +556,16 @@ function satan-modules-active-update() {
 #  Load active modules
 function satan-modules-active-load() {
   satan-modules-load ${SATAN_MODULES[@]}
+}
+
+#  Update all installed modules
+function satan-modules-installed-update() {
+  satan-modules-update $(cat "${SATAN_INDEX_INSTALLED}")
+}
+
+#  Load all installed modules
+function satan-modules-installed-load() {
+  satan-modules-load $(cat "${SATAN_INDEX_INSTALLED}")
 }
 
 #  Enable developer mode for active modules
