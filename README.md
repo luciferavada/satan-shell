@@ -28,7 +28,7 @@ A modular ZShell configuration.
 
 User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
 
-### Manager<br>
+### Module Manager<br>
 
 The __satan-shell__ module manager, `satan` has the following options.<br>
 
@@ -47,7 +47,21 @@ The __satan-shell__ module manager, `satan` has the following options.<br>
   - `-r` Reload __satan-shell__.
   - `-h` Display help.
 
-### Documentation<br>
+### Module Developer<br>
+
+The __satan-shell__ module developer command, `satan-dev` has the following options.<br>
+
+`satan-dev [flags] [module] <module...>`
+
+  - `-I` Initialize a list of modules.
+  - `-E` Enable developer mode for a list of modules.
+  - `-D` Disable developer mode for a list of modules.
+  - `-S` Display developer status for a list of modules.
+  - `-a` Use the `SATAN_MODULES` array as the list of modules.
+  - `-i` Use all installed modules as the list of modules.
+  - `-h` Display help.
+
+### Documentation Viewer<br>
 
 The __satan-shell__ documentation viewer, `satan-info` can be used as follows.<br>
 

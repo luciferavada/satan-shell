@@ -360,7 +360,7 @@ function satan-module-developer-init() {
     OUTPUT=$(mkdir -p ${MODULE_DIRECTORY} 2>&1)
 
     if [ -z "${OUTPUT}" ]; then
-      echo "${MODULE_DIRECTORY}"
+      satan-message "info" "${MODULE_DIRECTORY}"
     else
       satan-message "error" "${OUTPUT}"
     fi
@@ -378,7 +378,7 @@ function satan-module-developer-init() {
       "${MODULE_ORIGIN_URL}" 2>&1)
 
     if [ -z "${OUTPUT}" ]; then
-      echo "${MODULE_ORIGIN_URL}"
+      satan-message "info" "${MODULE_ORIGIN_URL}"
       _satan-index-installed-write "${MODULE_LINE}"
     else
       satan-message "error" "${OUTPUT}"
@@ -678,6 +678,72 @@ function satan-info() {
     cat "${README}" | sed "s/<br>//" | \
       less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     satan-message "title" "install mdv for formated output."
+  fi
+}
+
+#  Satan module developer manager
+function satan-dev() {
+  local INITIALIZE=""
+  local ENABLE=""
+  local DISABLE=""
+  local STATUS=""
+  local ENABLED_MODULES=""
+  local INSTALLED_MODULES=""
+  local DISPLAY_HELP=""
+
+  local MODULE_LIST=()
+
+  if [[ -z "${@}" ]]; then
+    satan-info "" "Manager"
+    return ${?}
+  fi
+
+  while getopts ":IEDSaih" option; do
+    case $option in
+      "I") INITIALIZE="true" ;;
+      "E") ENABLE="true" ;;
+      "D") DISABLE="true" ;;
+      "S") STATUS="true" ;;
+      "a") ENABLED_MODULES="true" ;;
+      "i") INSTALLED_MODULES="true" ;;
+      "h") DISPLAY_HELP="true" ;;
+      *) DISPLAY_HELP="true" ;;
+    esac
+  done
+
+  if [ -n "${DISPLAY_HELP}" ]; then
+    satan-info "" "Manager"
+    return ${?}
+  fi
+
+  satan-reload-configuration-variables
+
+  MODULE_LIST=(${@:${OPTIND}})
+
+  if [ -n "${INITIALIZE}" ]; then
+    satan-modules-developer-init ${MODULE_LIST[@]}
+    return
+  fi
+
+  if [ -n "${INSTALLED_MODULES}" ]; then
+    MODULE_LIST=($(cat "${SATAN_INDEX_INSTALLED}"))
+  fi
+
+  if [ -n "${ENABLED_MODULES}" ]; then
+    MODULE_LIST=(${SATAN_MODULES[@]})
+  fi
+
+  if [ -n "${STATUS}" ]; then
+    satan-modules-developer-status ${MODULE_LIST[@]}
+    return
+  fi
+
+  if [ -n "${ENABLE}" ]; then
+    satan-modules-developer-enable ${MODULE_LIST[@]}
+  fi
+
+  if [ -n "${DISABLE}" ]; then
+    satan-modules-developer-disable ${MODULE_LIST[@]}
   fi
 }
 
