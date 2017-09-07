@@ -577,7 +577,7 @@ function satan() {
 
   local MODULE_LIST=()
 
-  if [ -z "${@}" ]; then
+  if [[ -z "${@}" ]]; then
     satan-info "" "Manager"
     return ${?}
   fi
