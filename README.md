@@ -249,6 +249,8 @@ Developer state for a module can be managed by *name* or *repository/name*.
 
 Files of the format `*.sh` in the root of the module are loaded by default.
 
+The following variables are available inside module files.
+
 ### Variables
 
 `MODULE_NAME`
