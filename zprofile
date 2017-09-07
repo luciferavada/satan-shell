@@ -511,7 +511,7 @@ function satan-developer-status() {
 #  Source satan-shell environment files
 function satan-reload() {
   satan-message "title" "Reloading satan-shell..."
-  exec -l $(command -v zsh)
+  exec -l zsh
 }
 
 #  Update satan-shell and active modules
