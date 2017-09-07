@@ -1,37 +1,12 @@
-## TTY Settings
-#  Enable forward history search (CTRL+s)
-stty -ixon
-
 ## Aliases
 #  Sudo with an alias as a command (trailing space is for alias expansion)
 alias sudo="sudo "
 
-#  Launchctl alias
-alias lctl="launchctl"
-
-#  Colorize du
-alias du="grc du"
-
-#  Colorize tcpdump
-alias tcpdump="grc tcpdump"
-
-#  Corolize traceroute
-alias traceroute="grc traceroute"
-
-#  Colorize ping
-alias ping="grc ping"
-
-#  Corolize docker
-alias docker="grc docker"
-
-#  Colorize docker-machine
-alias docker-machine="grc docker-machine"
-
 ## Functions
 #  Disk Usage
 function dh() {
-  local DIRECTORY=${1:-"${PWD}"}
-  du -hsc "${DIRECTORY}"
+  local DIRECTORY=${1:-"."}
+  command du -hsc ${DIRECTORY}/* | gsort -hr | grcat conf.du
 }
 
 #  Inspect DNS traffic
