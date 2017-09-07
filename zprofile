@@ -553,13 +553,13 @@ function satan-info() {
 
   if [ -n "$(command -v mdv)" ]; then
     if [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
-      mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R \
-        ${SEARCH:+-p ${SEARCH}}
+      mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less \
+        --clear-screen --RAW-CONTROL-CHARS ${SEARCH:+--pattern="${SEARCH}"}
     else
-      cat "${README}" | less ${SEARCH:+-p ${SEARCH}}
+      cat "${README}" | less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     fi
   else
-    cat "${README}" | less ${SEARCH:+-p ${SEARCH}}
+    cat "${README}" | less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     satan-message "info" "install mdv (terminal markdown viewer) for formated output."
   fi
 }
