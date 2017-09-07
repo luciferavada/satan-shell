@@ -694,7 +694,7 @@ function satan-dev() {
   local MODULE_LIST=()
 
   if [[ -z "${@}" ]]; then
-    satan-info "" "Manager"
+    satan-info "" "Module Developer"
     return ${?}
   fi
 
@@ -712,7 +712,7 @@ function satan-dev() {
   done
 
   if [ -n "${DISPLAY_HELP}" ]; then
-    satan-info "" "Manager"
+    satan-info "" "Module Developer"
     return ${?}
   fi
 
@@ -765,7 +765,7 @@ function satan() {
   local MODULE_LIST=()
 
   if [[ -z "${@}" ]]; then
-    satan-info "" "Manager"
+    satan-info "" "Module Manager"
     return ${?}
   fi
 
@@ -788,7 +788,7 @@ function satan() {
   done
 
   if [ -n "${DISPLAY_HELP}" ]; then
-    satan-info "" "Manager"
+    satan-info "" "Module Manager"
     return ${?}
   fi
 
