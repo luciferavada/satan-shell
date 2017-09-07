@@ -116,7 +116,7 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
 `satan-message [type] [message]`
 
-  - Display a formatted message of *type*:
+  - Display a formatted *message* of *type*:
 
     - `title` *Green   -->* `[message]`
     - `bold`  *Magenta ==>* `[message]`
