@@ -65,7 +65,7 @@ function satan-message() {
   case "${TYPE}" in
     "title") echo -n "$(tput bold; tput setaf ${COLOR[green]})--> " ;;
     "bold") echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> " ;;
-    "info") echo -n "$(tput bold; tput setaf ${COLOR[white]})--> " ;;
+    "info") echo -n "$(tput ${COLOR[reset]}; tput bold)--> " ;;
     "error") echo -n "$(tput bold; tput setaf ${COLOR[red]})--> " ;;
   esac
 
@@ -550,7 +550,8 @@ function satan-info() {
     return
   fi
 
-  if [ -n "$(command -v mdv)" ]; then
+  if [ -n "$(command -v mdv)" ] && \
+     [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
     mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R
   else
     cat "${README}" | less
