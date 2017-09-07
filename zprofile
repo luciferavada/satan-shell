@@ -65,7 +65,7 @@ function satan-message() {
   case "${TYPE}" in
     "title") echo -n "$(tput bold; tput setaf ${COLOR[green]})--> " ;;
     "bold") echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> " ;;
-    "info") echo -n "$(tput ${COLOR[reset]}; tput bold)--> " ;;
+    "info") echo -n "$(tput ${COLOR[reset]})--> " ;;
     "error") echo -n "$(tput bold; tput setaf ${COLOR[red]})--> " ;;
   esac
 
@@ -539,6 +539,7 @@ function satan-info() {
     if [ -n "${MODULE_LINE}" ]; then
       README="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}/README.md"
     else
+      satan-message "bold" "${MODULE}"
       satan-message "info" "module not found."
       return
     fi
@@ -547,6 +548,7 @@ function satan-info() {
   fi
 
   if [ ! -f "${README}" ]; then
+    satan-message "bold" "${MODULE_LINE}"
     satan-message "info" "readme not found."
     return
   fi
@@ -556,10 +558,12 @@ function satan-info() {
       mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less \
         --clear-screen --RAW-CONTROL-CHARS ${SEARCH:+--pattern="${SEARCH}"}
     else
-      cat "${README}" | less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
+      cat "${README}" | sed "s/<br>//" | \
+        less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     fi
   else
-    cat "${README}" | less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
+    cat "${README}" | sed "s/<br>//" | \
+      less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     satan-message "info" "install mdv (terminal markdown viewer) for formated output."
   fi
 }
