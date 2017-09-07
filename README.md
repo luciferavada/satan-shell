@@ -55,6 +55,22 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
 ### Functions
 
+`satan-ascii-art`
+
+  - Display ascii art.
+
+`satan-ascii-title`
+
+  - Display ascii title.
+
+`satan-ascii-header`
+
+  - Display ascii art, title and credit.
+
+`satan-credit`
+
+  - Display credit.
+
 `satan-reload`
 
   - Replace the current shell with a new login shell.
