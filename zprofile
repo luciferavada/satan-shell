@@ -589,13 +589,13 @@ function satan-modules-developer-installed-status() {
 }
 
 #  Source satan-shell environment files
-function satan-reload() {
+function satan-reload reload() {
   satan-message "title" "Reloading satan-shell..."
   exec -l zsh
 }
 
 #  Update satan-shell and active modules
-function satan-update() {
+function satan-update update() {
   satan-message "title" "Updating satan-shell..."
 
   satan-reload-configuration-variables
