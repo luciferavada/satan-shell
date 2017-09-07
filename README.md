@@ -60,7 +60,7 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 `satan-info [module]`
 
   - Display documentation for a module.
-  - If no module is specified, display the __satan-shell__ documentation.
+  - If no module is specified, the __satan-shell__ documentation is displayed.
   - If [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) is available on the system, use it to display documentation.
 
 ### Variables
@@ -78,6 +78,10 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 `SATAN_MODULES_DIRECTORY`
 
   - The path to the modules directory.
+
+`SATAN_MARKDOWN_VIEWER_THEME`
+
+  - blank
 
 #### Settings
 
@@ -101,12 +105,13 @@ The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
 `satan-update`
 
-  - Update __satan-shell__ and activated modules then reload the shell with *satan-reload*.
+  - Update __satan-shell__.
+  - Update activated modules.
+  - Reload the shell with *satan-reload*.
 
 `satan-message [type] [message]`
 
-  - Display a formatted message.
-  - Message *type*:
+  - Display a formatted message of *type*:
 
     - `title` *Green   -->* `[message]`
     - `bold`  *Magenta ==>* `[message]`
@@ -122,6 +127,7 @@ Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/reposito
 Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
 
 Modules can be found by *name* or *repository/name*.
+
 Modules can be searched by *keyword*.
 
 ### Variables
