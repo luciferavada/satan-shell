@@ -43,7 +43,7 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
 The __satan-shell__ module manager, `satan` has the following options.
 
-`satan [flags] [module] [module...]`
+`satan [flags] [module] <module...>`
 
   - `-S` Install a list of modules.
   - `-R` Uninstall a list of modules.
@@ -57,9 +57,10 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
-`satan-info [module]`
+`satan-info [module] <search>`
 
-  - Display documentation for a module.
+  - Display documentation for *module*.
+  - Optionally *search* for a pattern.
   - If no module is specified, the __satan-shell__ documentation is displayed.
   - If [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) is available on the system, use it to display documentation.
 
@@ -162,19 +163,19 @@ Modules can be searched by *keyword*.
 
   - Search through installed modules.
 
-`satan-modules-available-find [module] [module...]`
+`satan-modules-available-find [module] <module...>`
 
   - Find a list of available module.
 
-`satan-modules-available-search [keyword] [keyword...]`
+`satan-modules-available-search [keyword] <keyword...>`
 
   - Search through a list of available modules.
 
-`satan-modules-installed-find [module] [module...]`
+`satan-modules-installed-find [module] <module...>`
 
   - Find a list of installed module.
 
-`satan-modules-installed-search [keyword] [keyword...]`
+`satan-modules-installed-search [keyword] <keyword...>`
 
   - Search through a list of installed modules.
 
@@ -210,19 +211,19 @@ Modules can be managed by *name* or *repository/name*.
 
   - Load a module.
 
-`satan-modules-install [module] [module...]`
+`satan-modules-install [module] <module...>`
 
   - Install a list of modules.
 
-`satan-modules-uninstall [module] [module...]`
+`satan-modules-uninstall [module] <module...>`
 
   - Uninstall a list of modules.
 
-`satan-modules-update [module] [module...]`
+`satan-modules-update [module] <module...>`
 
   - Update a list of modules.
 
-`satan-modules-load [module] [module...]`
+`satan-modules-load [module] <module...>`
 
   - Load a list of modules.
 
@@ -274,15 +275,15 @@ Developer state for a module can be managed by *name* or *repository/name*.
 
   - Report if a module has any modified files.
 
-`satan-modules-developer-enable [module] [module...]`
+`satan-modules-developer-enable [module] <module...>`
 
   - Set the git origin url for a list of modules.
 
-`satan-modules-developer-disable [module] [module...]`
+`satan-modules-developer-disable [module] <module...>`
 
   - Set the git origin url for a list of modules.
 
-`satan-modules-developer-status [module] [module...]`
+`satan-modules-developer-status [module] <module...>`
 
   - Report if a list of modules have any modified files.
 
