@@ -200,6 +200,11 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "SATAN_DISPLAY_MODULE_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
+  echo "#  Display documentation with Markdown Viewer" >> \
+    "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_USE_MARKDOWN_VIEWER=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
   echo "#  Markdown Viewer (mdv) theme" >> "${SATAN_SETTINGS_FILE}"
   echo "SATAN_MARKDOWN_VIEWER_THEME=\"960.847\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
