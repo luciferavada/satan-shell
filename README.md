@@ -43,7 +43,7 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
 The __satan-shell__ module manager, `satan` has the following options.
 
-`satan`
+`satan [flags] [module] [module...]`
 
   - `-S` Install a list of modules.
   - `-R` Uninstall a list of modules.
@@ -55,17 +55,13 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 ### Documentation
 
-The __satan-shell__ documentation viewer, `satan-info` displays the *README.md* file for a module by *name* or *repository/name*.
-
-If no module is specified, `satan-info` displays the __satan-shell__ *README.md*.
+The __satan-shell__ documentation viewer, `satan-info` can be used as follows.
 
 `satan-info [module]`
 
-  - Display documentation for a module by *name* or *repository/name*.
-
-If `mdv` is available on the system, it is used to display *README.md* files.
-
-  - [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation)
+  - Display documentation for a module.
+  - If no module is specified, display the __satan-shell__ documentation.
+  - If [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation) is available on the system, use it to display documentation.
 
 ### Variables
 
@@ -110,7 +106,6 @@ If `mdv` is available on the system, it is used to display *README.md* files.
 `satan-message [type] [message]`
 
   - Display a formatted message.
-
   - Message *type*:
 
     - `title` *Green   -->* `[message]`
@@ -126,6 +121,9 @@ Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/reposito
 
 Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
 
+Modules can be found by *name* or *repository/name*.
+Modules can be searched by *keyword*.
+
 ### Variables
 
 `SATAN_REPOSITORIES`
@@ -138,35 +136,35 @@ Module repositories are indexed in `~/.zsh.d/.index.available` and installed mod
 
   - Index repositories in the repositories array.
 
-`satan-module-available-find`
+`satan-module-available-find [module]`
 
-  - Find an available module by *name* or *repository/name*.
+  - Find an available module.
 
-`satan-module-available-search`
+`satan-module-available-search [keyword]`
 
   - Search through available modules.
 
-`satan-module-installed-find`
+`satan-module-installed-find [module]`
 
-  - Find an installed module by *name* or *repository/name*.
+  - Find an installed module.
 
-`satan-module-installed-search`
+`satan-module-installed-search [keyword]`
 
   - Search through installed modules.
 
-`satan-modules-available-find`
+`satan-modules-available-find [module] [module...]`
 
-  - Find a list of available module by *name* or *repository/name*.
+  - Find a list of available module.
 
-`satan-modules-available-search`
+`satan-modules-available-search [keyword] [keyword...]`
 
   - Search through a list of available modules.
 
-`satan-modules-installed-find`
+`satan-modules-installed-find [module] [module...]`
 
-  - Find a list of installed module by *name* or *repository/name*.
+  - Find a list of installed module.
 
-`satan-modules-installed-search`
+`satan-modules-installed-search [keyword] [keyword...]`
 
   - Search through a list of installed modules.
 
@@ -176,6 +174,8 @@ Module repositories are indexed in `~/.zsh.d/.index.available` and installed mod
 
 Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
 
+Modules can be managed by *name* or *repository/name*.
+
 ### Variables
 
 `SATAN_MODULES`
@@ -184,37 +184,37 @@ Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.
 
 ### Functions
 
-`satan-module-install`
+`satan-module-install [module]`
 
-  - Install an available module by *name* or *repository/name*.
+  - Install an available module.
 
-`satan-module-uninstall`
+`satan-module-uninstall [module]`
 
-  - Uninstall a module by *name* or *repository/name*.
+  - Uninstall a module.
 
-`satan-module-update`
+`satan-module-update [module]`
 
-  - Update a module by *name* or *repository/name*.
+  - Update a module.
 
-`satan-module-load`
+`satan-module-load [module]`
 
-  - Load a module by *name* or *repository/name*.
+  - Load a module.
 
-`satan-modules-install`
+`satan-modules-install [module] [module...]`
 
-  - Install a list of modules by *name* or *repository/name*.
+  - Install a list of modules.
 
-`satan-modules-uninstall`
+`satan-modules-uninstall [module] [module...]`
 
-  - Uninstall a list of modules by *name* or *repository/name*.
+  - Uninstall a list of modules.
 
-`satan-modules-update`
+`satan-modules-update [module] [module...]`
 
-  - Update a list of modules by *name* or *repository/name*.
+  - Update a list of modules.
 
-`satan-modules-load`
+`satan-modules-load [module] [module...]`
 
-  - Load a list of modules by *name* or *repository/name*.
+  - Load a list of modules.
 
 `satan-modules-active-install`
 
@@ -234,11 +234,13 @@ Activated modules are managed by the `SATAN_MODULES` array in `~/.zsh.d/modules.
 
 Files of the format `*.sh` in the root of the module are loaded by default.
 
+Developer state for a module can be managed by *name* or *repository/name*.
+
 ### Variables
 
 `MODULE_REPOSITORY`
 
-  - The name of the repository in which the module resides.
+  - The name of the module's the repository.
 
 `MODULE_NAME`
 
@@ -250,29 +252,29 @@ Files of the format `*.sh` in the root of the module are loaded by default.
 
 ### Functions
 
-`satan-module-developer-enable`
+`satan-module-developer-enable [module]`
 
-  - Set the git origin url for a module by *name* or *repository/name* to use the SSH protocol.
+  - Set the git origin url for a module to use the SSH protocol.
 
-`satan-module-developer-disable`
+`satan-module-developer-disable [module]`
 
-  - Set the git origin url for a module by *name* or *repository/name* to use the HTTPS protocol.
+  - Set the git origin url for a module to use the HTTPS protocol.
 
-`satan-module-developer-status`
+`satan-module-developer-status [module]`
 
-  - Report if a module by *name* or *repository/name* has any modified files.
+  - Report if a module has any modified files.
 
-`satan-modules-developer-enable`
+`satan-modules-developer-enable [module] [module...]`
 
-  - Set the git origin url for a list of modules by *name* or *repository/name* to use the SSH protocol.
+  - Set the git origin url for a list of modules.
 
-`satan-modules-developer-disable`
+`satan-modules-developer-disable [module] [module...]`
 
-  - Set the git origin url for a list of modules by *name* or *repository/name* to use the HTTPS protocol.
+  - Set the git origin url for a list of modules.
 
-`satan-modules-developer-status`
+`satan-modules-developer-status [module] [module...]`
 
-  - Report if a list of modules by *name* or *repository/name* have any modified files.
+  - Report if a list of modules have any modified files.
 
 `satan-developer-enable`
 
