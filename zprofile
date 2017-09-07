@@ -529,6 +529,7 @@ function satan-update() {
 #  Display readme for satan-shell or a module
 function satan-info() {
   local MODULE="${1}"
+  local SEARCH="${2}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local README=""
 
@@ -552,12 +553,13 @@ function satan-info() {
 
   if [ -n "$(command -v mdv)" ]; then
     if [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
-      mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R
+      mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R \
+        ${SEARCH:+-p ${SEARCH}}
     else
-      cat "${README}" | less
+      cat "${README}" | less ${SEARCH:+-p ${SEARCH}}
     fi
   else
-    cat "${README}" | less
+    cat "${README}" | less ${SEARCH:+-p ${SEARCH}}
     satan-message "info" "install mdv (terminal markdown viewer) for formated output."
   fi
 }
@@ -571,10 +573,16 @@ function satan() {
   local GENERATE_INDEX=""
   local LOAD_MODULES=""
   local ACTIVATED_MODULES=""
+  local DISPLAY_HELP=""
 
   local MODULE_LIST=()
 
-  while getopts ":SRQXyla" option; do
+  if [ -z "${@}" ]; then
+    satan-info "" "Manager"
+    return ${?}
+  fi
+
+  while getopts ":SRQXylah" option; do
     case $option in
       "S") INSTALL_MODULES="true" ;;
       "R") UNINSTALL_MODULES="true" ;;
@@ -583,9 +591,15 @@ function satan() {
       "y") GENERATE_INDEX="true" ;;
       "l") LOAD_MODULES="true" ;;
       "a") ACTIVATED_MODULES="true" ;;
-      *) ;;
+      "h") DISPLAY_HELP="true" ;;
+      *) DISPLAY_HELP="true" ;;
     esac
   done
+
+  if [ -n "${DISPLAY_HELP}" ]; then
+    satan-info "" "Manager"
+    return ${?}
+  fi
 
   satan-reload-configuration-variables
 
