@@ -238,6 +238,7 @@ function satan-module-install() {
 #  Uninstall a module
 function satan-module-uninstall() {
   local MODULE="${1}"
+  local MODULE_FORCE_UNINSTALL="${2}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
   local MODULE_UNINSTALL="yes"
@@ -250,7 +251,8 @@ function satan-module-uninstall() {
 
   satan-message "bold" "${MODULE_LINE}"
 
-  if [ -n "$(git -C ${MODULE_DIRECTORY} status --porcelain)" ]; then
+  if [ -z "${MODULE_FORCE_UNINSTALL}" ] && \
+     [ -n "$(git -C ${MODULE_DIRECTORY} status --porcelain)" ]; then
     satan-message "error" "${MODULE_LINE} has modifications."
     echo -n "Do you want to uninstall anyway? (yes/no) "
     read MODULE_UNINSTALL
@@ -690,6 +692,7 @@ function satan() {
   local ENABLED_MODULES=""
   local INSTALLED_MODULES=""
   local RELOAD_SATAN_SHELL=""
+  local FORCE_UNINSTALL=""
   local DISPLAY_HELP=""
 
   local MODULE_LIST=()
@@ -699,7 +702,7 @@ function satan() {
     return ${?}
   fi
 
-  while getopts ":SRULQXyairh" option; do
+  while getopts ":SRULQXyaifrh" option; do
     case $option in
       "S") INSTALL_MODULES="true" ;;
       "R") UNINSTALL_MODULES="true" ;;
@@ -710,6 +713,7 @@ function satan() {
       "y") GENERATE_INDEX="true" ;;
       "a") ENABLED_MODULES="true" ;;
       "i") INSTALLED_MODULES="true" ;;
+      "f") FORCE_UNINSTALL="true" ;;
       "r") RELOAD_SATAN_SHELL="true" ;;
       "h") DISPLAY_HELP="true" ;;
       *) DISPLAY_HELP="true" ;;
@@ -746,7 +750,10 @@ function satan() {
   fi
 
   if [ -n "${UNINSTALL_MODULES}" ]; then
-    satan-modules-uninstall ${MODULE_LIST[@]}
+    satan-message "title" "Uninstalling modules..."
+    for module in ${MODULE_LIST[@]}; do
+      satan-module-uninstall "${module}" "${FORCE_UNINSTALL}"
+    done
   fi
 
   if [ -n "${LOAD_MODULES}" ]; then
