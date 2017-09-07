@@ -312,6 +312,63 @@ function satan-module-load() {
   done
 }
 
+#  Initialize a new module
+function satan-module-developer-init() {
+  local MODULE_LINE="${1}"
+  local MODULE_INSTALLED=$(satan-module-installed-find "${MODULE_LINE}")
+  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  local MODULE_ORIGIN_URL="git@github.com:${MODULE_LINE}.git"
+
+  satan-reload-configuration-variables
+
+  local SPLIT=(`echo ${MODULE_LINE//\// }`)
+  if [ ${#SPLIT[@]} -eq 2 ]; then
+
+    if [ -n "${MODULE_INSTALLED}" ]; then
+      satan-message "bold" "${MODULE_LINE}"
+      satan-message "error" "already exists."
+      return 1
+    fi
+
+    local OUTPUT=""
+
+    satan-message "bold" "${MODULE_LINE}"
+
+    satan-message "title" "Creating directory..."
+    OUTPUT=$(mkdir -p ${MODULE_DIRECTORY} 2>&1)
+
+    if [ -z "${OUTPUT}" ]; then
+      satan-message "info" "${MODULE_DIRECTORY}"
+    else
+      satan-message "error" "${OUTPUT}"
+    fi
+
+    satan-message "title" "Initializing git repository..."
+    OUTPUT=$(git -C "${MODULE_DIRECTORY}" init --quiet 2>&1)
+
+    if [ -n "${OUTPUT}" ]; then
+      satan-message "error" "${OUTPUT}"
+    fi
+
+    satan-message "title" "Setting git origin url..."
+
+    OUTPUT=$(git -C "${MODULE_DIRECTORY}" remote add origin "${MODULE_ORIGIN_URL}" 2>&1)
+
+    if [ -z "${OUTPUT}" ]; then
+      satan-message "info" "${MODULE_ORIGIN_URL}"
+      _satan-index-installed-write "${MODULE_LINE}"
+    else
+      satan-message "error" "${OUTPUT}"
+      satan-message "error" "failure."
+    fi
+
+  else
+    satan-message "bold" "${MODULE_LINE}"
+    satan-message "error" "modules must be of the format repository/module."
+    return 1
+  fi
+}
+
 #  Enable developer mode
 function satan-module-developer-enable() {
   local MODULE="${1}"
