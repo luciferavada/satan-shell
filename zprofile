@@ -550,9 +550,12 @@ function satan-info() {
     return
   fi
 
-  if [ -n "$(command -v mdv)" ] && \
-     [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
-    mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R
+  if [ -n "$(command -v mdv)" ]; then
+    if [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
+      mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less -R
+    else
+      cat "${README}" | less
+    fi
   else
     cat "${README}" | less
     satan-message "info" "install mdv (terminal markdown viewer) for formated output."
