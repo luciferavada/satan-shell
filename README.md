@@ -14,6 +14,10 @@ A modular ZShell configuration.
   - curl
   - git
 
+## Recommended
+
+  - [mdv (Terminal Markdown Viewer)](https://github.com/axiros/terminal_markdown_viewer#installation)
+
 ## Install
 
 `eval "$(curl -s 'https://raw.githubusercontent.com/luciferavada/satan-shell/master/install-github.sh')"`
@@ -51,9 +55,13 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 ### Documentation
 
-The __satan-shell__ documentation viewer, `satan-info` can display *README.md* files for a module.
+The __satan-shell__ documentation viewer, `satan-info` displays the *README.md* file for a module by *name* or *repository/name*.
 
 If no module is specified, `satan-info` displays the __satan-shell__ *README.md*.
+
+`satan-info [module]`
+
+  - Display documentation for a module by *name* or *repository/name*.
 
 If `mdv` is available on the system, it is used to display *README.md* files.
 
@@ -93,11 +101,22 @@ If `mdv` is available on the system, it is used to display *README.md* files.
 
 `satan-reload`
 
-  - Read *zshenv*, *zprofile*, *zshrc* and *zprofile*.
+  - Replace the current shell with a new login shell.
 
 `satan-update`
 
-  - Update __satan-shell__ and activated modules then reload the environment with *satan-reload*.
+  - Update __satan-shell__ and activated modules then reload the shell with *satan-reload*.
+
+`satan-message [type] [message]`
+
+  - Display a formatted message.
+
+  - Message *type*:
+
+    - `title` *Green   -->* `[message]`
+    - `bold`  *Magenta ==>* `[message]`
+    - `info`  *White   -->* `[message]`
+    - `error` *Red     -->* `[message]`
 
 ## Repositories
 
