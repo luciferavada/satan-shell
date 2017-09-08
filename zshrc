@@ -23,3 +23,11 @@ if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
   satan-credit
   satan-ascii-title
 fi
+
+if _satan-index-updates-check; then
+  (satan-modules-enabled-update-check 2>&1 > /dev/null &)
+fi
+
+if [ -n "$(cat ${SATAN_INDEX_UPDATES})" ]; then
+  satan-message "title" "Module updates available."
+fi
