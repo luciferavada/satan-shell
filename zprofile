@@ -240,13 +240,14 @@ function _satan-index-updates-remove() {
 
 #  Determine if updates should be checked for
 function _satan-index-updates-check() {
+  local -i CURRENT_TIME="$(date +%s)"
+
   if [ ! -f "${SATAN_INDEX_UPDATES_CHECKED}" ] || \
      [ -z "$(cat ${SATAN_INDEX_UPDATES_CHECKED})" ]; then
     echo "${CURRENT_TIME}" > "${SATAN_INDEX_UPDATES_CHECKED}"
     return 0
   fi
 
-  local -i CURRENT_TIME="$(date +%s)"
   local -i LAST_CHECKED="$(cat ${SATAN_INDEX_UPDATES_CHECKED})"
   local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LAST_CHECKED} ))
 
