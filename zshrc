@@ -10,6 +10,20 @@ if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   satan-modules-enabled-install
 fi
 
+if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
+
+  if _satan-index-updates-check; then
+    satan-message "Checking for updates..."
+    satan-modules-enabled-update-check
+  fi
+
+  if [ -n "$(cat ${SATAN_INDEX_UPDATES})" ]; then
+    satan-message "title" "Updating modules..."
+    satan-modules-update $(cat "${SATAN_INDEX_UPDATES}")
+  fi
+
+fi
+
 #  Load enabled modules
 satan-modules-enabled-load
 
@@ -22,10 +36,6 @@ fi
 if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
   satan-credit
   satan-ascii-title
-fi
-
-if _satan-index-updates-check; then
-  (satan-modules-enabled-update-check 2>&1 > /dev/null &)
 fi
 
 if [ -n "$(cat ${SATAN_INDEX_UPDATES})" ]; then
