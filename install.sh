@@ -10,14 +10,6 @@ local SATAN_DIRECTORIES=(
   "zsh.d" "zsh.d.conf" "zsh.d.modules"
 )
 
-#  Module index files
-local SATAN_INDEX=(
-  "index.available" "index.installed" "index.updates"
-)
-
-#  Module indexes to create
-local SATAN_INDEX_CREATE=()
-
 #  Files to backup
 local SATAN_BACKUPS=()
 
@@ -110,25 +102,6 @@ if [ -n "${SATAN_LINKS}" ]; then
     echo "${SRC} -> ${DST}"
     ln -sfh "${SRC}" "${DST}"
 
-  done
-fi
-
-#  Check for indexes to create
-for file in ${SATAN_INDEX[@]}; do
-  if [ ! -f "${HOME}/.zsh.d/.${file}" ]; then
-    SATAN_INDEX_CREATE+=("${file}")
-  fi
-done
-
-#  Create module index files
-if [ -n "${SATAN_INDEX_CREATE}" ]; then
-  #  Colorized output
-  echo -n "$(tput bold; tput setaf 2)"
-  echo "--> Creating module index files..."
-  echo -n "$(tput sgr0)"
-
-  for index in ${SATAN_INDEX_CREATE[@]}; do
-    touch "${HOME}/.zsh.d/.${index}"
   done
 fi
 
