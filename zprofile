@@ -93,14 +93,24 @@ function _satan-index-lock-await-untrap() {
   trap - SIGINT
 }
 
+function _satan-index-lock-get-group() {
+  cat "${SATAN_INDEX_LOCK_FILE}" | sed -E \
+    "s/^([A-Fa-f0-9\-]+)\:([0-9]+)\:(.*)$/\\${1}/"
+}
+
 #  Get the index lock file uuid
 function _satan-index-lock-get-uuid() {
-  cat "${SATAN_INDEX_LOCK_FILE}" | sed "s/\(.*\)\:.*/\1/"
+  _satan-index-lock-get-group "1"
 }
 
 #  Get the index lock file date
 function _satan-index-lock-get-date() {
-  cat "${SATAN_INDEX_LOCK_FILE}" | sed "s/.*\:\(.*\)/\1/"
+  _satan-index-lock-get-group "2"
+}
+
+#  Get the index lock file message
+function _satan-index-lock-get-message() {
+  _satan-index-lock-get-group "3"
 }
 
 #  Determine if the lock file has expired
@@ -132,6 +142,8 @@ function _satan-index-lock-check-date() {
 #  Wait for index lock
 function _satan-index-lock-await() {
   if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
+    local -l LOCK_MESSAGE="$(_satan-index-lock-get-message)"
+    satan-message "title" "Locked ${LOCK_MESSAGE}"
     satan-message "title" "Waiting for lock... (~/.zsh.d/.index.lock)"
     satan-message "title" "Force removal with: (CTRL+C)"
     _satan-index-lock-await-trap
@@ -162,7 +174,7 @@ function _satan-index-lock() {
     local UUID=$(uuidgen)
     local -i CURRENT_TIME=$(date +%s)
 
-    echo "${UUID}:${CURRENT_TIME}" > "${SATAN_INDEX_LOCK_FILE}"
+    echo "${UUID}:${CURRENT_TIME}:${2}" > "${SATAN_INDEX_LOCK_FILE}"
     eval "SATAN_INDEX_LOCK_UUID=\"${UUID}\""
     eval "${1}=\"${SATAN_INDEX_LOCK_UUID}\""
   else
@@ -288,7 +300,7 @@ function satan-message() {
 #  Find an available module
 function satan-module-available-find() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Finding an available module..."
 
   local MODULE="${1}"
   if [ -z "${MODULE}" ]; then
@@ -310,7 +322,7 @@ function satan-module-available-find() {
 #  Search available modules
 function satan-module-available-search() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Searching available modules..."
 
   local MODULE="${1}"
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
@@ -328,7 +340,7 @@ function satan-module-available-search() {
 #  Find an installed module
 function satan-module-installed-find() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Finding an installed module..."
 
   local MODULE="${1}"
   if [ -z "${MODULE}" ]; then
@@ -350,7 +362,7 @@ function satan-module-installed-find() {
 #  Search installed modules
 function satan-module-installed-search() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Searching installed modules..."
 
   local MODULE="${1}"
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
@@ -368,7 +380,7 @@ function satan-module-installed-search() {
 #  Index available modules
 function satan-repository-index() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Indexing repositories..."
 
   satan-message "title" "Indexing repositories..."
 
@@ -398,7 +410,7 @@ function satan-repository-index() {
 #  Install a module
 function satan-module-install() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Installing a module..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-available-find "${MODULE}")
@@ -440,7 +452,7 @@ function satan-module-install() {
 #  Uninstall a module
 function satan-module-uninstall() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Uninstalling a module..."
 
   local MODULE="${1}"
   local MODULE_FORCE_UNINSTALL="${2}"
@@ -503,7 +515,7 @@ function satan-module-uninstall() {
 #  Check a module for updates
 function satan-module-update-check() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Checking a module for updates..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -541,7 +553,7 @@ function satan-module-update-check() {
 #  Update a module
 function satan-module-update() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Updating a module..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -574,7 +586,7 @@ function satan-module-update() {
 #  Load a module
 function satan-module-load() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Loading a module..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -610,7 +622,7 @@ function satan-module-load() {
 #  Initialize a new module
 function satan-module-developer-init() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Initializing a new module..."
 
   local MODULE_LINE="${1}"
   local MODULE_INSTALLED=$(satan-module-installed-find "${MODULE_LINE}")
@@ -676,7 +688,7 @@ function satan-module-developer-init() {
 #  Enable developer mode for a module
 function satan-module-developer-enable() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Enabling developer mode..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -709,7 +721,7 @@ function satan-module-developer-enable() {
 #  Disable developer mode for a module
 function satan-module-developer-disable() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Disabling developer mode..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -742,7 +754,7 @@ function satan-module-developer-disable() {
 #  Check for modifications in a module
 function satan-module-developer-status() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Checking modules for changes..."
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -770,7 +782,7 @@ function satan-module-developer-status() {
 #  Find a list of available modules
 function satan-modules-available-find() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Finding available modules..."
 
   satan-message "title" "Finding available modules..."
 
@@ -791,7 +803,7 @@ function satan-modules-available-find() {
 #  Search a list of available modules
 function satan-modules-available-search() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Searching available modules..."
 
   satan-message "title" "Searching available modules..."
 
@@ -812,7 +824,7 @@ function satan-modules-available-search() {
 #  Find a list of installed modules
 function satan-modules-installed-find() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Finding installed modules..."
 
   satan-message "title" "Finding installed modules..."
 
@@ -833,7 +845,7 @@ function satan-modules-installed-find() {
 #  Search a list of installed modules
 function satan-modules-installed-search() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Searching installed modules..."
 
   satan-message "title" "Searching installed modules..."
 
@@ -854,7 +866,7 @@ function satan-modules-installed-search() {
 #  Install a list of modules
 function satan-modules-install() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Installing modules..."
 
   satan-message "title" "Installing modules..."
 
@@ -875,7 +887,7 @@ function satan-modules-install() {
 #  Uninstall a list of modules
 function satan-modules-uninstall() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Uninstalling modules..."
 
   satan-message "title" "Uninstalling modules..."
 
@@ -896,7 +908,7 @@ function satan-modules-uninstall() {
 #  Check a list of modules for updates
 function satan-modules-update-check() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Checking for module updates..."
 
   satan-message "title" "Checking for module updates..."
 
@@ -917,7 +929,7 @@ function satan-modules-update-check() {
 #  Update a list of modules
 function satan-modules-update() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Updating modules..."
 
   satan-message "title" "Updating modules..."
 
@@ -938,7 +950,7 @@ function satan-modules-update() {
 #  Load a list of modules
 function satan-modules-load() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Loading modules..."
 
   satan-reload-configuration-variables
 
@@ -963,9 +975,9 @@ function satan-modules-load() {
 #  Initialize a list of modules
 function satan-modules-developer-init() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Initializing new modules..."
 
-  satan-message "title" "Initializing modules..."
+  satan-message "title" "Initializing new modules..."
 
   for module in ${@}; do
 
@@ -984,7 +996,7 @@ function satan-modules-developer-init() {
 #  Enable developer mode for a list of modules
 function satan-modules-developer-enable() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Enabling developer mode..."
 
   satan-message "title" "Enabling developer mode..."
 
@@ -1005,7 +1017,7 @@ function satan-modules-developer-enable() {
 #  Disable developer mode for a list of modules
 function satan-modules-developer-disable() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Disabling developer mode..."
 
   satan-message "title" "Disabling developer mode..."
 
@@ -1026,7 +1038,7 @@ function satan-modules-developer-disable() {
 #  Check for modifications in a list of modules
 function satan-modules-developer-status() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Checking modules for changes..."
 
   satan-message "title" "Checking modules for changes..."
 
@@ -1157,7 +1169,7 @@ function satan-reload reload() {
 #  Update satan-shell and enabled modules
 function satan-update update() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Updating satan-shell..."
 
   satan-message "title" "Updating satan-shell..."
 
@@ -1189,7 +1201,7 @@ function satan-update update() {
 #  Display readme for satan-shell or a module
 function satan-info() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "By satan-info..."
 
   local MODULE="${1}"
   local SEARCH="${2}"
@@ -1239,7 +1251,7 @@ function satan-info() {
 #  Satan module developer manager
 function satan-dev() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "By satan-dev..."
 
   local INITIALIZE=""
   local ENABLE=""
@@ -1319,7 +1331,7 @@ function satan-dev() {
 #  Satan module manager
 function satan() {
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "By satan..."
 
   local INSTALL_MODULES=""
   local UNINSTALL_MODULES=""
