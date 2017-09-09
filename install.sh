@@ -188,7 +188,11 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "--> Writing default ~/.zsh.d/settings.conf..."
   echo -n "$(tput sgr0)"
 
-  echo "#  Display ascii art" > "${SATAN_SETTINGS_FILE}"
+  echo "#  Automatically update modules" > "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_AUTO_UPDATE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
+  echo "#  Display ascii art" >> "${SATAN_SETTINGS_FILE}"
   echo "SATAN_DISPLAY_ASCII_ART=\"true\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
