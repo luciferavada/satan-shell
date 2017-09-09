@@ -894,12 +894,16 @@ function satan-modules-developer-enable() {
   _satan-index-lock "LOCK"
 
   satan-message "title" "Enabling developer mode..."
+
   for module in ${@}; do
+
     satan-module-developer-enable "${module}"
+
     if [ ! ${?} -eq 0 ]; then
       _satan-index-unlock "${LOCK}"
       return 1
     fi
+
   done
 
   _satan-index-unlock "${LOCK}"
@@ -950,66 +954,105 @@ function satan-modules-developer-status() {
 #  Install enabled modules
 function satan-modules-enabled-install() {
   satan-modules-install ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Check enabled modules for updates
 function satan-modules-enabled-update-check() {
   satan-modules-update-check ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Update enabled modules
 function satan-modules-enabled-update() {
   satan-modules-update ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Load enabled modules
 function satan-modules-enabled-load() {
   satan-modules-load ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Check all installed modules for updates
 function satan-modules-installed-update-check() {
   satan-modules-update-check $(cat "${SATAN_INDEX_INSTALLED}")
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Update all installed modules
 function satan-modules-installed-update() {
   satan-modules-update $(cat "${SATAN_INDEX_INSTALLED}")
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Load all installed modules
 function satan-modules-installed-load() {
   satan-modules-load $(cat "${SATAN_INDEX_INSTALLED}")
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Enable developer mode for enabled modules
 function satan-modules-developer-enabled-enable() {
   satan-modules-developer-enable ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Disable developer mode for enabled modules
 function satan-modules-developer-enabled-disable() {
   satan-modules-developer-disable ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Check for changes in enabled modules
 function satan-modules-developer-enabled-status() {
   satan-modules-developer-status ${SATAN_MODULES[@]}
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Enable developer mode for all installed modules
 function satan-modules-developer-installed-enable() {
   satan-modules-developer-enable $(cat "${SATAN_INDEX_INSTALLED}")
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Disable developer mode for all installed modules
 function satan-modules-developer-installed-disable() {
   satan-modules-developer-disable $(cat "${SATAN_INDEX_INSTALLED}")
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Check for changes in all installed modules
 function satan-modules-developer-installed-status() {
   satan-modules-developer-status $(cat "${SATAN_INDEX_INSTALLED}")
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 }
 
 #  Source satan-shell environment files
@@ -1026,8 +1069,21 @@ function satan-update update() {
 
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
 
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
+
   satan-modules-enabled-update-check
+
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
+
   satan-modules-update "$(cat ${SATAN_INDEX_UPDATES})"
+
+  if [ ! ${?} -eq 0 ]; then
+    return 1
+  fi
 
   satan-reload
 }
@@ -1115,7 +1171,7 @@ function satan-dev() {
 
   if [ -n "${INITIALIZE}" ]; then
     satan-modules-developer-init ${MODULE_LIST[@]}
-    return
+    return ${?}
   fi
 
   if [ -n "${INSTALLED_MODULES}" ]; then
@@ -1128,15 +1184,21 @@ function satan-dev() {
 
   if [ -n "${STATUS}" ]; then
     satan-modules-developer-status ${MODULE_LIST[@]}
-    return
+    return ${?}
   fi
 
   if [ -n "${ENABLE}" ]; then
     satan-modules-developer-enable ${MODULE_LIST[@]}
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 
   if [ -n "${DISABLE}" ]; then
     satan-modules-developer-disable ${MODULE_LIST[@]}
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 }
 
@@ -1199,29 +1261,47 @@ function satan() {
 
   if [ -n "${GENERATE_INDEX}" ]; then
     satan-repository-index
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 
   if [ -n "${UPDATE_MODULES}" ]; then
     satan-modules-update ${MODULE_LIST[@]}
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 
   if [ -n "${INSTALL_MODULES}" ]; then
     satan-modules-install ${MODULE_LIST[@]}
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 
   if [ -n "${UNINSTALL_MODULES}" ]; then
     satan-message "title" "Uninstalling modules..."
     for module in ${MODULE_LIST[@]}; do
       satan-module-uninstall "${module}" "${FORCE_UNINSTALL}"
+      if [ ! ${?} -eq 0 ]; then
+        return 1
+      fi
     done
   fi
 
   if [ -n "${LOAD_MODULES}" ]; then
     satan-modules-load ${MODULE_LIST[@]}
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 
   if [ -n "${RELOAD_SATAN_SHELL}" ]; then
     satan-reload
+    if [ ! ${?} -eq 0 ]; then
+      return 1
+    fi
   fi
 
   if [ -n "${AVAILABLE_SEARCH}" ]; then
