@@ -121,7 +121,7 @@ for file in ${SATAN_INDEX[@]}; do
 done
 
 #  Create module index files
-if [ -n "${SATAN_INDEX_CREATE}" ]; do
+if [ -n "${SATAN_INDEX_CREATE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Creating module index files..."
@@ -130,7 +130,7 @@ if [ -n "${SATAN_INDEX_CREATE}" ]; do
   for index in ${SATAN_INDEX_CREATE[@]}; do
     touch "${HOME}/.zsh.d/.${index}"
   done
-done
+fi
 
 #  Check for gitkeep files to remove
 for directory in ${SATAN_DIRECTORIES[@]}; do
