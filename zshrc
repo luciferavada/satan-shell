@@ -6,20 +6,28 @@ satan-load-configuration-variables
 #  If the available modules index file doesn't exist
 #  index repositories and install enabled modules.
 if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
+  local LOCK
+  _satan-index-lock "LOCK"
+
   satan-repository-index
   satan-modules-enabled-install
+
+  _satan-index-unlock "${LOCK}"
 fi
 
 if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
 
   if _satan-index-updates-check; then
-    satan-message "Checking for updates..."
-    satan-modules-enabled-update-check
-  fi
+    local LOCK
+    _satan-index-lock "LOCK"
 
-  if [ -n "$(cat ${SATAN_INDEX_UPDATES})" ]; then
-    satan-message "title" "Updating modules..."
+    satan-message "title" "Updating satan-shell..."
+    git -C "${SATAN_INSTALL_DIRECTORY}" pull
+
+    satan-modules-enabled-update-check
     satan-modules-update $(cat "${SATAN_INDEX_UPDATES}")
+
+    _satan-index-unlock "${LOCK}"
   fi
 
 fi
@@ -36,8 +44,4 @@ fi
 if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
   satan-credit
   satan-ascii-title
-fi
-
-if [ -n "$(cat ${SATAN_INDEX_UPDATES})" ]; then
-  satan-message "title" "Module updates available."
 fi
