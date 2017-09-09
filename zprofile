@@ -81,9 +81,37 @@ function _satan-index-lock-untrap() {
   trap - SIGINT SIGHUP SIGQUIT SIGABRT SIGKILL SIGTERM
 }
 
+function _satan-index-lock-check-date() {
+  if [ -f "${SATAN_INDEX_LOCK_FILE}" ] && \
+     [ -n "$(cat ${SATAN_INDEX_LOCK_FILE})" ]; then
+
+    satan-reload-configuration-variables
+
+    local -i CURRENT_TIME="$(date +%s)"
+    local -i LOCK_DATE=$(cat "${SATAN_INDEX_LOCK_FILE}")
+    local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LOCK_DATE} ))
+    local -i WAIT=$(( ${SATAN_INDEX_LOCK_FILE_EXPIRE} - ${DIFFERENCE} ))
+    local -i DISPLAY=$(( ${WAIT} % ${SATAN_DISPLAY_INDEX_LOCK_FILE_EVERY} ))
+
+    if [ "${SATAN_DISPLAY_INDEX_LOCK_FILE_WAIT}" = "true" ] && \
+       [ ${WAIT} -ge 0 ] && [ ${DISPLAY} -eq 0 ]; then
+      satan-message "info" "expires in: ${WAIT}s"
+    fi
+
+    if [ ${DIFFERENCE} -ge ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
+      satan-message "title" "Lock file expired..."
+      rm "${SATAN_INDEX_LOCK_FILE}"
+    fi
+  fi
+}
+
 #  Wait for index lock
 function _satan-index-lock-await() {
+  if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
+    satan-message "title" "Waiting for lock... (~/.zsh.d/.index.lock)"
+  fi
   until [ ! -f "${SATAN_INDEX_LOCK_FILE}" ]; do
+    _satan-index-lock-check-date
     sleep 1
   done
 }
@@ -93,9 +121,9 @@ function _satan-index-lock() {
   if [ -z "${SATAN_INDEX_LOCK_UUID}" ]; then
     _satan-index-lock-await
     _satan-index-lock-trap
-    touch "${SATAN_INDEX_LOCK_FILE}"
-    local UUID=$(uuidgen)
-    eval "SATAN_INDEX_LOCK_UUID=\"${UUID}\""
+    local -i CURRENT_TIME="$(date +%s)"
+    echo "${CURRENT_TIME}" > "${SATAN_INDEX_LOCK_FILE}"
+    eval "SATAN_INDEX_LOCK_UUID=\"$(uuidgen)\""
     eval "${1}=\"${SATAN_INDEX_LOCK_UUID}\""
   else
     eval "${1}=\"\""
@@ -152,19 +180,18 @@ function _satan-index-updates-remove() {
 }
 
 function _satan-index-updates-check() {
-  local CURRENT_TIME="$(date +%s)"
-
   if [ ! -f "${SATAN_INDEX_UPDATES_CHECKED}" ] || \
      [ -z "$(cat ${SATAN_INDEX_UPDATES_CHECKED})" ]; then
     echo "${CURRENT_TIME}" > "${SATAN_INDEX_UPDATES_CHECKED}"
     return 0
   fi
 
+  local -i CURRENT_TIME="$(date +%s)"
   local -i LAST_CHECKED="$(cat ${SATAN_INDEX_UPDATES_CHECKED})"
   local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LAST_CHECKED} ))
 
   # If the difference is greater than one day, in seconds...
-  if [ ${DIFFERENCE} -gt 86400 ]; then
+  if [ ${DIFFERENCE} -gt ${SATAN_AUTO_UPDATE_SECONDS} ]; then
     echo "${CURRENT_TIME}" > "${SATAN_INDEX_UPDATES_CHECKED}"
     return 0
   fi
@@ -533,37 +560,36 @@ function satan-module-developer-init() {
       return 0
     fi
 
-    local OUTPUT=""
-
     satan-message "bold" "${MODULE_LINE}"
 
     satan-message "title" "Creating directory..."
-    OUTPUT=$(mkdir -p ${MODULE_DIRECTORY} 2>&1)
 
-    if [ -z "${OUTPUT}" ]; then
-      satan-message "info" "${MODULE_DIRECTORY}"
-    else
-      satan-message "error" "${OUTPUT}"
+    mkdir -p ${MODULE_DIRECTORY} 2>&1 > /dev/null
+
+    if [ ! ${?} -eq 0 ]; then
+      satan-message "error" "failed to create the directory."
+      return 1
     fi
 
     satan-message "title" "Initializing git repository..."
-    OUTPUT=$(git -C "${MODULE_DIRECTORY}" init --quiet 2>&1)
 
-    if [ -n "${OUTPUT}" ]; then
-      satan-message "error" "${OUTPUT}"
+    git -C "${MODULE_DIRECTORY}" init --quiet 2>&1 > /dev/null
+
+    if [ ! ${?} -eq 0 ]; then
+      satan-message "error" "failed to initialize the git repository."
+      _satan-index-unlock "${LOCK}"
+      return 1
     fi
 
     satan-message "title" "Setting git origin url..."
 
-    OUTPUT=$(git -C "${MODULE_DIRECTORY}" remote add origin \
-      "${MODULE_ORIGIN_URL}" 2>&1)
+    git -C "${MODULE_DIRECTORY}" remote add origin \
+      "${MODULE_ORIGIN_URL}" 2>&1 /dev/null
 
-    if [ -z "${OUTPUT}" ]; then
-      satan-message "info" "${MODULE_ORIGIN_URL}"
+    if [ ${?} -eq 0 ]; then
       _satan-index-installed-write "${MODULE_LINE}"
     else
-      satan-message "error" "${OUTPUT}"
-      satan-message "error" "failure."
+      satan-message "error" "failed to set the origin url."
       _satan-index-unlock "${LOCK}"
       return 1
     fi
@@ -578,7 +604,7 @@ function satan-module-developer-init() {
   _satan-index-unlock "${LOCK}"
 }
 
-#  Enable developer mode
+#  Enable developer mode for a module
 function satan-module-developer-enable() {
   local LOCK
   _satan-index-lock "LOCK"
@@ -612,7 +638,7 @@ function satan-module-developer-enable() {
   _satan-index-unlock "${LOCK}"
 }
 
-#  Disable developer mode
+#  Disable developer mode for a module
 function satan-module-developer-disable() {
   local LOCK
   _satan-index-lock "LOCK"
@@ -646,7 +672,7 @@ function satan-module-developer-disable() {
   _satan-index-unlock "${LOCK}"
 }
 
-#  Check for changes in modules
+#  Check for changes in a module
 function satan-module-developer-status() {
   local LOCK
   _satan-index-lock "LOCK"
@@ -1063,6 +1089,9 @@ function satan-reload reload() {
 
 #  Update satan-shell and enabled modules
 function satan-update update() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   satan-message "title" "Updating satan-shell..."
 
   satan-reload-configuration-variables
@@ -1084,6 +1113,8 @@ function satan-update update() {
   if [ ! ${?} -eq 0 ]; then
     return 1
   fi
+
+  _satan-index-unlock "${LOCK}"
 
   satan-reload
 }
