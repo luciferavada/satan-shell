@@ -72,15 +72,35 @@ function satan-ascii-header() {
   satan-ascii-title
 }
 
-#  Set trap for index file lock removal
+#  Set trap for index lock file removal
 function _satan-index-lock-trap() {
   trap "_satan-index-unlock \"${SATAN_INDEX_LOCK_UUID}\"; kill -INT $$" \
     SIGINT SIGHUP SIGQUIT SIGABRT SIGKILL SIGTERM
 }
 
-#  Reset trap
+#  Reset trap index lock file removal
 function _satan-index-lock-untrap() {
   trap - SIGINT SIGHUP SIGQUIT SIGABRT SIGKILL SIGTERM
+}
+
+#  Set trap for index lock await
+function _satan-index-lock-await-trap() {
+  trap "rm \"${SATAN_INDEX_LOCK_FILE}\"" SIGINT
+}
+
+#  Reset trap for index lock await
+function _satan-index-lock-await-untrap() {
+  trap - SIGINT
+}
+
+#  Get the index lock file uuid
+function _satan-index-lock-get-uuid() {
+  cat "${SATAN_INDEX_LOCK_FILE}" | sed "s/\(.*\)\:.*/\1/"
+}
+
+#  Get the index lock file date
+function _satan-index-lock-get-date() {
+  cat "${SATAN_INDEX_LOCK_FILE}" | sed "s/.*\:\(.*\)/\1/"
 }
 
 #  Determine if the lock file has expired
@@ -90,13 +110,14 @@ function _satan-index-lock-check-date() {
 
     satan-reload-configuration-variables
 
-    local -i CURRENT_TIME="$(date +%s)"
-    local -i LOCK_DATE=$(cat "${SATAN_INDEX_LOCK_FILE}")
+    local -i CURRENT_TIME=$(date +%s)
+    local -i LOCK_DATE=$(_satan-index-lock-get-date)
     local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LOCK_DATE} ))
     local -i WAIT=$(( ${SATAN_INDEX_LOCK_FILE_EXPIRE} - ${DIFFERENCE} ))
     local -i DISPLAY=$(( ${WAIT} % ${SATAN_DISPLAY_INDEX_LOCK_FILE_EVERY} ))
 
     if [ "${SATAN_DISPLAY_INDEX_LOCK_FILE_WAIT}" = "true" ] && \
+       [ ${WAIT} -ne ${SATAN_INDEX_LOCK_FILE_EXPIRE} ] && \
        [ ${WAIT} -ge 0 ] && [ ${DISPLAY} -eq 0 ]; then
       satan-message "info" "expires in: ${WAIT}s"
     fi
@@ -112,11 +133,24 @@ function _satan-index-lock-check-date() {
 function _satan-index-lock-await() {
   if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
     satan-message "title" "Waiting for lock... (~/.zsh.d/.index.lock)"
+    satan-message "title" "Force removal with: (CTRL+C)"
+    _satan-index-lock-await-trap
   fi
   until [ ! -f "${SATAN_INDEX_LOCK_FILE}" ]; do
     _satan-index-lock-check-date
     sleep 1
   done
+  _satan-index-lock-await-untrap
+}
+
+function _satan-index-lock-check-uuid() {
+  if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
+    local LOCK_FILE_UUID=$(_satan-index-lock-get-uuid)
+    if [ ! "${LOCK_FILE_UUID}" = "${SATAN_INDEX_LOCK_UUID}" ]; then
+      return 1
+    fi
+  fi
+  return 0
 }
 
 #  Acquire the index lock
@@ -124,9 +158,12 @@ function _satan-index-lock() {
   if [ -z "${SATAN_INDEX_LOCK_UUID}" ]; then
     _satan-index-lock-await
     _satan-index-lock-trap
-    local -i CURRENT_TIME="$(date +%s)"
-    echo "${CURRENT_TIME}" > "${SATAN_INDEX_LOCK_FILE}"
-    eval "SATAN_INDEX_LOCK_UUID=\"$(uuidgen)\""
+
+    local UUID=$(uuidgen)
+    local -i CURRENT_TIME=$(date +%s)
+
+    echo "${UUID}:${CURRENT_TIME}" > "${SATAN_INDEX_LOCK_FILE}"
+    eval "SATAN_INDEX_LOCK_UUID=\"${UUID}\""
     eval "${1}=\"${SATAN_INDEX_LOCK_UUID}\""
   else
     eval "${1}=\"\""
@@ -135,7 +172,14 @@ function _satan-index-lock() {
 
 #  Release the index lock
 function _satan-index-unlock() {
+  if ! _satan-index-lock-check-uuid; then
+    _satan-index-lock-untrap
+    kill -INT "$$"
+    return 1
+  fi
+
   local LOCK="${1}"
+
   if [ "${LOCK}" = "${SATAN_INDEX_LOCK_UUID}" ]; then
     _satan-index-lock-untrap
     eval "SATAN_INDEX_LOCK_UUID=\"\""
@@ -243,9 +287,13 @@ function satan-message() {
 
 #  Find an available module
 function satan-module-available-find() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local MODULE="${1}"
   if [ -z "${MODULE}" ]; then
-    return
+    _satan-index-unlock "${LOCK}"
+    return 0
   fi
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
@@ -255,10 +303,15 @@ function satan-module-available-find() {
       cat "${SATAN_INDEX_AVAILABLE}" | grep --max-count "1" --regexp "${1}$"
     fi
   fi
+
+  _satan-index-unlock "${LOCK}"
 }
 
 #  Search available modules
 function satan-module-available-search() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local MODULE="${1}"
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
@@ -269,13 +322,18 @@ function satan-module-available-search() {
     fi
   fi
 
+  _satan-index-unlock "${LOCK}"
 }
 
 #  Find an installed module
 function satan-module-installed-find() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local MODULE="${1}"
   if [ -z "${MODULE}" ]; then
-    return
+    _satan-index-unlock "${LOCK}"
+    return 0
   fi
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
@@ -285,10 +343,15 @@ function satan-module-installed-find() {
       cat "${SATAN_INDEX_INSTALLED}" | grep --max-count "1" --regexp "${1}$"
     fi
   fi
+
+  _satan-index-unlock "${LOCK}"
 }
 
 #  Search installed modules
 function satan-module-installed-search() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local MODULE="${1}"
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
@@ -298,6 +361,8 @@ function satan-module-installed-search() {
       cat "${SATAN_INDEX_INSTALLED}" | grep  --regexp ".*${1}.*"
     fi
   fi
+
+  _satan-index-unlock "${LOCK}"
 }
 
 #  Index available modules
@@ -1138,9 +1203,9 @@ function satan-info() {
       README="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}/README.md"
     else
       satan-message "bold" "${MODULE}"
-      satan-message "info" "module not found."
+      satan-message "error" "module not found."
       _satan-index-unlock "${LOCK}"
-      return
+      return 1
     fi
   else
     README="${SATAN_INSTALL_DIRECTORY}/README.md"
@@ -1148,9 +1213,9 @@ function satan-info() {
 
   if [ ! -f "${README}" ]; then
     satan-message "bold" "${MODULE_LINE}"
-    satan-message "info" "readme not found."
+    satan-message "error" "readme not found."
     _satan-index-unlock "${LOCK}"
-    return
+    return 1
   fi
 
   if [ -n "$(command -v mdv)" ]; then
