@@ -7,7 +7,7 @@ satan-load-configuration-variables
 #  index repositories and install enabled modules.
 if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   local LOCK
-  _satan-index-lock "LOCK"
+  _satan-index-lock "LOCK" "Initializing satan-shell..."
 
   satan-repository-index
   satan-modules-enabled-install
@@ -19,7 +19,7 @@ if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
 
   if _satan-index-updates-check; then
     local LOCK
-    _satan-index-lock "LOCK"
+    _satan-index-lock "LOCK" "Automatically updating..."
 
     satan-message "title" "Updating satan-shell..."
     git -C "${SATAN_INSTALL_DIRECTORY}" pull
