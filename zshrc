@@ -25,7 +25,10 @@ if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
     git -C "${SATAN_INSTALL_DIRECTORY}" pull
 
     satan-modules-enabled-update-check
-    satan-modules-update $(cat "${SATAN_INDEX_UPDATES}")
+
+    if [ -f "${SATAN_INDEX_UPDATES}" ]; then
+      satan-modules-update $(cat "${SATAN_INDEX_UPDATES}")
+    fi
 
     _satan-index-unlock "${LOCK}"
   fi
