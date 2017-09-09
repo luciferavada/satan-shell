@@ -185,6 +185,7 @@ function _satan-index-lock() {
 #  Release the index lock
 function _satan-index-unlock() {
   if ! _satan-index-lock-check-uuid; then
+    satan-message "error" "lock removed..."
     _satan-index-lock-untrap
     kill -INT "$$"
     return 1
