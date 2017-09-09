@@ -147,7 +147,6 @@ if [ ! -f "${SATAN_DIRECTORIES_FILE}" ]; then
   echo "#  Modules directory" >> "${SATAN_DIRECTORIES_FILE}"
   echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
     "${SATAN_DIRECTORIES_FILE}"
-  echo "" >> "${SATAN_DIRECTORIES_FILE}"
 fi
 
 #  Write default modules file
@@ -188,8 +187,27 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "--> Writing default ~/.zsh.d/settings.conf..."
   echo -n "$(tput sgr0)"
 
-  echo "#  Automatic daily updates" > "${SATAN_SETTINGS_FILE}"
+  echo "#  Automatic updates" > "${SATAN_SETTINGS_FILE}"
   echo "SATAN_AUTO_UPDATE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
+  echo "#  Automatic daily updates" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_AUTO_UPDATE_SECONDS=\"86400\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
+  echo "#  Index lock file expiration (5 minutes)" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_INDEX_LOCK_FILE_EXPIRE=\"300\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
+  echo "#  Display lock expiration wait" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_DISPLAY_INDEX_LOCK_FILE_WAIT=\"true\"" >> \
+    "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
+  echo "#  Display lock expiration wait every n seconds" >> \
+    "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_DISPLAY_INDEX_LOCK_FILE_EVERY=\"10\"" >> \
+    "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
   echo "#  Display ascii art" >> "${SATAN_SETTINGS_FILE}"
@@ -211,7 +229,6 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
 
   echo "#  Markdown Viewer (mdv) theme" >> "${SATAN_SETTINGS_FILE}"
   echo "SATAN_MARKDOWN_VIEWER_THEME=\"960.847\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
 fi
 
 #  Write default zlogin file
