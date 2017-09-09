@@ -72,15 +72,18 @@ function satan-ascii-header() {
   satan-ascii-title
 }
 
+#  Set trap for index file lock removal
 function _satan-index-lock-trap() {
   trap "_satan-index-unlock \"${SATAN_INDEX_LOCK_UUID}\"; kill -INT $$" \
     SIGINT SIGHUP SIGQUIT SIGABRT SIGKILL SIGTERM
 }
 
+#  Reset trap
 function _satan-index-lock-untrap() {
   trap - SIGINT SIGHUP SIGQUIT SIGABRT SIGKILL SIGTERM
 }
 
+#  Determine if the lock file has expired
 function _satan-index-lock-check-date() {
   if [ -f "${SATAN_INDEX_LOCK_FILE}" ] && \
      [ -n "$(cat ${SATAN_INDEX_LOCK_FILE})" ]; then
@@ -179,6 +182,7 @@ function _satan-index-updates-remove() {
   mv "${SATAN_INDEX_UPDATES_TEMP}" "${SATAN_INDEX_UPDATES}"
 }
 
+#  Determine if updates should be checked for
 function _satan-index-updates-check() {
   if [ ! -f "${SATAN_INDEX_UPDATES_CHECKED}" ] || \
      [ -z "$(cat ${SATAN_INDEX_UPDATES_CHECKED})" ]; then
@@ -296,7 +300,7 @@ function satan-module-installed-search() {
   fi
 }
 
-#  Index available satan modules
+#  Index available modules
 function satan-repository-index() {
   local LOCK
   _satan-index-lock "LOCK"
@@ -457,7 +461,7 @@ function satan-module-update-check() {
     return 1
   fi
 
-  # exits non-zero if there are changes
+  # exits non-zero if there are updates available
   git -C "${MODULE_DIRECTORY}" diff --exit-code --no-patch master origin/master
 
   if [ ! ${?} -eq 0 ]; then
@@ -621,11 +625,10 @@ function satan-module-developer-enable() {
     return 0
   fi
 
-  local MODULE_SSH=$(_satan-module-get-url "${MODULE_LINE}" | grep "git@")
+  _satan-module-get-url "${MODULE_LINE}" | grep --silent "git@"
 
-  if [ -z "${MODULE_SSH}" ]; then
+  if [ ! ${?} -eq 0 ]; then
     satan-message "bold" "${MODULE_LINE}"
-
     _satan-module-set-url "${MODULE_LINE}" "ssh"
 
     if [ ! ${?} -eq 0 ]; then
@@ -655,11 +658,10 @@ function satan-module-developer-disable() {
     return 0
   fi
 
-  local MODULE_HTTPS=$(_satan-module-get-url "${MODULE_LINE}" | grep "https")
+  _satan-module-get-url "${MODULE_LINE}" | grep --silent "https"
 
-  if [ -z "${MODULE_HTTPS}" ]; then
+  if [ ! ${?} -eq 0 ]; then
     satan-message "bold" "${MODULE_LINE}"
-
     _satan-module-set-url "${MODULE_LINE}" "https"
 
     if [ ! ${?} -eq 0 ]; then
@@ -672,7 +674,7 @@ function satan-module-developer-disable() {
   _satan-index-unlock "${LOCK}"
 }
 
-#  Check for changes in a module
+#  Check for modifications in a module
 function satan-module-developer-status() {
   local LOCK
   _satan-index-lock "LOCK"
@@ -956,7 +958,7 @@ function satan-modules-developer-disable() {
   _satan-index-unlock "${LOCK}"
 }
 
-#  Check for changes in a list of modules
+#  Check for modifications in a list of modules
 function satan-modules-developer-status() {
   local LOCK
   _satan-index-lock "LOCK"
@@ -1121,6 +1123,9 @@ function satan-update update() {
 
 #  Display readme for satan-shell or a module
 function satan-info() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local MODULE="${1}"
   local SEARCH="${2}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -1134,6 +1139,7 @@ function satan-info() {
     else
       satan-message "bold" "${MODULE}"
       satan-message "info" "module not found."
+      _satan-index-unlock "${LOCK}"
       return
     fi
   else
@@ -1143,18 +1149,22 @@ function satan-info() {
   if [ ! -f "${README}" ]; then
     satan-message "bold" "${MODULE_LINE}"
     satan-message "info" "readme not found."
+    _satan-index-unlock "${LOCK}"
     return
   fi
 
   if [ -n "$(command -v mdv)" ]; then
     if [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
+      _satan-index-unlock "${LOCK}"
       mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less \
         --clear-screen --RAW-CONTROL-CHARS ${SEARCH:+--pattern="${SEARCH}"}
     else
+      _satan-index-unlock "${LOCK}"
       cat "${README}" | sed "s/<br>//" | \
         less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     fi
   else
+    _satan-index-unlock "${LOCK}"
     cat "${README}" | sed "s/<br>//" | \
       less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     satan-message "title" "install mdv for formated output."
@@ -1163,6 +1173,9 @@ function satan-info() {
 
 #  Satan module developer manager
 function satan-dev() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local INITIALIZE=""
   local ENABLE=""
   local DISABLE=""
@@ -1175,6 +1188,7 @@ function satan-dev() {
 
   if [[ -z "${@}" ]]; then
     satan-info "" "Module Developer"
+    _satan-index-unlock "${LOCK}"
     return ${?}
   fi
 
@@ -1193,6 +1207,7 @@ function satan-dev() {
 
   if [ -n "${DISPLAY_HELP}" ]; then
     satan-info "" "Module Developer"
+    _satan-index-unlock "${LOCK}"
     return ${?}
   fi
 
@@ -1215,12 +1230,14 @@ function satan-dev() {
 
   if [ -n "${STATUS}" ]; then
     satan-modules-developer-status ${MODULE_LIST[@]}
+    _satan-index-unlock "${LOCK}"
     return ${?}
   fi
 
   if [ -n "${ENABLE}" ]; then
     satan-modules-developer-enable ${MODULE_LIST[@]}
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1228,6 +1245,7 @@ function satan-dev() {
   if [ -n "${DISABLE}" ]; then
     satan-modules-developer-disable ${MODULE_LIST[@]}
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1235,6 +1253,9 @@ function satan-dev() {
 
 #  Satan module manager
 function satan() {
+  local LOCK
+  _satan-index-lock "LOCK"
+
   local INSTALL_MODULES=""
   local UNINSTALL_MODULES=""
   local UPDATE_MODULES=""
@@ -1252,6 +1273,7 @@ function satan() {
 
   if [[ -z "${@}" ]]; then
     satan-info "" "Module Manager"
+    _satan-index-unlock "${LOCK}"
     return ${?}
   fi
 
@@ -1275,6 +1297,7 @@ function satan() {
 
   if [ -n "${DISPLAY_HELP}" ]; then
     satan-info "" "Module Manager"
+    _satan-index-unlock "${LOCK}"
     return ${?}
   fi
 
@@ -1293,6 +1316,7 @@ function satan() {
   if [ -n "${GENERATE_INDEX}" ]; then
     satan-repository-index
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1300,6 +1324,7 @@ function satan() {
   if [ -n "${UPDATE_MODULES}" ]; then
     satan-modules-update ${MODULE_LIST[@]}
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1307,6 +1332,7 @@ function satan() {
   if [ -n "${INSTALL_MODULES}" ]; then
     satan-modules-install ${MODULE_LIST[@]}
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1316,6 +1342,7 @@ function satan() {
     for module in ${MODULE_LIST[@]}; do
       satan-module-uninstall "${module}" "${FORCE_UNINSTALL}"
       if [ ! ${?} -eq 0 ]; then
+        _satan-index-unlock "${LOCK}"
         return 1
       fi
     done
@@ -1324,6 +1351,7 @@ function satan() {
   if [ -n "${LOAD_MODULES}" ]; then
     satan-modules-load ${MODULE_LIST[@]}
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1331,6 +1359,7 @@ function satan() {
   if [ -n "${RELOAD_SATAN_SHELL}" ]; then
     satan-reload
     if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
@@ -1366,4 +1395,6 @@ function satan() {
       satan-message "bold" "${module}"
     done
   fi
+
+  _satan-index-unlock "${LOCK}"
 }
