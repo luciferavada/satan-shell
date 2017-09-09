@@ -10,6 +10,14 @@ local SATAN_DIRECTORIES=(
   "zsh.d" "zsh.d.conf" "zsh.d.modules"
 )
 
+#  Module index files
+local SATAN_INDEX=(
+  "index.available" "index.installed" "index.updates"
+)
+
+#  Module indexes to create
+local SATAN_INDEX_CREATE=()
+
 #  Files to backup
 local SATAN_BACKUPS=()
 
@@ -105,6 +113,25 @@ if [ -n "${SATAN_LINKS}" ]; then
   done
 fi
 
+#  Check for indexes to create
+for file in ${SATAN_INDEX[@]}; do
+  if [ ! -f "${HOME}/.zsh.d/.${file}" ]; then
+    SATAN_INDEX_CREATE+=("${file}")
+  fi
+done
+
+#  Create module index files
+if [ -n "${SATAN_INDEX_CREATE}" ]; do
+  #  Colorized output
+  echo -n "$(tput bold; tput setaf 2)"
+  echo "--> Creating module index files..."
+  echo -n "$(tput sgr0)"
+
+  for index in ${SATAN_INDEX_CREATE[@]}; do
+    touch "${HOME}/.zsh.d/.${index}"
+  done
+done
+
 #  Check for gitkeep files to remove
 for directory in ${SATAN_DIRECTORIES[@]}; do
   local GITKEEP_FILE="${PWD}/${directory}/.gitkeep"
@@ -188,7 +215,7 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "--> Writing default ~/.zsh.d/settings.conf..."
   echo -n "$(tput sgr0)"
 
-  echo "#  Automatically update modules" > "${SATAN_SETTINGS_FILE}"
+  echo "#  Automatic daily updates" > "${SATAN_SETTINGS_FILE}"
   echo "SATAN_AUTO_UPDATE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
