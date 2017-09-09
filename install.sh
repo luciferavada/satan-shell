@@ -100,7 +100,7 @@ if [ -n "${SATAN_LINKS}" ]; then
     local DST="${HOME}/.${file}"
 
     echo "${SRC} -> ${DST}"
-    ln -sfh "${SRC}" "${DST}"
+    ln -sf "${SRC}" "${DST}"
 
   done
 fi
