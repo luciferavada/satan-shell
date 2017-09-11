@@ -9,6 +9,8 @@ if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   local LOCK
   _satan-index-lock "LOCK" "Initializing satan-shell..."
 
+  satan-message "title" "Initializing satan-shell..."
+
   satan-repository-index
   satan-modules-enabled-install
 
@@ -19,9 +21,9 @@ if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
 
   if _satan-index-updates-check; then
     local LOCK
-    _satan-index-lock "LOCK" "Automatically updating..."
+    _satan-index-lock "LOCK" "Automatically updating satan-shell..."
 
-    satan-message "title" "Updating satan-shell..."
+    satan-message "title" "Automatically updating satan-shell..."
     git -C "${SATAN_INSTALL_DIRECTORY}" pull
 
     satan-modules-enabled-update-check
