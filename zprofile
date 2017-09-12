@@ -667,7 +667,7 @@ function satan-module-developer-init() {
     satan-message "title" "Setting git origin url..."
 
     git -C "${MODULE_DIRECTORY}" remote add origin \
-      "${MODULE_ORIGIN_URL}" 2>&1 /dev/null
+      "${MODULE_ORIGIN_URL}" 2>&1 > /dev/null
 
     if [ ${?} -eq 0 ]; then
       _satan-index-installed-write "${MODULE_LINE}"
@@ -1203,7 +1203,7 @@ function satan-update update() {
 #  Display readme for satan-shell or a module
 function satan-info() {
   local LOCK
-  _satan-index-lock "LOCK" "By satan-info..."
+  _satan-index-lock "LOCK" "By satan-info command..."
 
   local MODULE="${1}"
   local SEARCH="${2}"
@@ -1253,7 +1253,7 @@ function satan-info() {
 #  Satan module developer manager
 function satan-dev() {
   local LOCK
-  _satan-index-lock "LOCK" "By satan-dev..."
+  _satan-index-lock "LOCK" "By satan-dev command..."
 
   local INITIALIZE=""
   local ENABLE=""
@@ -1296,6 +1296,7 @@ function satan-dev() {
 
   if [ -n "${INITIALIZE}" ]; then
     satan-modules-developer-init ${MODULE_LIST[@]}
+    _satan-index-unlock "${LOCK}"
     return ${?}
   fi
 
@@ -1333,7 +1334,7 @@ function satan-dev() {
 #  Satan module manager
 function satan() {
   local LOCK
-  _satan-index-lock "LOCK" "By satan..."
+  _satan-index-lock "LOCK" "By satan command..."
 
   local INSTALL_MODULES=""
   local UNINSTALL_MODULES=""
