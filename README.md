@@ -24,6 +24,10 @@ A modular ZShell configuration.
 
 ## General
 
+### Screen Shots
+
+![Dark Tmux Theme](screenshots/tmux-theme-dark.png?raw=true "Dark Tmux Theme")
+
 ### Usage<br>
 
 User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
