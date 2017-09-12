@@ -26,9 +26,11 @@ A modular ZShell configuration.
 
 ### Screen Shots
 
-![Light Tmux Theme](screenshots/tmux-theme-light.png?raw=true "Light Tmux Theme")
-
 ![Dark Tmux Theme](screenshots/tmux-theme-dark.png?raw=true "Dark Tmux Theme")
+
+---
+
+![Light Tmux Theme](screenshots/tmux-theme-light.png?raw=true "Light Tmux Theme")
 
 ### Usage<br>
 
