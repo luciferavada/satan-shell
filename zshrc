@@ -12,29 +12,55 @@ if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
   satan-message "title" "Initializing satan-shell..."
 
   satan-repository-index
-  satan-modules-enabled-install
 
-  _satan-index-unlock "${LOCK}"
-fi
-
-if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
-
-  if _satan-index-updates-check; then
-    local LOCK
-    _satan-index-lock "LOCK" "Automatically updating satan-shell..."
-
-    satan-message "title" "Automatically updating satan-shell..."
-    git -C "${SATAN_INSTALL_DIRECTORY}" pull
-
-    satan-modules-enabled-update-check
-
-    if [ -f "${SATAN_INDEX_UPDATES}" ]; then
-      satan-modules-update $(cat "${SATAN_INDEX_UPDATES}")
-    fi
-
+  if [ ! ${?} -eq 0 ]; then
     _satan-index-unlock "${LOCK}"
+    return 1
   fi
 
+  satan-modules-enabled-install
+
+  if [ ! ${?} -eq 0 ]; then
+    _satan-index-unlock "${LOCK}"
+    return 1
+  fi
+
+  _satan-index-unlock "${LOCK}"
+else
+  if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
+
+    if _satan-index-updates-check; then
+      local LOCK
+      _satan-index-lock "LOCK" "Automatically updating satan-shell..."
+
+      satan-message "title" "Automatically updating satan-shell..."
+
+      git -C "${SATAN_INSTALL_DIRECTORY}" pull
+
+      if [ ! ${?} -eq 0 ]; then
+        _satan-index-unlock "${LOCK}"
+        return 1
+      fi
+
+      satan-modules-enabled-update-check
+
+      if [ ! ${?} -eq 0 ]; then
+        _satan-index-unlock "${LOCK}"
+        return 1
+      fi
+
+      if [ -f "${SATAN_INDEX_UPDATES}" ]; then
+        satan-modules-update $(cat "${SATAN_INDEX_UPDATES}")
+        if [ ! ${?} -eq 0 ]; then
+          _satan-index-unlock "${LOCK}"
+          return 1
+        fi
+      fi
+
+      _satan-index-unlock "${LOCK}"
+    fi
+
+  fi
 fi
 
 #  Load enabled modules
