@@ -760,6 +760,8 @@ function satan-module-developer-status() {
 
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
+  local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
+  local MODULE_MODIFIED=""
 
   satan-reload-configuration-variables
 
@@ -774,6 +776,17 @@ function satan-module-developer-status() {
   git -C "${MODULE_DIRECTORY}" diff --exit-code --no-patch
 
   if [ ! ${?} -eq 0 ]; then
+    MODULE_MODIFIED="true"
+  fi
+
+  # exits zero if there are untracked files
+  git -C "${MODULE_DIRECTORY}" ls-files --other | grep ".*" > /dev/null 2>&1
+
+  if [ ${?} -eq 0 ]; then
+    MODULE_MODIFIED="true"
+  fi
+
+  if [ -n "${MODULE_MODIFIED}" ]; then
     satan-message "bold" "${MODULE_LINE}"
     satan-message "info" "modified."
   fi
@@ -1180,19 +1193,23 @@ function satan-update update() {
   git -C "${SATAN_INSTALL_DIRECTORY}" pull
 
   if [ ! ${?} -eq 0 ]; then
+    _satan-index-unlock "${LOCK}"
     return 1
   fi
 
   satan-modules-enabled-update-check
 
   if [ ! ${?} -eq 0 ]; then
+    _satan-index-unlock "${LOCK}"
     return 1
   fi
 
-  satan-modules-update "$(cat ${SATAN_INDEX_UPDATES})"
-
-  if [ ! ${?} -eq 0 ]; then
-    return 1
+  if [ -f "${SATAN_INDEX_UPDATES}" ]; then
+    satan-modules-update "$(cat ${SATAN_INDEX_UPDATES})"
+    if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
+      return 1
+    fi
   fi
 
   _satan-index-unlock "${LOCK}"
@@ -1296,8 +1313,10 @@ function satan-dev() {
 
   if [ -n "${INITIALIZE}" ]; then
     satan-modules-developer-init ${MODULE_LIST[@]}
-    _satan-index-unlock "${LOCK}"
-    return ${?}
+    if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
+      return 1
+    if
   fi
 
   if [ -n "${INSTALLED_MODULES}" ]; then
@@ -1310,8 +1329,10 @@ function satan-dev() {
 
   if [ -n "${STATUS}" ]; then
     satan-modules-developer-status ${MODULE_LIST[@]}
-    _satan-index-unlock "${LOCK}"
-    return ${?}
+    if [ ! ${?} -eq 0 ]; then
+      _satan-index-unlock "${LOCK}"
+      return 1
+    fi
   fi
 
   if [ -n "${ENABLE}" ]; then
@@ -1446,6 +1467,7 @@ function satan() {
 
   if [ -n "${AVAILABLE_SEARCH}" ]; then
     local MODULES=()
+
     if [ -n "${MODULE_LIST}" ]; then
       satan-message "title" "Searching available modules..."
       for module in ${MODULE_LIST[@]}; do
@@ -1455,6 +1477,7 @@ function satan() {
       satan-message "title" "Available modules..."
       MODULES=($(cat "${SATAN_INDEX_AVAILABLE}"))
     fi
+
     for module in ${MODULES[@]}; do
       satan-message "bold" "${module}"
     done
@@ -1462,6 +1485,7 @@ function satan() {
 
   if [ -n "${INSTALLED_SEARCH}" ]; then
     local MODULES=()
+
     if [ -n "${MODULE_LIST}" ]; then
       satan-message "title" "Searching installed modules..."
       for module in ${MODULE_LIST[@]}; do
@@ -1471,6 +1495,7 @@ function satan() {
       satan-message "title" "Installed modules..."
       MODULES=($(cat "${SATAN_INDEX_INSTALLED}"))
     fi
+
     for module in ${MODULES[@]}; do
       satan-message "bold" "${module}"
     done
