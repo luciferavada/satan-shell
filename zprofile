@@ -24,6 +24,9 @@ local SATAN_INDEX_UPDATES="${HOME}/.zsh.d/.index.updates"
 #  Satan modules updates index last checked since epoch time stamp
 local SATAN_INDEX_UPDATES_CHECKED="${HOME}/.zsh.d/.index.updates.checked"
 
+#  Satan on load hook
+local SATAN_ON_LOAD=()
+
 #  Satan configuration files
 local SATAN_DIRECTORIES_FILE="${HOME}/.zsh.d/directories.conf"
 local SATAN_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
@@ -281,6 +284,35 @@ function _satan-module-set-url() {
 
   git -C "${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}" remote set-url origin \
     "${MODULE_URL}"
+}
+
+function @satan-load() {
+  local STRING="'"
+  local i
+  for (( i = 1; i <= ${#}; i++ )); do
+    STRING+="\"${@[${i}]}\""
+    if [ ${i} -lt ${#} ]; then
+      STRING+=" "
+    fi
+  done
+  STRING+="'"
+  if [[ ! "${SATAN_ON_LOAD}" =~ "${STRING}" ]]; then
+    SATAN_ON_LOAD+=("${STRING}")
+  fi
+}
+
+#  Run satan on load functions
+function satan-on-load() {
+  for string in ${SATAN_ON_LOAD[@]}; do
+    local HOOK
+    eval "HOOK=(${string//\'/})"
+    local COMMAND="${HOOK[1]}"
+    local ARGUMENTS=""
+    for argument in ${HOOK[@]:1}; do
+      ARGUMENTS+="\"${argument}\" "
+    done
+    eval "${COMMAND} ${ARGUMENTS[@]}"
+  done
 }
 
 #  Display colorized message
@@ -1219,9 +1251,6 @@ function satan-update update() {
 
 #  Display readme for satan-shell or a module
 function satan-info() {
-  local LOCK
-  _satan-index-lock "LOCK" "By satan-info command..."
-
   local MODULE="${1}"
   local SEARCH="${2}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
@@ -1235,7 +1264,6 @@ function satan-info() {
     else
       satan-message "bold" "${MODULE}"
       satan-message "error" "module not found."
-      _satan-index-unlock "${LOCK}"
       return 1
     fi
   else
@@ -1245,22 +1273,18 @@ function satan-info() {
   if [ ! -f "${README}" ]; then
     satan-message "bold" "${MODULE_LINE}"
     satan-message "error" "readme not found."
-    _satan-index-unlock "${LOCK}"
     return 1
   fi
 
   if [ -n "$(command -v mdv)" ]; then
     if [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
-      _satan-index-unlock "${LOCK}"
       mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less \
         --clear-screen --RAW-CONTROL-CHARS ${SEARCH:+--pattern="${SEARCH}"}
     else
-      _satan-index-unlock "${LOCK}"
       cat "${README}" | sed "s/<br>//" | \
         less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     fi
   else
-    _satan-index-unlock "${LOCK}"
     cat "${README}" | sed "s/<br>//" | \
       less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
     satan-message "title" "install mdv for formated output."
@@ -1283,9 +1307,9 @@ function satan-dev() {
   local MODULE_LIST=()
 
   if [[ -z "${@}" ]]; then
-    satan-info "" "Module Developer"
     _satan-index-unlock "${LOCK}"
-    return ${?}
+    satan-info "" "Module Developer"
+    return 0
   fi
 
   while getopts ":IEDSaih" option; do
@@ -1302,8 +1326,8 @@ function satan-dev() {
   done
 
   if [ -n "${DISPLAY_HELP}" ]; then
-    satan-info "" "Module Developer"
     _satan-index-unlock "${LOCK}"
+    satan-info "" "Module Developer"
     return ${?}
   fi
 
@@ -1373,9 +1397,9 @@ function satan() {
   local MODULE_LIST=()
 
   if [[ -z "${@}" ]]; then
-    satan-info "" "Module Manager"
     _satan-index-unlock "${LOCK}"
-    return ${?}
+    satan-info "" "Module Manager"
+    return 0
   fi
 
   while getopts ":SRULQXyaifrh" option; do
@@ -1397,9 +1421,9 @@ function satan() {
   done
 
   if [ -n "${DISPLAY_HELP}" ]; then
-    satan-info "" "Module Manager"
     _satan-index-unlock "${LOCK}"
-    return ${?}
+    satan-info "" "Module Manager"
+    return 0
   fi
 
   satan-reload-configuration-variables
