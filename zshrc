@@ -76,3 +76,5 @@ if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
   satan-credit
   satan-ascii-title
 fi
+
+satan-on-load
