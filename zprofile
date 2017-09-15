@@ -286,6 +286,7 @@ function _satan-module-set-url() {
     "${MODULE_URL}"
 }
 
+#  Add a command with parameters to the satan-on-load hook array
 function @satan-load() {
   local STRING="'"
   local i
@@ -304,14 +305,8 @@ function @satan-load() {
 #  Run satan on load functions
 function satan-on-load() {
   for string in ${SATAN_ON_LOAD[@]}; do
-    local HOOK
-    eval "HOOK=(${string//\'/})"
-    local COMMAND="${HOOK[1]}"
-    local ARGUMENTS=""
-    for argument in ${HOOK[@]:1}; do
-      ARGUMENTS+="\"${argument}\" "
-    done
-    eval "${COMMAND} ${ARGUMENTS[@]}"
+    local COMMAND=(${string//\'/})
+    eval "${COMMAND[@]}"
   done
 }
 
