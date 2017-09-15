@@ -24,7 +24,7 @@ local SATAN_INDEX_UPDATES="${HOME}/.zsh.d/.index.updates"
 #  Satan modules updates index last checked since epoch time stamp
 local SATAN_INDEX_UPDATES_CHECKED="${HOME}/.zsh.d/.index.updates.checked"
 
-#  Satan on load hook
+#  Satan on load hook array
 local SATAN_ON_LOAD=()
 
 #  Satan configuration files
