@@ -286,30 +286,6 @@ function _satan-module-set-url() {
     "${MODULE_URL}"
 }
 
-#  Add a command with parameters to the satan-on-load hook array
-function @satan-load() {
-  local STRING="'"
-  local i
-  for (( i = 1; i <= ${#}; i++ )); do
-    STRING+="\"${@[${i}]}\""
-    if [ ${i} -lt ${#} ]; then
-      STRING+=" "
-    fi
-  done
-  STRING+="'"
-  if [[ ! "${SATAN_ON_LOAD}" =~ "${STRING}" ]]; then
-    SATAN_ON_LOAD+=("${STRING}")
-  fi
-}
-
-#  Run satan on load functions
-function satan-on-load() {
-  for string in ${SATAN_ON_LOAD[@]}; do
-    local COMMAND=(${string//\'/})
-    eval "${COMMAND[@]}"
-  done
-}
-
 #  Display colorized message
 function satan-message() {
   local TYPE="${1}"
@@ -1202,6 +1178,30 @@ function satan-modules-developer-installed-status() {
   fi
 }
 
+#  Add a command with parameters to the satan-on-load hook array
+function @satan-load() {
+  local STRING="'"
+  local i
+  for (( i = 1; i <= ${#}; i++ )); do
+    STRING+="\"${@[${i}]}\""
+    if [ ${i} -lt ${#} ]; then
+      STRING+=" "
+    fi
+  done
+  STRING+="'"
+  if [[ ! "${SATAN_ON_LOAD}" =~ "${STRING}" ]]; then
+    SATAN_ON_LOAD+=("${STRING}")
+  fi
+}
+
+#  Run satan on load functions
+function satan-on-load() {
+  for string in ${SATAN_ON_LOAD[@]}; do
+    local COMMAND=(${string//\'/})
+    eval "${COMMAND[@]}"
+  done
+}
+
 #  Source satan-shell environment files
 function satan-reload reload() {
   satan-message "title" "Reloading satan-shell..."
@@ -1323,7 +1323,7 @@ function satan-dev() {
   if [ -n "${DISPLAY_HELP}" ]; then
     _satan-index-unlock "${LOCK}"
     satan-info "" "Module Developer"
-    return ${?}
+    return 0
   fi
 
   satan-reload-configuration-variables
@@ -1441,16 +1441,17 @@ function satan() {
     fi
   fi
 
-  if [ -n "${UPDATE_MODULES}" ]; then
-    satan-modules-update ${MODULE_LIST[@]}
+  if [ -n "${INSTALL_MODULES}" ]; then
+    satan-modules-install ${MODULE_LIST[@]}
     if [ ! ${?} -eq 0 ]; then
       _satan-index-unlock "${LOCK}"
       return 1
     fi
   fi
 
-  if [ -n "${INSTALL_MODULES}" ]; then
-    satan-modules-install ${MODULE_LIST[@]}
+  if [ -n "${UPDATE_MODULES}" ]; then
+    satan-modules-enabled-update-check
+    satan-modules-update $(cat ${SATAN_INDEX_UPDATES})
     if [ ! ${?} -eq 0 ]; then
       _satan-index-unlock "${LOCK}"
       return 1
