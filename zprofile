@@ -504,11 +504,20 @@ function satan-module-update-check() {
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
+  local MODULE_AVAILABLE=$(satan-module-available-find "${MODULE_LINE}")
+
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
     satan-message "bold" "${MODULE}"
     satan-message "error" "not installed."
+    _satan-index-unlock "${LOCK}"
+    return 0
+  fi
+
+  if [ -z "${MODULE_AVAILABLE}" ]; then
+    satan-message "bold" "${MODULE}"
+    satan-message "error" "not in remote repository."
     _satan-index-unlock "${LOCK}"
     return 0
   fi
@@ -542,11 +551,20 @@ function satan-module-update() {
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
 
+  local MODULE_AVAILABLE=$(satan-module-available-find "${MODULE_LINE}")
+
   satan-reload-configuration-variables
 
   if [ -z "${MODULE_LINE}" ]; then
     satan-message "bold" "${MODULE}"
     satan-message "error" "not installed."
+    _satan-index-unlock "${LOCK}"
+    return 0
+  fi
+
+  if [ -z "${MODULE_AVAILABLE}" ]; then
+    satan-message "bold" "${MODULE}"
+    satan-message "error" "not in remote repository."
     _satan-index-unlock "${LOCK}"
     return 0
   fi
