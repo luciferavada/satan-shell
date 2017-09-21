@@ -191,11 +191,11 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "SATAN_AUTO_UPDATE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
-  echo "#  Automatic daily updates" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_AUTO_UPDATE_SECONDS=\"86400\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Check weekly for updates (seconds)" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_AUTO_UPDATE_CHECK=\"604800\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
-  echo "#  Index lock file expiration (5 minutes)" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Index lock file expiration (seconds)" >> "${SATAN_SETTINGS_FILE}"
   echo "SATAN_INDEX_LOCK_FILE_EXPIRE=\"300\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
