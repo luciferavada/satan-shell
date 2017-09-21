@@ -256,7 +256,7 @@ function _satan-index-updates-check() {
   local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LAST_CHECKED} ))
 
   # If the difference is greater than one day, in seconds...
-  if [ ${DIFFERENCE} -gt ${SATAN_AUTO_UPDATE_SECONDS} ]; then
+  if [ ${DIFFERENCE} -gt ${SATAN_AUTO_UPDATE_CHECK} ]; then
     echo "${CURRENT_TIME}" > "${SATAN_INDEX_UPDATES_CHECKED}"
     return 0
   fi
@@ -869,38 +869,31 @@ function satan-modules-installed-load() {
   fi
 }
 
-#  Add a command with parameters to the satan-on-load hook array
-function @satan-load() {
-  local STRING="'"
-  local i
-  for (( i = 1; i <= ${#}; i++ )); do
-    STRING+="\"${@[${i}]}\""
-    if [ ${i} -lt ${#} ]; then
-      STRING+=" "
-    fi
-  done
-  STRING+="'"
-  if [[ ! "${SATAN_ON_LOAD}" =~ "${STRING}" ]]; then
-    SATAN_ON_LOAD+=("${STRING}")
+function _satan-init() {
+  local LOCK
+  _satan-index-lock "LOCK" "Initializing satan-shell..."
+
+  satan-message "title" "Initializing satan-shell..."
+
+  satan-repository-index
+
+  if [ ! ${?} -eq 0 ]; then
+    _satan-index-unlock "${LOCK}"
+    return 1
   fi
-}
 
-#  Run satan on load functions
-function satan-on-load() {
-  for string in ${SATAN_ON_LOAD[@]}; do
-    local COMMAND=(${string//\'/})
-    eval "${COMMAND[@]}"
-  done
-}
+  satan-modules-enabled-install
 
-#  Source satan-shell environment files
-function satan-reload reload() {
-  satan-message "title" "Reloading satan-shell..."
-  exec -l zsh
+  if [ ! ${?} -eq 0 ]; then
+    _satan-index-unlock "${LOCK}"
+    return 1
+  fi
+
+  _satan-index-unlock "${LOCK}"
 }
 
 #  Update satan-shell and enabled modules
-function satan-update update() {
+function _satan-update() {
   local LOCK
   _satan-index-lock "LOCK" "Updating satan-shell..."
 
@@ -931,8 +924,41 @@ function satan-update update() {
   fi
 
   _satan-index-unlock "${LOCK}"
+}
 
+#  Source satan-shell environment files
+function satan-reload reload() {
+  satan-message "title" "Reloading satan-shell..."
+  exec -l zsh
+}
+
+function satan-update update() {
+  _satan-update
   satan-reload
+}
+
+#  Run satan on load functions
+function satan-on-load() {
+  for string in ${SATAN_ON_LOAD[@]}; do
+    local COMMAND=(${string//\'/})
+    eval "${COMMAND[@]}"
+  done
+}
+
+#  Add a command with parameters to the satan-on-load hook array
+function @satan-load() {
+  local STRING="'"
+  local i
+  for (( i = 1; i <= ${#}; i++ )); do
+    STRING+="\"${@[${i}]}\""
+    if [ ${i} -lt ${#} ]; then
+      STRING+=" "
+    fi
+  done
+  STRING+="'"
+  if [[ ! "${SATAN_ON_LOAD}" =~ "${STRING}" ]]; then
+    SATAN_ON_LOAD+=("${STRING}")
+  fi
 }
 
 #  Display readme for satan-shell or a module
