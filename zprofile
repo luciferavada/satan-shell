@@ -142,6 +142,17 @@ function _satan-index-lock-check-date() {
   fi
 }
 
+#  Determine if the lock uuid belongs to this shell instance
+function _satan-index-lock-check-uuid() {
+  if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
+    local LOCK_FILE_UUID=$(_satan-index-lock-get-uuid)
+    if [ ! "${LOCK_FILE_UUID}" = "${SATAN_INDEX_LOCK_UUID}" ]; then
+      return 1
+    fi
+  fi
+  return 0
+}
+
 #  Wait for index lock
 function _satan-index-lock-await() {
   if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
@@ -156,16 +167,6 @@ function _satan-index-lock-await() {
     sleep 1
   done
   _satan-index-lock-await-untrap
-}
-
-function _satan-index-lock-check-uuid() {
-  if [ -f "${SATAN_INDEX_LOCK_FILE}" ]; then
-    local LOCK_FILE_UUID=$(_satan-index-lock-get-uuid)
-    if [ ! "${LOCK_FILE_UUID}" = "${SATAN_INDEX_LOCK_UUID}" ]; then
-      return 1
-    fi
-  fi
-  return 0
 }
 
 #  Acquire the index lock
