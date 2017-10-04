@@ -962,48 +962,6 @@ function @satan-load() {
   fi
 }
 
-#  Display readme for satan-shell or a module
-function satan-info() {
-  local MODULE="${1}"
-  local SEARCH="${2}"
-  local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
-  local README=""
-
-  satan-reload-configuration-variables
-
-  if [ -n "${MODULE}" ]; then
-    if [ -n "${MODULE_LINE}" ]; then
-      README="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}/README.md"
-    else
-      satan-message "bold" "${MODULE}"
-      satan-message "error" "module not found."
-      return 1
-    fi
-  else
-    README="${SATAN_INSTALL_DIRECTORY}/README.md"
-  fi
-
-  if [ ! -f "${README}" ]; then
-    satan-message "bold" "${MODULE_LINE}"
-    satan-message "error" "readme not found."
-    return 1
-  fi
-
-  if [ -n "$(command -v mdv)" ]; then
-    if [ "${SATAN_USE_MARKDOWN_VIEWER}" = "true" ]; then
-      mdv -t "${SATAN_MARKDOWN_VIEWER_THEME}" "${README}" | less \
-        --clear-screen --RAW-CONTROL-CHARS ${SEARCH:+--pattern="${SEARCH}"}
-    else
-      cat "${README}" | sed "s/<br>//" | \
-        less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
-    fi
-  else
-    cat "${README}" | sed "s/<br>//" | \
-      less --clear-screen ${SEARCH:+--pattern="${SEARCH}"}
-    satan-message "title" "install mdv for formated output."
-  fi
-}
-
 #  Satan module manager
 function satan() {
   local LOCK
