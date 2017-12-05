@@ -909,6 +909,13 @@ function _satan-update() {
     return 1
   fi
 
+  satan-repository-index
+
+  if [ ! ${?} -eq 0 ]; then
+    _satan-index-unlock "${LOCK}"
+    return 1
+  fi
+
   satan-modules-enabled-update-check
 
   if [ ! ${?} -eq 0 ]; then
@@ -938,14 +945,6 @@ function satan-update update() {
   satan-reload
 }
 
-#  Run satan on load functions
-function satan-on-load() {
-  for string in ${SATAN_ON_LOAD[@]}; do
-    local COMMAND=(${string//\'/})
-    eval "${COMMAND[@]}"
-  done
-}
-
 #  Add a command with parameters to the satan-on-load hook array
 function @satan-load() {
   local STRING="'"
@@ -960,6 +959,14 @@ function @satan-load() {
   if [[ ! "${SATAN_ON_LOAD}" =~ "${STRING}" ]]; then
     SATAN_ON_LOAD+=("${STRING}")
   fi
+}
+
+#  Run satan on load functions
+function satan-on-load() {
+  for string in ${SATAN_ON_LOAD[@]}; do
+    local COMMAND=(${string//\'/})
+    eval "${COMMAND[@]}"
+  done
 }
 
 #  Satan module manager
