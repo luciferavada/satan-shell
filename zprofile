@@ -885,6 +885,9 @@ function _satan-init() {
 
   satan-modules-enabled-install
 
+  # initially create the ${SATAN_INDEX_UPDATES_CHECKED} file
+  _satan-index-updates-check
+
   if [ ! ${?} -eq 0 ]; then
     _satan-index-unlock "${LOCK}"
     return 1
