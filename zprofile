@@ -256,7 +256,6 @@ function _satan-index-updates-check() {
   local -i LAST_CHECKED="$(cat ${SATAN_INDEX_UPDATES_CHECKED})"
   local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LAST_CHECKED} ))
 
-  # If the difference is greater than one day, in seconds...
   if [ ${DIFFERENCE} -gt ${SATAN_AUTO_UPDATE_CHECK} ]; then
     echo "${CURRENT_TIME}" > "${SATAN_INDEX_UPDATES_CHECKED}"
     return 0
@@ -411,13 +410,13 @@ function satan-module-install() {
     return 0
   fi
 
+  satan-message "bold" "${MODULE_LINE}"
+
   if [ -n "$(satan-module-installed-find ${MODULE_LINE})" ]; then
     satan-message "error" "module already installed."
     _satan-index-unlock "${LOCK}"
     return 0
   fi
-
-  satan-message "bold" "${MODULE_LINE}"
 
   git clone "${GITHUB_URL}/${MODULE_REPOSITORY}/${MODULE_NAME}.git" \
     "${SATAN_MODULES_DIRECTORY}/${MODULE_REPOSITORY}/${MODULE_NAME}"
