@@ -34,7 +34,7 @@ local SATAN_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
 #  Zlogin file
 local SATAN_ZLOGIN_FILE="${HOME}/.zlogin"
 
-#  Link source path
+#  Source path
 local SATAN_SHELL_SOURCE="${PWD#${HOME}/}"
 
 #  Date stamp
@@ -159,7 +159,7 @@ if [ ! -f "${SATAN_MODULES_FILE}" ]; then
   #  Write file
   echo "#  Modules are loaded in order" > "${SATAN_MODULES_FILE}"
   echo "SATAN_MODULES=(" >> "${SATAN_MODULES_FILE}"
-  echo "  \"prompt\" \"history\" \"man\" \"ls\" \"cd\" \"git\"" >> \
+  echo "  \"prompt\" \"history\" \"man\" \"ls\" \"cd\" \"git\" \"ssh\"" >> \
     "${SATAN_MODULES_FILE}"
   echo ")" >> "${SATAN_MODULES_FILE}"
 fi
@@ -177,7 +177,6 @@ if [ ! -f "${SATAN_REPOSITORIES_FILE}" ]; then
   echo "  \"satan-core\" \"satan-extra\" \"satan-community\"" >> \
     "${SATAN_REPOSITORIES_FILE}"
   echo ")" >> "${SATAN_REPOSITORIES_FILE}"
-
 fi
 
 #  Wride default settings file
