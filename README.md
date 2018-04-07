@@ -88,6 +88,10 @@ The __satan-shell__ module manager, `satan` has the following options.
     - `info`  *White   -->* `[message]`
     - `error` *Red     -->* `[message]`
 
+`@satan-load [function]`
+
+  - Add a function to be called when the shell is loaded.
+
 ### Configuration
 
 The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
@@ -162,6 +166,10 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
   - Uninstall a module.
   - Optionally *force* uninstall a module with modifications.
 
+`satan-module-update-check`
+
+  - Check a module for updates.
+
 `satan-module-update [module]`
 
   - Update a module.
@@ -178,6 +186,10 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
   - Uninstall a list of modules.
 
+`satan-modules-update-check [module] <module...>`
+
+  - Check a list of modules for updates.
+
 `satan-modules-update [module] <module...>`
 
   - Update a list of modules.
@@ -190,6 +202,10 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
   - Install modules in the enabled modules array.
 
+`satan-modules-enabled-update-check`
+
+  - Check modules in the enabled modules array for updates.
+
 `satan-modules-enabled-update`
 
   - Update modules in the enabled modules array.
@@ -197,6 +213,18 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 `satan-modules-enabled-load`
 
   - Load modules in the enabled modules array.
+
+`satan-modules-installed-update-check`
+
+  - Check installed modules for updates.
+
+`satan-modules-installed-update`
+
+  - Update installed modules.
+
+`satan-modules-installed-load`
+
+  - Load installed modules.
 
 ## Repositories
 
