@@ -993,7 +993,7 @@ function satan() {
 
   if [[ -z "${@}" ]]; then
     _satan-index-unlock "${LOCK}"
-    satan-info "" "Module Manager"
+    satan-man
     return 0
   fi
 
@@ -1017,7 +1017,7 @@ function satan() {
 
   if [ -n "${DISPLAY_HELP}" ]; then
     _satan-index-unlock "${LOCK}"
-    satan-info "" "Module Manager"
+    satan-man
     return 0
   fi
 
