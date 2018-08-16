@@ -1,65 +1,65 @@
 #!/usr/bin/env zsh
 
 #  Install files
-local SATAN_FILES=(
+local SUGAR_FILES=(
   "zshenv" "zprofile" "zshrc" "zlogin"
 )
 
 #  Install directories
-local SATAN_DIRECTORIES=(
+local SUGAR_DIRECTORIES=(
   "zsh.d" "zsh.d.conf" "zsh.d.modules"
 )
 
 #  Files to backup
-local SATAN_BACKUPS=()
+local SUGAR_BACKUPS=()
 
 #  Files to link
-local SATAN_LINKS=()
+local SUGAR_LINKS=()
 
 #  Gitkeep files
-local SATAN_GITKEEP_FILES=()
+local SUGAR_GITKEEP_FILES=()
 
 #  Directories file
-local SATAN_DIRECTORIES_FILE="${HOME}/.zsh.d/directories.conf"
+local SUGAR_DIRECTORIES_FILE="${HOME}/.zsh.d/directories.conf"
 
 #  Modules file
-local SATAN_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
+local SUGAR_MODULES_FILE="${HOME}/.zsh.d/modules.conf"
 
 #  Repositories file
-local SATAN_REPOSITORIES_FILE="${HOME}/.zsh.d/repositories.conf"
+local SUGAR_REPOSITORIES_FILE="${HOME}/.zsh.d/repositories.conf"
 
 #  Settings file
-local SATAN_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
+local SUGAR_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
 
 #  Zlogin file
-local SATAN_ZLOGIN_FILE="${HOME}/.zlogin"
+local SUGAR_ZLOGIN_FILE="${HOME}/.zlogin"
 
 #  Source path
-local SATAN_SHELL_SOURCE="${PWD#${HOME}/}"
+local SUGAR_SHELL_SOURCE="${PWD#${HOME}/}"
 
 #  Date stamp
 local DATE_STAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 
 #  Check for files to backup
-for file in ${SATAN_FILES[@]} ${SATAN_DIRECTORIES[@]}; do
+for file in ${SUGAR_FILES[@]} ${SUGAR_DIRECTORIES[@]}; do
 
   local FILE="${HOME}/.${file}"
 
   #  Don't backup links
   if [ -f "${FILE}" ] && [ ! -L "${FILE}" ]; then
-    SATAN_BACKUPS+=("${file}")
+    SUGAR_BACKUPS+=("${file}")
   fi
 
 done
 
 #  Backup files
-if [ -n "${SATAN_BACKUPS}" ]; then
+if [ -n "${SUGAR_BACKUPS}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Backing up files..."
   echo -n "$(tput sgr0)"
 
-  for file in ${SATAN_BACKUPS[@]}; do
+  for file in ${SUGAR_BACKUPS[@]}; do
 
     local SRC="${HOME}/.${file}"
     local DST="${HOME}/.${file}.${DATE_STAMP}"
@@ -71,32 +71,32 @@ if [ -n "${SATAN_BACKUPS}" ]; then
 fi
 
 #  Check for files to link
-for file in ${SATAN_FILES[@]} ${SATAN_DIRECTORIES[@]}; do
+for file in ${SUGAR_FILES[@]} ${SUGAR_DIRECTORIES[@]}; do
 
   #  Don't link zlogin
   if [ "${file}" = "zlogin" ]; then
     continue
   fi
 
-  local SRC="${SATAN_SHELL_SOURCE}/${file}"
+  local SRC="${SUGAR_SHELL_SOURCE}/${file}"
   local DST="${HOME}/.${file}"
 
   if [ ! "$(readlink ${DST})" = "${SRC}" ]; then
-    SATAN_LINKS+=("${file}")
+    SUGAR_LINKS+=("${file}")
   fi
 
 done
 
 #  Link files
-if [ -n "${SATAN_LINKS}" ]; then
+if [ -n "${SUGAR_LINKS}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Linking files..."
   echo -n "$(tput sgr0)"
 
-  for file in ${SATAN_LINKS[@]}; do
+  for file in ${SUGAR_LINKS[@]}; do
 
-    local SRC="${SATAN_SHELL_SOURCE}/${file}"
+    local SRC="${SUGAR_SHELL_SOURCE}/${file}"
     local DST="${HOME}/.${file}"
 
     echo "${SRC} -> ${DST}"
@@ -106,21 +106,21 @@ if [ -n "${SATAN_LINKS}" ]; then
 fi
 
 #  Check for gitkeep files to remove
-for directory in ${SATAN_DIRECTORIES[@]}; do
+for directory in ${SUGAR_DIRECTORIES[@]}; do
   local GITKEEP_FILE="${PWD}/${directory}/.gitkeep"
   if [ -f "${GITKEEP_FILE}" ]; then
-    SATAN_GITKEEP_FILES+=(${GITKEEP_FILE})
+    SUGAR_GITKEEP_FILES+=(${GITKEEP_FILE})
   fi
 done
 
 #  Remove gitkeep files
-if [ -n "${SATAN_GITKEEP_FILES}" ]; then
+if [ -n "${SUGAR_GITKEEP_FILES}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Removing .gitkeep files..."
   echo -n "$(tput sgr0)"
 
-  for file in ${SATAN_GITKEEP_FILES[@]}; do
+  for file in ${SUGAR_GITKEEP_FILES[@]}; do
     echo "${file}"
     git update-index --assume-unchanged "${file}"
     rm -f "${file}"
@@ -128,108 +128,108 @@ if [ -n "${SATAN_GITKEEP_FILES}" ]; then
 fi
 
 #  Write default directories file
-if [ ! -f "${SATAN_DIRECTORIES_FILE}" ]; then
+if [ ! -f "${SUGAR_DIRECTORIES_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zsh.d/directories.conf..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "#  Install dircetory" > "${SATAN_DIRECTORIES_FILE}"
-  echo "SATAN_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SATAN_DIRECTORIES_FILE}"
-  echo "" >> "${SATAN_DIRECTORIES_FILE}"
+  echo "#  Install dircetory" > "${SUGAR_DIRECTORIES_FILE}"
+  echo "SUGAR_INSTALL_DIRECTORY=\"${PWD}\"" >> "${SUGAR_DIRECTORIES_FILE}"
+  echo "" >> "${SUGAR_DIRECTORIES_FILE}"
 
-  echo "#  Configuration directory" >> "${SATAN_DIRECTORIES_FILE}"
-  echo "SATAN_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
-    "${SATAN_DIRECTORIES_FILE}"
-  echo "" >> "${SATAN_DIRECTORIES_FILE}"
+  echo "#  Configuration directory" >> "${SUGAR_DIRECTORIES_FILE}"
+  echo "SUGAR_CONFIGURATION_DIRECTORY=\"${HOME}/.zsh.d.conf\"" >> \
+    "${SUGAR_DIRECTORIES_FILE}"
+  echo "" >> "${SUGAR_DIRECTORIES_FILE}"
 
-  echo "#  Modules directory" >> "${SATAN_DIRECTORIES_FILE}"
-  echo "SATAN_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
-    "${SATAN_DIRECTORIES_FILE}"
+  echo "#  Modules directory" >> "${SUGAR_DIRECTORIES_FILE}"
+  echo "SUGAR_MODULES_DIRECTORY=\"${HOME}/.zsh.d.modules\"" >> \
+    "${SUGAR_DIRECTORIES_FILE}"
 fi
 
 #  Write default modules file
-if [ ! -f "${SATAN_MODULES_FILE}" ]; then
+if [ ! -f "${SUGAR_MODULES_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zsh.d/modules.conf..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "#  Modules are loaded in order" > "${SATAN_MODULES_FILE}"
-  echo "SATAN_MODULES=(" >> "${SATAN_MODULES_FILE}"
+  echo "#  Modules are loaded in order" > "${SUGAR_MODULES_FILE}"
+  echo "SUGAR_MODULES=(" >> "${SUGAR_MODULES_FILE}"
   echo "  \"prompt\" \"history\" \"man\" \"ls\" \"cd\" \"git\" \"ssh\"" >> \
-    "${SATAN_MODULES_FILE}"
-  echo ")" >> "${SATAN_MODULES_FILE}"
+    "${SUGAR_MODULES_FILE}"
+  echo ")" >> "${SUGAR_MODULES_FILE}"
 fi
 
 #  Write default repositories file
-if [ ! -f "${SATAN_REPOSITORIES_FILE}" ]; then
+if [ ! -f "${SUGAR_REPOSITORIES_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zsh.d/repositories.conf..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "#  Repositories are indexed in order" > "${SATAN_REPOSITORIES_FILE}"
-  echo "SATAN_REPOSITORIES=(" >> "${SATAN_REPOSITORIES_FILE}"
-  echo "  \"satan-core\" \"satan-extra\" \"satan-community\"" >> \
-    "${SATAN_REPOSITORIES_FILE}"
-  echo ")" >> "${SATAN_REPOSITORIES_FILE}"
+  echo "#  Repositories are indexed in order" > "${SUGAR_REPOSITORIES_FILE}"
+  echo "SUGAR_REPOSITORIES=(" >> "${SUGAR_REPOSITORIES_FILE}"
+  echo "  \"sugar-core\" \"sugar-extra\" \"sugar-community\"" >> \
+    "${SUGAR_REPOSITORIES_FILE}"
+  echo ")" >> "${SUGAR_REPOSITORIES_FILE}"
 fi
 
 #  Wride default settings file
-if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
+if [ ! -f "${SUGAR_SETTINGS_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zsh.d/settings.conf..."
   echo -n "$(tput sgr0)"
 
-  echo "#  Automatic updates" > "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_AUTO_UPDATE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Automatic updates" > "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_AUTO_UPDATE=\"true\"" >> "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
-  echo "#  Check weekly for updates (seconds)" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_AUTO_UPDATE_CHECK=\"604800\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Check weekly for updates (seconds)" >> "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_AUTO_UPDATE_CHECK=\"604800\"" >> "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
-  echo "#  Index lock file expiration (seconds)" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_INDEX_LOCK_FILE_EXPIRE=\"300\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Index lock file expiration (seconds)" >> "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_INDEX_LOCK_FILE_EXPIRE=\"300\"" >> "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
-  echo "#  Display lock expiration wait" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_INDEX_LOCK_FILE_WAIT=\"true\"" >> \
-    "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Display lock expiration wait" >> "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_DISPLAY_INDEX_LOCK_FILE_WAIT=\"true\"" >> \
+    "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
   echo "#  Display lock expiration wait every n seconds" >> \
-    "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_INDEX_LOCK_FILE_EVERY=\"10\"" >> \
-    "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+    "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_DISPLAY_INDEX_LOCK_FILE_EVERY=\"10\"" >> \
+    "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
-  echo "#  Display ascii art" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_ASCII_ART=\"true\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Display ascii art" >> "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_DISPLAY_ASCII_ART=\"true\"" >> "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
-  echo "#  Display ascii title" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_ASCII_TITLE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Display ascii title" >> "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_DISPLAY_ASCII_TITLE=\"true\"" >> "${SUGAR_SETTINGS_FILE}"
+  echo "" >> "${SUGAR_SETTINGS_FILE}"
 
-  echo "#  Display loaded modules" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_MODULE_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "#  Display loaded modules" >> "${SUGAR_SETTINGS_FILE}"
+  echo "SUGAR_DISPLAY_MODULE_LOAD=\"true\"" >> "${SUGAR_SETTINGS_FILE}"
 fi
 
 #  Write default zlogin file
-if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
+if [ ! -f "${SUGAR_ZLOGIN_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
   echo "--> Writing default ~/.zlogin..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "## User customization goes here" > "${SATAN_ZLOGIN_FILE}"
+  echo "## User customization goes here" > "${SUGAR_ZLOGIN_FILE}"
 fi
 
 #  Load the environment
