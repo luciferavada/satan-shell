@@ -16,7 +16,7 @@ A modular ZShell environment.
 
 ## Install
 
-`eval "$(curl -s 'https://raw.githubusercontent.com/satanush/satan-shell/master/install-github.sh')"`
+`eval "$(curl -s 'https://raw.githubusercontent.com/luciferavada/satan-shell/master/install-github.sh')"`
 
 ## General
 
