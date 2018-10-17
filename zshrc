@@ -1,34 +1,34 @@
 #  Do not modify this file
 
 #  Load configuration variables
-sugar-load-configuration-variables
+satan-load-configuration-variables
 
 #  If the available modules index file doesn't exist
 #  index repositories and install enabled modules.
-if [ ! -f "${SUGAR_INDEX_AVAILABLE}" ]; then
-  _sugar-init
+if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
+  _satan-init
 else
-  if _sugar-index-updates-check; then
+  if _satan-index-updates-check; then
 
-    if [ "${SUGAR_AUTO_UPDATE}" = "true" ]; then
-      _sugar-update
+    if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
+      _satan-update
     fi
 
   fi
 fi
 
 #  Load enabled modules
-sugar-modules-enabled-load
+satan-modules-enabled-load
 
 #  Display ascii art
-if [ "${SUGAR_DISPLAY_ASCII_ART}" = "true" ]; then
-  sugar-ascii-art
+if [ "${SATAN_DISPLAY_ASCII_ART}" = "true" ]; then
+  satan-ascii-art
 fi
 
 #  Display ascii title
-if [ "${SUGAR_DISPLAY_ASCII_TITLE}" = "true" ]; then
-  sugar-credit
-  sugar-ascii-title
+if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
+  satan-credit
+  satan-ascii-title
 fi
 
-sugar-on-load
+satan-on-load

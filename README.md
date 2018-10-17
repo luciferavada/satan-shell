@@ -1,12 +1,12 @@
-# sugar-shell
+# satan-shell
 
 A modular ZShell environment.
 
 ## Module Repositories
 
-  - [sugar-core](https://github.com/sugar-core)
-  - [sugar-extra](https://github.com/sugar-extra)
-  - [sugar-community](https://github.com/sugar-community)
+  - [satan-core](https://github.com/satan-core)
+  - [satan-extra](https://github.com/satan-extra)
+  - [satan-community](https://github.com/satan-community)
 
 ## Requirements
 
@@ -16,7 +16,7 @@ A modular ZShell environment.
 
 ## Install
 
-`eval "$(curl -s 'https://raw.githubusercontent.com/sugarush/sugar-shell/master/install-github.sh')"`
+`eval "$(curl -s 'https://raw.githubusercontent.com/satanush/satan-shell/master/install-github.sh')"`
 
 ## General
 
@@ -30,13 +30,13 @@ A modular ZShell environment.
 
 ### Usage
 
-User configuration goes in `~/.zlogin` which is not managed by __sugar-shell__.
+User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
 
 ### Module Manager
 
-The __sugar-shell__ module manager, `sugar` has the following options.
+The __satan-shell__ module manager, `satan` has the following options.
 
-`sugar [flags] [module] <module...>`
+`satan [flags] [module] <module...>`
 
   - `-S` Install a list of modules.
   - `-R` Uninstall a list of modules.
@@ -45,41 +45,41 @@ The __sugar-shell__ module manager, `sugar` has the following options.
   - `-Q` Search for available modules.
   - `-X` Search for installed modules.
   - `-y` Update the repository index.
-  - `-a` Use the `SUGAR_MODULES` array as the list of modules.
+  - `-a` Use the `SATAN_MODULES` array as the list of modules.
   - `-i` Use all installed modules as the list of modules.
   - `-f` Force uninstall of modules with modifications.
-  - `-r` Reload __sugar-shell__.
+  - `-r` Reload __satan-shell__.
   - `-h` Display help.
 
 ### Functions
 
-`sugar-ascii-art`
+`satan-ascii-art`
 
   - Display ascii art.
 
-`sugar-ascii-title`
+`satan-ascii-title`
 
   - Display ascii title.
 
-`sugar-ascii-header`
+`satan-ascii-header`
 
   - Display ascii art, title and credit.
 
-`sugar-credit`
+`satan-credit`
 
   - Display credit.
 
-`sugar-reload`
+`satan-reload`
 
   - Replace the current shell with a new login shell.
 
-`sugar-update`
+`satan-update`
 
-  - Update __sugar-shell__.
+  - Update __satan-shell__.
   - Update enabled modules.
-  - Reload the shell with *sugar-reload*.
+  - Reload the shell with *satan-reload*.
 
-`sugar-message [type] [message]`
+`satan-message [type] [message]`
 
   - Display a formatted *message* of *type*:
 
@@ -88,13 +88,13 @@ The __sugar-shell__ module manager, `sugar` has the following options.
     - `info`  *White   -->* `[message]`
     - `error` *Red     -->* `[message]`
 
-`@sugar-load [function]`
+`@satan-load [function]`
 
   - Add a function to be called when the shell is loaded.
 
 ### Configuration
 
-The __sugar-shell__ configuration files are located in the `~/.zsh.d` directory.
+The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
 
   - `~/.zsh.d/directories.conf`
   - `~/.zsh.d/modules.conf`
@@ -105,41 +105,41 @@ The __sugar-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 #### Directories
 
-`SUGAR_INSTALL_DIRECTORY`
+`SATAN_INSTALL_DIRECTORY`
 
   - The path to the installation directory.
 
-`SUGAR_CONFIGURATION_DIRECTORY`
+`SATAN_CONFIGURATION_DIRECTORY`
 
   - The path to the configuration directory.
 
-`SUGAR_MODULES_DIRECTORY`
+`SATAN_MODULES_DIRECTORY`
 
   - The path to the modules directory.
 
 #### Modules
 
-`SUGAR_MODULES`
+`SATAN_MODULES`
 
-  - An array of __sugar-shell__ modules to load on start.
+  - An array of __satan-shell__ modules to load on start.
 
 #### Repositories
 
-`SUGAR_REPOSITORIES`
+`SATAN_REPOSITORIES`
 
-  - An ordered list of github organizations containing __sugar-shell__ modules as git repositories.
+  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
 
 #### Settings
 
-`SUGAR_DISPLAY_ASCII_ART`
+`SATAN_DISPLAY_ASCII_ART`
 
   - Display ASCII artwork on load.
 
-`SUGAR_DISPLAY_ASCII_TITLE`
+`SATAN_DISPLAY_ASCII_TITLE`
 
   - Display ASCII title on load.
 
-`SUGAR_DISPLAY_MODULE_LOAD`
+`SATAN_DISPLAY_MODULE_LOAD`
 
   - Display loaded modules.
 
@@ -149,7 +149,7 @@ The __sugar-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 Modules can be enabled, installed, uninstalled, updated and loaded by *name* or *repository/name*.
 
-Enabled modules are handled by the `SUGAR_MODULES` array in `~/.zsh.d/modules.conf`.
+Enabled modules are handled by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
 
 Modules are installed to the `~/.zsh.d.modules` directory.
 
@@ -157,72 +157,72 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
 ### Functions
 
-`sugar-module-install [module]`
+`satan-module-install [module]`
 
   - Install an available module.
 
-`sugar-module-uninstall [module] <force>`
+`satan-module-uninstall [module] <force>`
 
   - Uninstall a module.
   - Optionally *force* uninstall a module with modifications.
 
-`sugar-module-update-check`
+`satan-module-update-check`
 
   - Check a module for updates.
 
-`sugar-module-update [module]`
+`satan-module-update [module]`
 
   - Update a module.
 
-`sugar-module-load [module]`
+`satan-module-load [module]`
 
   - Load a module.
 
-`sugar-modules-install [module] <module...>`
+`satan-modules-install [module] <module...>`
 
   - Install a list of modules.
 
-`sugar-modules-uninstall [module] <module...>`
+`satan-modules-uninstall [module] <module...>`
 
   - Uninstall a list of modules.
 
-`sugar-modules-update-check [module] <module...>`
+`satan-modules-update-check [module] <module...>`
 
   - Check a list of modules for updates.
 
-`sugar-modules-update [module] <module...>`
+`satan-modules-update [module] <module...>`
 
   - Update a list of modules.
 
-`sugar-modules-load [module] <module...>`
+`satan-modules-load [module] <module...>`
 
   - Load a list of modules.
 
-`sugar-modules-enabled-install`
+`satan-modules-enabled-install`
 
   - Install modules in the enabled modules array.
 
-`sugar-modules-enabled-update-check`
+`satan-modules-enabled-update-check`
 
   - Check modules in the enabled modules array for updates.
 
-`sugar-modules-enabled-update`
+`satan-modules-enabled-update`
 
   - Update modules in the enabled modules array.
 
-`sugar-modules-enabled-load`
+`satan-modules-enabled-load`
 
   - Load modules in the enabled modules array.
 
-`sugar-modules-installed-update-check`
+`satan-modules-installed-update-check`
 
   - Check installed modules for updates.
 
-`sugar-modules-installed-update`
+`satan-modules-installed-update`
 
   - Update installed modules.
 
-`sugar-modules-installed-load`
+`satan-modules-installed-load`
 
   - Load installed modules.
 
@@ -234,44 +234,44 @@ Modules can be found by *name* or *repository/name*.
 
 Modules can be searched for by *pattern*.
 
-Repositories are managed by the `SUGAR_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
+Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
 
 Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
 
 ### Functions
 
-`sugar-repository-index`
+`satan-repository-index`
 
   - Index repositories in the repositories array.
 
-`sugar-module-available-find [module]`
+`satan-module-available-find [module]`
 
   - Find an available module.
 
-`sugar-module-available-search [pattern]`
+`satan-module-available-search [pattern]`
 
   - Search through available modules.
 
-`sugar-module-installed-find [module]`
+`satan-module-installed-find [module]`
 
   - Find an installed module.
 
-`sugar-module-installed-search [pattern]`
+`satan-module-installed-search [pattern]`
 
   - Search through installed modules.
 
-`sugar-modules-available-find [module] <module...>`
+`satan-modules-available-find [module] <module...>`
 
   - Find a list of available module.
 
-`sugar-modules-available-search [pattern] <pattern...>`
+`satan-modules-available-search [pattern] <pattern...>`
 
   - Search through a list of available modules.
 
-`sugar-modules-installed-find [module] <module...>`
+`satan-modules-installed-find [module] <module...>`
 
   - Find a list of installed module.
 
-`sugar-modules-installed-search [pattern] <pattern...>`
+`satan-modules-installed-search [pattern] <pattern...>`
 
   - Search through a list of installed modules.

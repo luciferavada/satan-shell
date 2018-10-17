@@ -1,14 +1,14 @@
 #!/usr/bin/env zsh
 
 #  Github repository url
-local GITHUB_URL="https://github.com/sugarush/sugar-shell.git"
+local GITHUB_URL="https://github.com/satanush/satan-shell.git"
 
 #  Git clone destination directory
-local INSTALL_DIRECTORY="${HOME}/.sugar-shell"
+local INSTALL_DIRECTORY="${HOME}/.satan-shell"
 
 #  Colorize output
 echo -n "$(tput bold; tput setaf 2)"
-echo "--> Installing sugar-shell..."
+echo "--> Installing satan-shell..."
 echo -n "$(tput sgr0)"
 
 #  Clone the repository
