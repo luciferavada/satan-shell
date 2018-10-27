@@ -1,3 +1,4 @@
 zsh.d/*
 zsh.d.conf/*
 zsh.d.modules/*
+.DS_Store
