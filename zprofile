@@ -286,10 +286,12 @@ function satan-module-available-find() {
   _satan-index-lock "LOCK" "Finding an available module..."
 
   local MODULE="${1}"
+
   if [ -z "${MODULE}" ]; then
     _satan-index-unlock "${LOCK}"
     return 0
   fi
+
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -308,6 +310,7 @@ function satan-module-available-search() {
   _satan-index-lock "LOCK" "Searching available modules..."
 
   local MODULE="${1}"
+
   if [ -f "${SATAN_INDEX_AVAILABLE}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -326,10 +329,12 @@ function satan-module-installed-find() {
   _satan-index-lock "LOCK" "Finding an installed module..."
 
   local MODULE="${1}"
+
   if [ -z "${MODULE}" ]; then
     _satan-index-unlock "${LOCK}"
     return 0
   fi
+
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
@@ -348,6 +353,7 @@ function satan-module-installed-search() {
   _satan-index-lock "LOCK" "Searching installed modules..."
 
   local MODULE="${1}"
+
   if [ -f "${SATAN_INDEX_INSTALLED}" ]; then
     local SPLIT=(`echo ${MODULE//\// }`)
     if [ ${#SPLIT[@]} -eq 1 ]; then
