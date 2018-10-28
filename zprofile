@@ -126,13 +126,10 @@ function _satan-index-lock-check-date() {
     local -i CURRENT_TIME=$(date +%s)
     local -i LOCK_DATE=$(_satan-index-lock-get-date)
     local -i DIFFERENCE=$(( ${CURRENT_TIME} - ${LOCK_DATE} ))
-    local -i WAIT=$(( ${SATAN_INDEX_LOCK_FILE_EXPIRE} - ${DIFFERENCE} ))
-    local -i DISPLAY=$(( ${WAIT} % ${SATAN_DISPLAY_INDEX_LOCK_FILE_EVERY} ))
+    local -i REMAINING=$(( ${SATAN_INDEX_LOCK_FILE_EXPIRE} - ${DIFFERENCE} ))
 
-    if [ "${SATAN_DISPLAY_INDEX_LOCK_FILE_WAIT}" = "true" ] && \
-       [ ${WAIT} -ne ${SATAN_INDEX_LOCK_FILE_EXPIRE} ] && \
-       [ ${WAIT} -ge 0 ] && [ ${DISPLAY} -eq 0 ]; then
-      satan-message "info" "expires in: ${WAIT}s"
+    if [ ${REMAINING} -ne ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
+      satan-message "info" "expires in: ${REMAINING}s"
     fi
 
     if [ ${DIFFERENCE} -ge ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
@@ -162,10 +159,12 @@ function _satan-index-lock-await() {
     satan-message "title" "Force removal with: (CTRL+C)"
     _satan-index-lock-await-trap
   fi
+
   until [ ! -f "${SATAN_INDEX_LOCK_FILE}" ]; do
     _satan-index-lock-check-date
-    sleep 1
+    sleep "${SATAN_INDEX_LOCK_FILE_CHECK}"
   done
+
   _satan-index-lock-await-untrap
 }
 

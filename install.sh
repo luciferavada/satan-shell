@@ -194,19 +194,12 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "SATAN_AUTO_UPDATE_CHECK=\"604800\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
+  echo "#  Index lock file check (seconds)" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_INDEX_LOCK_FILE_CHECK=\"1\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "" >> "${SATAN_SETTINGS_FILE}"
+
   echo "#  Index lock file expiration (seconds)" >> "${SATAN_SETTINGS_FILE}"
   echo "SATAN_INDEX_LOCK_FILE_EXPIRE=\"300\"" >> "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
-
-  echo "#  Display lock expiration wait" >> "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_INDEX_LOCK_FILE_WAIT=\"true\"" >> \
-    "${SATAN_SETTINGS_FILE}"
-  echo "" >> "${SATAN_SETTINGS_FILE}"
-
-  echo "#  Display lock expiration wait every n seconds" >> \
-    "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_DISPLAY_INDEX_LOCK_FILE_EVERY=\"10\"" >> \
-    "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
   echo "#  Display ascii art" >> "${SATAN_SETTINGS_FILE}"
