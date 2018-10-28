@@ -509,7 +509,6 @@ function satan-module-update-check() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
-
   local MODULE_AVAILABLE=$(satan-module-available-find "${MODULE_LINE}")
 
   satan-reload-configuration-variables
@@ -556,7 +555,6 @@ function satan-module-update() {
   local MODULE="${1}"
   local MODULE_LINE=$(satan-module-installed-find "${MODULE}")
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
-
   local MODULE_AVAILABLE=$(satan-module-available-find "${MODULE_LINE}")
 
   satan-reload-configuration-variables
@@ -600,7 +598,6 @@ function satan-module-load() {
   local MODULE_INFO=(`echo ${MODULE_LINE//\// }`)
   local MODULE_NAME="${MODULE_INFO[2]}"
   local MODULE_REPOSITORY="${MODULE_INFO[1]}"
-
   local MODULE_DIRECTORY="${SATAN_MODULES_DIRECTORY}/${MODULE_LINE}"
   local MODULE_FILES=(${MODULE_DIRECTORY}/*.sh)
 
