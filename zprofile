@@ -42,11 +42,20 @@ function satan-load-configuration-variables \
   source "${SATAN_SETTINGS_FILE}"
 }
 
-#  Display ascii art
-function satan-ascii-art() {
+#  Display ascii skull
+function satan-ascii-skull skull() {
   echo ""
   echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
-  cat "${SATAN_INSTALL_DIRECTORY}/ascii-art"
+  cat "${SATAN_INSTALL_DIRECTORY}/ascii-art/skull"
+  echo -n "$(tput ${COLOR[reset]})"
+  echo ""
+}
+
+#  Display ascii demon
+function satan-ascii-demon demon() {
+  echo ""
+  echo -n "$(tput ${COLOR[reset]}; tput setaf ${COLOR[magenta]})"
+  cat "${SATAN_INSTALL_DIRECTORY}/ascii-art/demon"
   echo -n "$(tput ${COLOR[reset]})"
   echo ""
 }
@@ -54,7 +63,7 @@ function satan-ascii-art() {
 #  Display ascii title
 function satan-ascii-title() {
   echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[red]})"
-  cat "${SATAN_INSTALL_DIRECTORY}/ascii-title"
+  cat "${SATAN_INSTALL_DIRECTORY}/ascii-art/title"
   echo -n "$(tput ${COLOR[reset]})"
   echo ""
 }
@@ -70,7 +79,7 @@ function satan-credit() {
 
 #  Display ascii header
 function satan-ascii-header() {
-  satan-ascii-art
+  satan-ascii-skull
   satan-credit
   satan-ascii-title
 }
@@ -614,7 +623,8 @@ function satan-module-load() {
   fi
 
   for file in ${MODULE_FILES[@]}; do
-    MODULE_REPOSITORY="${MODULE_REPOSITORY}" MODULE_NAME="${MODULE_NAME}" \
+    MODULE_REPOSITORY="${MODULE_REPOSITORY}" \
+      MODULE_NAME="${MODULE_NAME}" \
       MODULE_DIRECTORY="${MODULE_DIRECTORY}" \
       source "${file}"
   done
