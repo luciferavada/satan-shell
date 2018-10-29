@@ -22,7 +22,7 @@ satan-modules-enabled-load
 
 #  Display ascii art
 if [ "${SATAN_DISPLAY_ASCII_ART}" = "true" ]; then
-  satan-ascii-art
+  satan-ascii-skull
 fi
 
 #  Display ascii title
