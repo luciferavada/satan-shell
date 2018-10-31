@@ -293,6 +293,11 @@ function satan-template() {
   local TEMPLATE_SOURCE="${1}"
   local TEMPLATE_DESTINATION="${2}"
 
+  if [ ! -f "${TEMPLATE_SOURCE}" ]; then
+    satan-message "error" "missing template: ${TEMPLATE_SOURCE}"
+    return 1
+  fi
+
   eval "echo \"$(< ${TEMPLATE_SOURCE} )\"" > "${TEMPLATE_DESTINATION}"
 }
 
