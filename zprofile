@@ -43,7 +43,7 @@ function satan-load-configuration-variables \
 }
 
 #  Display ascii skull
-function satan-ascii-skull skull() {
+function satan-ascii-skull() {
   echo ""
   echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
   cat "${SATAN_INSTALL_DIRECTORY}/ascii-art/skull"
@@ -286,6 +286,14 @@ function satan-message() {
 
   echo "${MESSAGE}"
   echo -n "$(tput ${COLOR[reset]})"
+}
+
+#
+function satan-template() {
+  local TEMPLATE_SOURCE="${1}"
+  local TEMPLATE_DESTINATION="${2}"
+
+  eval "echo \"$(< ${TEMPLATE_SOURCE} )\"" > "${TEMPLATE_DESTINATION}"
 }
 
 #  Find an available module
