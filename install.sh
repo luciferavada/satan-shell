@@ -159,7 +159,7 @@ if [ ! -f "${SATAN_MODULES_FILE}" ]; then
   #  Write file
   echo "#  Modules are loaded in order" > "${SATAN_MODULES_FILE}"
   echo "SATAN_MODULES=(" >> "${SATAN_MODULES_FILE}"
-  echo "  \"path\" \"prompt\" \"history\" \"man\" \"ls\" \"cd\" \"git\" \"ssh\"" >> \
+  echo "  \"prompt\" \"history\" \"path\" \"man\" \"ls\" \"cd\" \"git\" \"ssh\"" >> \
     "${SATAN_MODULES_FILE}"
   echo ")" >> "${SATAN_MODULES_FILE}"
 fi
