@@ -1,5 +1,15 @@
 #  Do not modify this file
 
+#  Source ~/.zshenv if the ${COLOR} array is not defined
+if [ -z "${COLOR}" ]; then
+  source "${HOME}/.zshenv"
+fi
+
+#  Source ~/.zprofile if the `satan` command is undefined
+if [ -z $(whence satan) ]; then
+  source "${HOME}/.zprofile"
+fi
+
 #  Load configuration variables
 satan-load-configuration-variables
 
