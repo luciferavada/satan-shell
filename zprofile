@@ -138,7 +138,7 @@ function _satan-index-lock-check-date() {
     local -i REMAINING=$(( ${SATAN_INDEX_LOCK_FILE_EXPIRE} - ${DIFFERENCE} ))
 
     if [ ${REMAINING} -ne ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
-      satan-message "info" "expires in: ${REMAINING}s"
+      satan-message "reprint" "expires in: ${REMAINING}s"
     fi
 
     if [ ${DIFFERENCE} -ge ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
@@ -280,8 +280,13 @@ function satan-message() {
   case "${TYPE}" in
     "title") echo -n "$(tput bold; tput setaf ${COLOR[green]})--> " ;;
     "bold") echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> " ;;
-    "info") echo -n "$(tput ${COLOR[reset]})--> " ;;
     "error") echo -n "$(tput bold; tput setaf ${COLOR[red]})--> " ;;
+    "info") echo -n "$(tput ${COLOR[reset]})--> " ;;
+    "reprint")
+      echo -n "\e[2K\r$(tput ${COLOR[reset]})--> ${MESSAGE}"
+      echo -n "$(tput ${COLOR[reset]})"
+      return 0
+      ;;
   esac
 
   echo "${MESSAGE}"
