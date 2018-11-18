@@ -51,15 +51,6 @@ function satan-ascii-skull() {
   echo ""
 }
 
-#  Display ascii demon
-function satan-ascii-demon demon() {
-  echo ""
-  echo -n "$(tput ${COLOR[reset]}; tput setaf ${COLOR[magenta]})"
-  cat "${SATAN_INSTALL_DIRECTORY}/ascii-art/demon"
-  echo -n "$(tput ${COLOR[reset]})"
-  echo ""
-}
-
 #  Display ascii title
 function satan-ascii-title() {
   echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[red]})"
@@ -73,6 +64,15 @@ function satan-credit() {
   echo ""
   echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
   echo "   By: Lucifer Avada | Github: luciferavada | Twitter: @luciferavada"
+  echo -n "$(tput ${COLOR[reset]})"
+  echo ""
+}
+
+#  Display ascii demon
+function satan-ascii-demon demon() {
+  echo ""
+  echo -n "$(tput ${COLOR[reset]}; tput setaf ${COLOR[magenta]})"
+  cat "${SATAN_INSTALL_DIRECTORY}/ascii-art/demon"
   echo -n "$(tput ${COLOR[reset]})"
   echo ""
 }
@@ -138,7 +138,7 @@ function _satan-index-lock-check-date() {
     local -i REMAINING=$(( ${SATAN_INDEX_LOCK_FILE_EXPIRE} - ${DIFFERENCE} ))
 
     if [ ${REMAINING} -ne ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
-      satan-message "reprint" "expires in: ${REMAINING}s"
+      satan-message "info:reprint" "expires in: ${REMAINING}s"
     fi
 
     if [ ${DIFFERENCE} -ge ${SATAN_INDEX_LOCK_FILE_EXPIRE} ]; then
@@ -313,7 +313,7 @@ function satan-message() {
   return 0
 }
 
-#
+#  Interpolate shell variables into source and write to destination
 function satan-template() {
   local TEMPLATE_SOURCE="${1}"
   local TEMPLATE_DESTINATION="${2}"
