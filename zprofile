@@ -277,20 +277,40 @@ function satan-message() {
   local TYPE="${1}"
   local MESSAGE="${2}"
 
+  local SPLIT=(`echo ${TYPE//:/ }`)
+
+  local TYPE="${SPLIT[1]}"
+  local OPTION="${SPLIT[2]}"
+
+  if [ -n "${OPTION}" ]; then
+    case "${OPTION}" in
+      "reprint") echo -n "\e[2K\r" ;;
+      *)
+        satan-message "error" "invalid message option: ${OPTION}"
+        return 1
+        ;;
+    esac
+  fi
+
   case "${TYPE}" in
     "title") echo -n "$(tput bold; tput setaf ${COLOR[green]})--> " ;;
     "bold") echo -n "$(tput bold; tput setaf ${COLOR[magenta]})==> " ;;
     "error") echo -n "$(tput bold; tput setaf ${COLOR[red]})--> " ;;
     "info") echo -n "$(tput ${COLOR[reset]})--> " ;;
-    "reprint")
-      echo -n "\e[2K\r$(tput ${COLOR[reset]})--> ${MESSAGE}"
-      echo -n "$(tput ${COLOR[reset]})"
-      return 0
+    *)
+      satan-message "error" "invalid message type: ${TYPE}"
+      return 1
       ;;
   esac
 
-  echo "${MESSAGE}"
+  case "${OPTION}" in
+    "reprint") echo -n "${MESSAGE}" ;;
+    *) echo "${MESSAGE}" ;;
+  esac
+
   echo -n "$(tput ${COLOR[reset]})"
+
+  return 0
 }
 
 #
