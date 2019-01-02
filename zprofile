@@ -106,8 +106,9 @@ function _satan-index-lock-await-untrap() {
 }
 
 function _satan-index-lock-get-group() {
+  local GROUP="${1}"
   cat "${SATAN_INDEX_LOCK_FILE}" | sed -E \
-    "s/^([A-Fa-f0-9\-]+)\:([0-9]+)\:(.*)$/\\${1}/"
+    "s/^([A-Fa-f0-9\-]+)\:([0-9]+)\:(.*)$/\\${GROUP}/"
 }
 
 #  Get the index lock file uuid
