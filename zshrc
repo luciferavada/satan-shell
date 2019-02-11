@@ -28,7 +28,8 @@ else
 fi
 
 #  Load enabled modules
-satan-modules-enabled-load
+DISPLAY_MODULE_LOAD="${SATAN_DISPLAY_MODULE_LOAD}" \
+  satan-modules-enabled-load
 
 #  Display ascii art
 if [ "${SATAN_DISPLAY_ASCII_ART}" = "true" ]; then

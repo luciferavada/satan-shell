@@ -657,7 +657,10 @@ function satan-module-load() {
     return 0
   fi
 
-  if [ "${SATAN_DISPLAY_MODULE_LOAD}" = "true" ]; then
+  # DISPLAY_MODULE_LOAD can be provided at calltime, i.e.
+  # DISPLAY_MODULE_LOAD='false' satan-module-load 'some/module'
+  # DISPLAY_MODULE_LOAD='false' satan-modules-enabled-load
+  if [ ! "${DISPLAY_MODULE_LOAD}" = "false" ]; then
     satan-message "bold" "${MODULE_LINE}"
   fi
 
@@ -800,9 +803,9 @@ function satan-modules-uninstall() {
 #  Check a list of modules for updates
 function satan-modules-update-check() {
   local LOCK
-  _satan-index-lock "LOCK" "Checking for module updates..."
+  _satan-index-lock "LOCK" "Checking modules for updates..."
 
-  satan-message "title" "Checking for module updates..."
+  satan-message "title" "Checking modules for updates..."
 
   for module in ${@}; do
 
