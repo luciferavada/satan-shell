@@ -63,7 +63,7 @@ function satan-ascii-title() {
 function satan-credit() {
   echo ""
   echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
-  echo "   By: Lucifer Avada | Github: luciferavada | Twitter: @luciferavada"
+  echo "   By: Lucifer Sears | Github: lucifersears | Twitter: @lucifersears"
   echo -n "$(tput ${COLOR[reset]})"
   echo ""
 }
