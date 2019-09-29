@@ -30,7 +30,7 @@ A modular ZShell environment.
 
 ### Usage
 
-User configuration goes in `~/.zlogin` which is not managed by __satan-shell__.
+User configuration goes in `~/.zuser`.
 
 ### Module Manager
 

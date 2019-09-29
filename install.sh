@@ -2,7 +2,7 @@
 
 #  Install files
 local SATAN_FILES=(
-  "zshenv" "zprofile" "zshrc" "zlogin"
+  "zshenv" "zprofile" "zshrc" "zuser"
 )
 
 #  Install directories
@@ -32,7 +32,7 @@ local SATAN_REPOSITORIES_FILE="${HOME}/.zsh.d/repositories.conf"
 local SATAN_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
 
 #  Zlogin file
-local SATAN_ZLOGIN_FILE="${HOME}/.zlogin"
+local SATAN_ZUSER_FILE="${HOME}/.zuser"
 
 #  Source path
 local SATAN_SHELL_SOURCE="${PWD#${HOME}/}"
@@ -73,8 +73,8 @@ fi
 #  Check for files to link
 for file in ${SATAN_FILES[@]} ${SATAN_DIRECTORIES[@]}; do
 
-  #  Don't link zlogin
-  if [ "${file}" = "zlogin" ]; then
+  #  Don't link zuser
+  if [ "${file}" = "zuser" ]; then
     continue
   fi
 
@@ -214,19 +214,19 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo "SATAN_DISPLAY_MODULE_LOAD=\"true\"" >> "${SATAN_SETTINGS_FILE}"
 fi
 
-#  Write default zlogin file
-if [ ! -f "${SATAN_ZLOGIN_FILE}" ]; then
+#  Write default zuser file
+if [ ! -f "${SATAN_ZUSER_FILE}" ]; then
   #  Colorized output
   echo -n "$(tput bold; tput setaf 2)"
-  echo "--> Writing default ~/.zlogin..."
+  echo "--> Writing default ~/.zuser..."
   echo -n "$(tput sgr0)"
 
   #  Write file
-  echo "## User customization goes here" > "${SATAN_ZLOGIN_FILE}"
+  echo "## User customization goes here" > "${SATAN_ZUSER_FILE}"
 fi
 
 #  Load the environment
 source "${HOME}/.zshenv"
 source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
-source "${HOME}/.zlogin"
+source "${HOME}/.zuser"

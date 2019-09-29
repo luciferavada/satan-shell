@@ -43,3 +43,7 @@ if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
 fi
 
 satan-on-load
+
+if [ -f "${HOME}/.zuser" ]; then
+  source "${HOME}/.zuser"
+fi
