@@ -2,7 +2,7 @@
 
 #  Install files
 local SATAN_FILES=(
-  "zshenv" "zshrc" "zuser"
+  "zshenv" "zprofile" "zshrc" "zuser"
 )
 
 #  Install directories
@@ -227,4 +227,5 @@ fi
 
 #  Load the environment
 source "${HOME}/.zshenv"
+source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
