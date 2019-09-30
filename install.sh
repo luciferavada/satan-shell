@@ -2,7 +2,7 @@
 
 #  Install files
 local SATAN_FILES=(
-  "zshenv" "zprofile" "zshrc" "zuser"
+  "zshenv" "zshrc" "zuser"
 )
 
 #  Install directories
@@ -187,7 +187,7 @@ if [ ! -f "${SATAN_SETTINGS_FILE}" ]; then
   echo -n "$(tput sgr0)"
 
   echo "#  Automatic updates" > "${SATAN_SETTINGS_FILE}"
-  echo "SATAN_AUTO_UPDATE=\"true\"" >> "${SATAN_SETTINGS_FILE}"
+  echo "SATAN_AUTO_UPDATE=\"false\"" >> "${SATAN_SETTINGS_FILE}"
   echo "" >> "${SATAN_SETTINGS_FILE}"
 
   echo "#  Check weekly for updates (seconds)" >> "${SATAN_SETTINGS_FILE}"
@@ -227,6 +227,4 @@ fi
 
 #  Load the environment
 source "${HOME}/.zshenv"
-source "${HOME}/.zprofile"
 source "${HOME}/.zshrc"
-source "${HOME}/.zuser"
