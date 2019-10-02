@@ -53,7 +53,7 @@ The __satan-shell__ module manager, `satan` has the following options.
 
 ### Functions
 
-`satan-ascii-art`
+`satan-ascii-skull` `skull`
 
   - Display ascii art.
 
@@ -69,11 +69,11 @@ The __satan-shell__ module manager, `satan` has the following options.
 
   - Display credit.
 
-`satan-reload`
+`satan-reload` `reload`
 
   - Replace the current shell with a new login shell.
 
-`satan-update`
+`satan-update` `update`
 
   - Update __satan-shell__.
   - Update enabled modules.
