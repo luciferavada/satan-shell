@@ -827,6 +827,8 @@ function satan-modules-update-check() {
 
   done
 
+  satan-message "info:reprint" "done"
+
   echo -n "\n"
 
   _satan-index-unlock "${LOCK}"
@@ -1120,10 +1122,12 @@ function satan() {
 
   if [ -n "${UPDATE_MODULES}" ]; then
     satan-modules-enabled-update-check
-    satan-modules-update $(cat ${SATAN_INDEX_UPDATES})
-    if [ ! ${?} -eq 0 ]; then
-      _satan-index-unlock "${LOCK}"
-      return 1
+    if [ -f "${SATAN_INDEX_UPDATES}" ]; then
+      satan-modules-update $(cat ${SATAN_INDEX_UPDATES})
+      if [ ! ${?} -eq 0 ]; then
+        _satan-index-unlock "${LOCK}"
+        return 1
+      fi
     fi
   fi
 
