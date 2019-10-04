@@ -18,7 +18,7 @@ DISPLAY_MODULE_LOAD="${SANTA_DISPLAY_MODULE_LOAD}" \
 
 #  Display ascii art
 if [ "${SANTA_DISPLAY_ASCII_ART}" = "true" ]; then
-  santa-ascii-skull
+  santa-ascii-saint
 fi
 
 #  Display ascii title

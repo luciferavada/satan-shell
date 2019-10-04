@@ -51,9 +51,18 @@ function santa-ascii-skull skull() {
   echo ""
 }
 
+#  Display ascii saint
+function santa-ascii-saint saint() {
+  echo ""
+  echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[black]})"
+  cat "${SANTA_INSTALL_DIRECTORY}/ascii-art/saint"
+  echo -n "$(tput ${COLOR[reset]})"
+  echo ""
+}
+
 #  Display ascii title
 function santa-ascii-title() {
-  echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[red]})"
+  echo -n "$(tput ${COLOR[reset]}; tput bold; tput setaf ${COLOR[cyan]})"
   cat "${SANTA_INSTALL_DIRECTORY}/ascii-art/title"
   echo -n "$(tput ${COLOR[reset]})"
   echo ""
@@ -79,7 +88,7 @@ function santa-ascii-demon demon() {
 
 #  Display ascii header
 function santa-ascii-header() {
-  santa-ascii-skull
+  santa-ascii-saint
   santa-credit
   santa-ascii-title
 }
