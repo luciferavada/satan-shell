@@ -1,12 +1,12 @@
-# satan-shell
+# santa-shell
 
 A modular ZShell environment.
 
 ## Module Repositories
 
-  - [satan-core](https://github.com/satan-core)
-  - [satan-extra](https://github.com/satan-extra)
-  - [satan-community](https://github.com/satan-community)
+  - [santa-core](https://github.com/santa-core)
+  - [santa-extra](https://github.com/santa-extra)
+  - [santa-community](https://github.com/santa-community)
 
 ## Requirements
 
@@ -16,7 +16,7 @@ A modular ZShell environment.
 
 ## Install
 
-`eval "$(curl -s 'https://raw.githubusercontent.com/lucifersears/satan-shell/master/install-github.sh')"`
+`eval "$(curl -s 'https://raw.githubusercontent.com/lucifersears/santa-shell/master/install-github.sh')"`
 
 ## General
 
@@ -34,9 +34,9 @@ User configuration goes in `~/.zuser`.
 
 ### Module Manager
 
-The __satan-shell__ module manager, `satan` has the following options.
+The __santa-shell__ module manager, `santa` has the following options.
 
-`satan [flags] [module] <module...>`
+`santa [flags] [module] <module...>`
 
   - `-S` Install a list of modules.
   - `-R` Uninstall a list of modules.
@@ -45,41 +45,41 @@ The __satan-shell__ module manager, `satan` has the following options.
   - `-Q` Search for available modules.
   - `-X` Search for installed modules.
   - `-y` Update the repository index.
-  - `-a` Use the `SATAN_MODULES` array as the list of modules.
+  - `-a` Use the `SANTA_MODULES` array as the list of modules.
   - `-i` Use all installed modules as the list of modules.
   - `-f` Force uninstall of modules with modifications.
-  - `-r` Reload __satan-shell__.
+  - `-r` Reload __santa-shell__.
   - `-h` Display help.
 
 ### Functions
 
-`satan-ascii-skull` `skull`
+`santa-ascii-skull` `skull`
 
   - Display ascii art.
 
-`satan-ascii-title`
+`santa-ascii-title`
 
   - Display ascii title.
 
-`satan-ascii-header`
+`santa-ascii-header`
 
   - Display ascii art, title and credit.
 
-`satan-credit`
+`santa-credit`
 
   - Display credit.
 
-`satan-reload` `reload`
+`santa-reload` `reload`
 
   - Replace the current shell with a new login shell.
 
-`satan-update` `update`
+`santa-update` `update`
 
-  - Update __satan-shell__.
+  - Update __santa-shell__.
   - Update enabled modules.
-  - Reload the shell with *satan-reload*.
+  - Reload the shell with *santa-reload*.
 
-`satan-message [type] [message]`
+`santa-message [type] [message]`
 
   - Display a formatted *message* of *type*:
 
@@ -88,13 +88,13 @@ The __satan-shell__ module manager, `satan` has the following options.
     - `info`  *White   -->* `[message]`
     - `error` *Red     -->* `[message]`
 
-`@satan-load [function]`
+`@santa-load [function]`
 
   - Add a function to be called when the shell is loaded.
 
 ### Configuration
 
-The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
+The __santa-shell__ configuration files are located in the `~/.zsh.d` directory.
 
   - `~/.zsh.d/directories.conf`
   - `~/.zsh.d/modules.conf`
@@ -105,41 +105,41 @@ The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 #### Directories
 
-`SATAN_INSTALL_DIRECTORY`
+`SANTA_INSTALL_DIRECTORY`
 
   - The path to the installation directory.
 
-`SATAN_CONFIGURATION_DIRECTORY`
+`SANTA_CONFIGURATION_DIRECTORY`
 
   - The path to the configuration directory.
 
-`SATAN_MODULES_DIRECTORY`
+`SANTA_MODULES_DIRECTORY`
 
   - The path to the modules directory.
 
 #### Modules
 
-`SATAN_MODULES`
+`SANTA_MODULES`
 
-  - An array of __satan-shell__ modules to load on start.
+  - An array of __santa-shell__ modules to load on start.
 
 #### Repositories
 
-`SATAN_REPOSITORIES`
+`SANTA_REPOSITORIES`
 
-  - An ordered list of github organizations containing __satan-shell__ modules as git repositories.
+  - An ordered list of github organizations containing __santa-shell__ modules as git repositories.
 
 #### Settings
 
-`SATAN_DISPLAY_ASCII_ART`
+`SANTA_DISPLAY_ASCII_ART`
 
   - Display ASCII artwork on load.
 
-`SATAN_DISPLAY_ASCII_TITLE`
+`SANTA_DISPLAY_ASCII_TITLE`
 
   - Display ASCII title on load.
 
-`SATAN_DISPLAY_MODULE_LOAD`
+`SANTA_DISPLAY_MODULE_LOAD`
 
   - Display loaded modules.
 
@@ -149,7 +149,7 @@ The __satan-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 Modules can be enabled, installed, uninstalled, updated and loaded by *name* or *repository/name*.
 
-Enabled modules are handled by the `SATAN_MODULES` array in `~/.zsh.d/modules.conf`.
+Enabled modules are handled by the `SANTA_MODULES` array in `~/.zsh.d/modules.conf`.
 
 Modules are installed to the `~/.zsh.d.modules` directory.
 
@@ -157,72 +157,72 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
 ### Functions
 
-`satan-module-install [module]`
+`santa-module-install [module]`
 
   - Install an available module.
 
-`satan-module-uninstall [module] <force>`
+`santa-module-uninstall [module] <force>`
 
   - Uninstall a module.
   - Optionally *force* uninstall a module with modifications.
 
-`satan-module-update-check`
+`santa-module-update-check`
 
   - Check a module for updates.
 
-`satan-module-update [module]`
+`santa-module-update [module]`
 
   - Update a module.
 
-`satan-module-load [module]`
+`santa-module-load [module]`
 
   - Load a module.
 
-`satan-modules-install [module] <module...>`
+`santa-modules-install [module] <module...>`
 
   - Install a list of modules.
 
-`satan-modules-uninstall [module] <module...>`
+`santa-modules-uninstall [module] <module...>`
 
   - Uninstall a list of modules.
 
-`satan-modules-update-check [module] <module...>`
+`santa-modules-update-check [module] <module...>`
 
   - Check a list of modules for updates.
 
-`satan-modules-update [module] <module...>`
+`santa-modules-update [module] <module...>`
 
   - Update a list of modules.
 
-`satan-modules-load [module] <module...>`
+`santa-modules-load [module] <module...>`
 
   - Load a list of modules.
 
-`satan-modules-enabled-install`
+`santa-modules-enabled-install`
 
   - Install modules in the enabled modules array.
 
-`satan-modules-enabled-update-check`
+`santa-modules-enabled-update-check`
 
   - Check modules in the enabled modules array for updates.
 
-`satan-modules-enabled-update`
+`santa-modules-enabled-update`
 
   - Update modules in the enabled modules array.
 
-`satan-modules-enabled-load`
+`santa-modules-enabled-load`
 
   - Load modules in the enabled modules array.
 
-`satan-modules-installed-update-check`
+`santa-modules-installed-update-check`
 
   - Check installed modules for updates.
 
-`satan-modules-installed-update`
+`santa-modules-installed-update`
 
   - Update installed modules.
 
-`satan-modules-installed-load`
+`santa-modules-installed-load`
 
   - Load installed modules.
 
@@ -234,44 +234,44 @@ Modules can be found by *name* or *repository/name*.
 
 Modules can be searched for by *pattern*.
 
-Repositories are managed by the `SATAN_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
+Repositories are managed by the `SANTA_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
 
 Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
 
 ### Functions
 
-`satan-repository-index`
+`santa-repository-index`
 
   - Index repositories in the repositories array.
 
-`satan-module-available-find [module]`
+`santa-module-available-find [module]`
 
   - Find an available module.
 
-`satan-module-available-search [pattern]`
+`santa-module-available-search [pattern]`
 
   - Search through available modules.
 
-`satan-module-installed-find [module]`
+`santa-module-installed-find [module]`
 
   - Find an installed module.
 
-`satan-module-installed-search [pattern]`
+`santa-module-installed-search [pattern]`
 
   - Search through installed modules.
 
-`satan-modules-available-find [module] <module...>`
+`santa-modules-available-find [module] <module...>`
 
   - Find a list of available module.
 
-`satan-modules-available-search [pattern] <pattern...>`
+`santa-modules-available-search [pattern] <pattern...>`
 
   - Search through a list of available modules.
 
-`satan-modules-installed-find [module] <module...>`
+`santa-modules-installed-find [module] <module...>`
 
   - Find a list of installed module.
 
-`satan-modules-installed-search [pattern] <pattern...>`
+`santa-modules-installed-search [pattern] <pattern...>`
 
   - Search through a list of installed modules.

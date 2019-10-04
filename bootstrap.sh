@@ -1,33 +1,33 @@
 #  If the available modules index file doesn't exist
 #  index repositories and install enabled modules.
-if [ ! -f "${SATAN_INDEX_AVAILABLE}" ]; then
-  _satan-init
+if [ ! -f "${SANTA_INDEX_AVAILABLE}" ]; then
+  _santa-init
 else
-  if _satan-index-updates-check; then
+  if _santa-index-updates-check; then
 
-    if [ "${SATAN_AUTO_UPDATE}" = "true" ]; then
-      _satan-update
+    if [ "${SANTA_AUTO_UPDATE}" = "true" ]; then
+      _santa-update
     fi
 
   fi
 fi
 
 #  Load enabled modules
-DISPLAY_MODULE_LOAD="${SATAN_DISPLAY_MODULE_LOAD}" \
-  satan-modules-enabled-load
+DISPLAY_MODULE_LOAD="${SANTA_DISPLAY_MODULE_LOAD}" \
+  santa-modules-enabled-load
 
 #  Display ascii art
-if [ "${SATAN_DISPLAY_ASCII_ART}" = "true" ]; then
-  satan-ascii-skull
+if [ "${SANTA_DISPLAY_ASCII_ART}" = "true" ]; then
+  santa-ascii-skull
 fi
 
 #  Display ascii title
-if [ "${SATAN_DISPLAY_ASCII_TITLE}" = "true" ]; then
-  satan-credit
-  satan-ascii-title
+if [ "${SANTA_DISPLAY_ASCII_TITLE}" = "true" ]; then
+  santa-credit
+  santa-ascii-title
 fi
 
-satan-on-load
+santa-on-load
 
 if [ -f "${HOME}/.zuser" ]; then
   source "${HOME}/.zuser"
