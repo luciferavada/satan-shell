@@ -1,12 +1,12 @@
-# santa-shell
+# candy
 
 A modular ZShell environment.
 
 ## Module Repositories
 
-  - [santa-core](https://github.com/santa-core)
-  - [santa-extra](https://github.com/santa-extra)
-  - [santa-community](https://github.com/santa-community)
+  - [candy-core](https://github.com/candy-core)
+  - [candy-extra](https://github.com/candy-extra)
+  - [candy-community](https://github.com/candy-community)
 
 ## Requirements
 
@@ -16,7 +16,7 @@ A modular ZShell environment.
 
 ## Install
 
-`eval "$(curl -s 'https://raw.githubusercontent.com/lucifersears/santa-shell/master/install-github.sh')"`
+`eval "$(curl -s 'https://raw.githubusercontent.com/sugarush/candy/master/install-github.sh')"`
 
 ## General
 
@@ -34,9 +34,9 @@ User configuration goes in `~/.zuser`.
 
 ### Module Manager
 
-The __santa-shell__ module manager, `santa` has the following options.
+The __candy__ module manager, `candy` has the following options.
 
-`santa [flags] [module] <module...>`
+`candy [flags] [module] <module...>`
 
   - `-S` Install a list of modules.
   - `-R` Uninstall a list of modules.
@@ -45,41 +45,41 @@ The __santa-shell__ module manager, `santa` has the following options.
   - `-Q` Search for available modules.
   - `-X` Search for installed modules.
   - `-y` Update the repository index.
-  - `-a` Use the `SANTA_MODULES` array as the list of modules.
+  - `-a` Use the `CANDY_MODULES` array as the list of modules.
   - `-i` Use all installed modules as the list of modules.
   - `-f` Force uninstall of modules with modifications.
-  - `-r` Reload __santa-shell__.
+  - `-r` Reload __candy__.
   - `-h` Display help.
 
 ### Functions
 
-`santa-ascii-skull` `skull`
+`candy-ascii-skull` `skull`
 
   - Display ascii art.
 
-`santa-ascii-title`
+`candy-ascii-title`
 
   - Display ascii title.
 
-`santa-ascii-header`
+`candy-ascii-header`
 
   - Display ascii art, title and credit.
 
-`santa-credit`
+`candy-credit`
 
   - Display credit.
 
-`santa-reload` `reload`
+`candy-reload` `reload`
 
   - Replace the current shell with a new login shell.
 
-`santa-update` `update`
+`candy-update` `update`
 
-  - Update __santa-shell__.
+  - Update __candy__.
   - Update enabled modules.
-  - Reload the shell with *santa-reload*.
+  - Reload the shell with *candy-reload*.
 
-`santa-message [type] [message]`
+`candy-message [type] [message]`
 
   - Display a formatted *message* of *type*:
 
@@ -88,13 +88,13 @@ The __santa-shell__ module manager, `santa` has the following options.
     - `info`  *White   -->* `[message]`
     - `error` *Red     -->* `[message]`
 
-`@santa-load [function]`
+`@candy-load [function]`
 
   - Add a function to be called when the shell is loaded.
 
 ### Configuration
 
-The __santa-shell__ configuration files are located in the `~/.zsh.d` directory.
+The __candy__ configuration files are located in the `~/.zsh.d` directory.
 
   - `~/.zsh.d/directories.conf`
   - `~/.zsh.d/modules.conf`
@@ -105,41 +105,41 @@ The __santa-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 #### Directories
 
-`SANTA_INSTALL_DIRECTORY`
+`CANDY_INSTALL_DIRECTORY`
 
   - The path to the installation directory.
 
-`SANTA_CONFIGURATION_DIRECTORY`
+`CANDY_CONFIGURATION_DIRECTORY`
 
   - The path to the configuration directory.
 
-`SANTA_MODULES_DIRECTORY`
+`CANDY_MODULES_DIRECTORY`
 
   - The path to the modules directory.
 
 #### Modules
 
-`SANTA_MODULES`
+`CANDY_MODULES`
 
-  - An array of __santa-shell__ modules to load on start.
+  - An array of __candy__ modules to load on start.
 
 #### Repositories
 
-`SANTA_REPOSITORIES`
+`CANDY_REPOSITORIES`
 
-  - An ordered list of github organizations containing __santa-shell__ modules as git repositories.
+  - An ordered list of github organizations containing __candy__ modules as git repositories.
 
 #### Settings
 
-`SANTA_DISPLAY_ASCII_ART`
+`CANDY_DISPLAY_ASCII_ART`
 
   - Display ASCII artwork on load.
 
-`SANTA_DISPLAY_ASCII_TITLE`
+`CANDY_DISPLAY_ASCII_TITLE`
 
   - Display ASCII title on load.
 
-`SANTA_DISPLAY_MODULE_LOAD`
+`CANDY_DISPLAY_MODULE_LOAD`
 
   - Display loaded modules.
 
@@ -149,7 +149,7 @@ The __santa-shell__ configuration files are located in the `~/.zsh.d` directory.
 
 Modules can be enabled, installed, uninstalled, updated and loaded by *name* or *repository/name*.
 
-Enabled modules are handled by the `SANTA_MODULES` array in `~/.zsh.d/modules.conf`.
+Enabled modules are handled by the `CANDY_MODULES` array in `~/.zsh.d/modules.conf`.
 
 Modules are installed to the `~/.zsh.d.modules` directory.
 
@@ -157,72 +157,72 @@ Modules can create, store and use configuration files in the `~/.zsh.d.conf` dir
 
 ### Functions
 
-`santa-module-install [module]`
+`candy-module-install [module]`
 
   - Install an available module.
 
-`santa-module-uninstall [module] <force>`
+`candy-module-uninstall [module] <force>`
 
   - Uninstall a module.
   - Optionally *force* uninstall a module with modifications.
 
-`santa-module-update-check`
+`candy-module-update-check`
 
   - Check a module for updates.
 
-`santa-module-update [module]`
+`candy-module-update [module]`
 
   - Update a module.
 
-`santa-module-load [module]`
+`candy-module-load [module]`
 
   - Load a module.
 
-`santa-modules-install [module] <module...>`
+`candy-modules-install [module] <module...>`
 
   - Install a list of modules.
 
-`santa-modules-uninstall [module] <module...>`
+`candy-modules-uninstall [module] <module...>`
 
   - Uninstall a list of modules.
 
-`santa-modules-update-check [module] <module...>`
+`candy-modules-update-check [module] <module...>`
 
   - Check a list of modules for updates.
 
-`santa-modules-update [module] <module...>`
+`candy-modules-update [module] <module...>`
 
   - Update a list of modules.
 
-`santa-modules-load [module] <module...>`
+`candy-modules-load [module] <module...>`
 
   - Load a list of modules.
 
-`santa-modules-enabled-install`
+`candy-modules-enabled-install`
 
   - Install modules in the enabled modules array.
 
-`santa-modules-enabled-update-check`
+`candy-modules-enabled-update-check`
 
   - Check modules in the enabled modules array for updates.
 
-`santa-modules-enabled-update`
+`candy-modules-enabled-update`
 
   - Update modules in the enabled modules array.
 
-`santa-modules-enabled-load`
+`candy-modules-enabled-load`
 
   - Load modules in the enabled modules array.
 
-`santa-modules-installed-update-check`
+`candy-modules-installed-update-check`
 
   - Check installed modules for updates.
 
-`santa-modules-installed-update`
+`candy-modules-installed-update`
 
   - Update installed modules.
 
-`santa-modules-installed-load`
+`candy-modules-installed-load`
 
   - Load installed modules.
 
@@ -234,44 +234,44 @@ Modules can be found by *name* or *repository/name*.
 
 Modules can be searched for by *pattern*.
 
-Repositories are managed by the `SANTA_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
+Repositories are managed by the `CANDY_REPOSITORIES` array in `~/.zsh.d/repositories.conf`.
 
 Module repositories are indexed in `~/.zsh.d/.index.available` and installed modules are tracked in `~/.zsh.d/.index.installed`.
 
 ### Functions
 
-`santa-repository-index`
+`candy-repository-index`
 
   - Index repositories in the repositories array.
 
-`santa-module-available-find [module]`
+`candy-module-available-find [module]`
 
   - Find an available module.
 
-`santa-module-available-search [pattern]`
+`candy-module-available-search [pattern]`
 
   - Search through available modules.
 
-`santa-module-installed-find [module]`
+`candy-module-installed-find [module]`
 
   - Find an installed module.
 
-`santa-module-installed-search [pattern]`
+`candy-module-installed-search [pattern]`
 
   - Search through installed modules.
 
-`santa-modules-available-find [module] <module...>`
+`candy-modules-available-find [module] <module...>`
 
   - Find a list of available module.
 
-`santa-modules-available-search [pattern] <pattern...>`
+`candy-modules-available-search [pattern] <pattern...>`
 
   - Search through a list of available modules.
 
-`santa-modules-installed-find [module] <module...>`
+`candy-modules-installed-find [module] <module...>`
 
   - Find a list of installed module.
 
-`santa-modules-installed-search [pattern] <pattern...>`
+`candy-modules-installed-search [pattern] <pattern...>`
 
   - Search through a list of installed modules.
