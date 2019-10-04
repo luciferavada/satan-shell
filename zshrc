@@ -1022,7 +1022,7 @@ function candy() {
   local GENERATE_INDEX=""
   local ENABLED_MODULES=""
   local INSTALLED_MODULES=""
-  local RELOAD_CANDY_SHELL=""
+  local RELOAD_CANDY=""
   local FORCE_UNINSTALL=""
   local DISPLAY_HELP=""
 
@@ -1046,7 +1046,7 @@ function candy() {
       "a") ENABLED_MODULES="true" ;;
       "i") INSTALLED_MODULES="true" ;;
       "f") FORCE_UNINSTALL="true" ;;
-      "r") RELOAD_CANDY_SHELL="true" ;;
+      "r") RELOAD_CANDY="true" ;;
       "h") DISPLAY_HELP="true" ;;
       *) DISPLAY_HELP="true" ;;
     esac
@@ -1116,7 +1116,7 @@ function candy() {
     fi
   fi
 
-  if [ -n "${RELOAD_CANDY_SHELL}" ]; then
+  if [ -n "${RELOAD_CANDY}" ]; then
     candy-reload
     if [ ! ${?} -eq 0 ]; then
       _candy-index-unlock "${LOCK}"

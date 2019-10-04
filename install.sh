@@ -35,7 +35,7 @@ local CANDY_SETTINGS_FILE="${HOME}/.zsh.d/settings.conf"
 local CANDY_ZUSER_FILE="${HOME}/.zuser"
 
 #  Source path
-local CANDY_SHELL_SOURCE="${PWD#${HOME}/}"
+local CANDY_SOURCE="${PWD#${HOME}/}"
 
 #  Date stamp
 local DATE_STAMP=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -78,7 +78,7 @@ for file in ${CANDY_FILES[@]} ${CANDY_DIRECTORIES[@]}; do
     continue
   fi
 
-  local SRC="${CANDY_SHELL_SOURCE}/${file}"
+  local SRC="${CANDY_SOURCE}/${file}"
   local DST="${HOME}/.${file}"
 
   if [ ! "$(readlink ${DST})" = "${SRC}" ]; then
@@ -96,7 +96,7 @@ if [ -n "${CANDY_LINKS}" ]; then
 
   for file in ${CANDY_LINKS[@]}; do
 
-    local SRC="${CANDY_SHELL_SOURCE}/${file}"
+    local SRC="${CANDY_SOURCE}/${file}"
     local DST="${HOME}/.${file}"
 
     echo "${SRC} -> ${DST}"
